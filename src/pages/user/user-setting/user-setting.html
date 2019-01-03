@@ -1,0 +1,46 @@
+<!--
+  Generated template for the UsersettingPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+  	<button clear id="back" (click)="goBack()">
+  		<ion-icon name="arrow-back" id="back" style="zoom:2.0;"></ion-icon>
+  	</button>
+    <ion-title style="display:inline-block">Setting</ion-title>
+    <ion-buttons end>
+	    <button clear id="back" (click)="goBack()">
+	  		<ion-icon name="md-checkbox-outline" id="back" style="zoom:2.0;, display: inline-block;"></ion-icon>
+	  	</button>
+  	</ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+	<ion-list>
+		<ion-label>Sample</ion-label>
+		<ion-item>
+		<ion-range [(ngModel)]="singleValue" color="danger" pin="true"></ion-range>
+		</ion-item>
+
+		<ion-item>
+		<ion-range min="-200" max="200" [(ngModel)]="saturation" color="secondary">
+		  <ion-label range-left>-200</ion-label>
+		  <ion-label range-right>200</ion-label>
+		</ion-range>
+		</ion-item>
+
+		<ion-item>
+		<ion-range min="20" max="80" step="2" [(ngModel)]="brightness">
+		 <ion-icon small range-left name="sunny"></ion-icon>
+		 <ion-icon range-right name="sunny"></ion-icon>
+		</ion-range>
+		</ion-item>
+	</ion-list>
+
+</ion-content>

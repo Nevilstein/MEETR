@@ -1,0 +1,72 @@
+<!--
+  Generated template for the UserPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+  	<button clear id="back" (click)="goBack()">
+  		<ion-icon name="arrow-back" id="back" style="zoom:2.0;"></ion-icon>
+  	</button>
+    <ion-title style="display:inline-block">User Profile Page</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+	<ion-grid>
+		<ion-row>
+			<ion-col text-center >
+				<ion-avatar item-start style="margin: auto;">
+	     			<img src="../assets/imgs/avatar.jpg">
+	   			</ion-avatar>
+			</ion-col>
+		</ion-row> 
+		<ion-row style="height: 5px;"></ion-row>
+		<ion-row>
+			<ion-col text-center>
+		    	<h4>Luweth Baltasiono,19</h4>
+		  </ion-col>
+		</ion-row> 
+	</ion-grid>
+	<ion-card>
+		<ion-card-header class="header">
+			Intro
+		</ion-card-header>
+
+		<ion-card-content>
+			Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+		</ion-card-content>
+	</ion-card>
+	<ion-card>
+		<ion-card-header class="header">
+			Interests
+		</ion-card-header>
+		<ion-card-content>
+			Swimming, Books, Golf
+		</ion-card-content>
+	</ion-card>
+	<ion-grid>
+		<ion-row>
+			<ion-col col-2></ion-col>
+			<ion-col col-4>
+				<ion-fab style="margin-bottom: 10px;">
+					<button ion-fab color="secondary" (click)="user_edit()">
+						<ion-icon name="create" id="edit" style="zoom:2.0;"></ion-icon>
+					</button>
+				</ion-fab>
+			</ion-col>
+			<ion-col col-4>
+				<ion-fab>
+					<button ion-fab color="default" style="margin-left: 40px;" (click)="user_setting()">
+						<ion-icon name="construct" id="settings" style="zoom:2.0;"></ion-icon>
+					</button>
+				</ion-fab>
+			</ion-col>
+			<ion-col col-2></ion-col>
+		</ion-row>
+	</ion-grid>
+</ion-content>

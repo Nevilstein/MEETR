@@ -5,21 +5,45 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
-
+import { LoginPageModule } from '../pages/login/login.module';
+import { UserProfilePageModule } from '../pages/user/user-profile/user-profile.module';
+import { UserEditPageModule } from '../pages/user/user-edit/user-edit.module';
+import { UserSettingPageModule } from '../pages/user/user-setting/user-setting.module';
+import { UserSettingPage } from '../pages/user/user-setting/user-setting';
+import { UserEditPage } from '../pages/user/user-edit/user-edit';
+import { AdminTabsPageModule} from '../pages/admin/admin-tabs/admin-tabs.module';
+import { AdminTabsPage} from '../pages/admin/admin-tabs/admin-tabs';
+import { AdminHomePage} from '../pages/admin/admin-home/admin-home';
+import { AdminHomePageModule} from '../pages/admin/admin-home/admin-home.module';
+import { AdminListPage} from '../pages/admin/admin-list/admin-list';
+import { AdminListPageModule} from '../pages/admin/admin-list/admin-list.module';
+import { AdminSettingPage} from '../pages/admin/admin-setting/admin-setting';
+import { AdminSettingPageModule} from '../pages/admin/admin-setting/admin-setting.module';
 @NgModule({
   declarations: [
-    MyApp,
-    HomePage
+    MyApp
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    LoginPageModule,
+    UserProfilePageModule,
+    UserEditPageModule,
+    UserSettingPageModule,
+    AdminTabsPageModule,
+    AdminHomePageModule,
+    AdminListPageModule,
+    AdminSettingPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    UserEditPage,
+    UserSettingPage,
+    AdminTabsPage,
+    AdminHomePage,
+    AdminListPage,
+    AdminSettingPage
   ],
   providers: [
     StatusBar,
