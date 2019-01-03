@@ -19,6 +19,19 @@ import { AdminListPage} from '../pages/admin/admin-list/admin-list';
 import { AdminListPageModule} from '../pages/admin/admin-list/admin-list.module';
 import { AdminSettingPage} from '../pages/admin/admin-setting/admin-setting';
 import { AdminSettingPageModule} from '../pages/admin/admin-setting/admin-setting.module';
+import {Facebook} from '@ionic-native/facebook';
+import firebase from 'firebase';
+
+export const firebaseConfig={  
+  apiKey: "AIzaSyCjTUixYv189FGdP3hQdztU_HCbtqvjJTU",
+  authDomain: "meetr-e4a7c.firebaseapp.com",
+  databaseURL: "https://meetr-e4a7c.firebaseio.com",
+  projectId: "meetr-e4a7c",
+  storageBucket: "meetr-e4a7c.appspot.com",
+  messagingSenderId: "400578335773"
+}
+firebase.initializeApp(firebaseConfig)
+
 @NgModule({
   declarations: [
     MyApp
@@ -48,6 +61,7 @@ import { AdminSettingPageModule} from '../pages/admin/admin-setting/admin-settin
   providers: [
     StatusBar,
     SplashScreen,
+    Facebook,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
