@@ -25,13 +25,13 @@ export class UserProfilePage {
     console.log('ionViewDidLoad UserProfilePage');
   }
   goBack(){
-  	this.navCtrl.setRoot( LoginPage );
+  	this.navCtrl.push( LoginPage );
   }
   user_edit(){
-  	this.navCtrl.setRoot(UserEditPage);
+  	this.navCtrl.push(UserEditPage);
   }
   user_setting(){
-    this.navCtrl.setRoot(UserSettingPage);
+    this.navCtrl.push(UserSettingPage);
   }
 
 }
