@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
-import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
-import firebase from 'firebase';
-
 import { UserProfilePage } from '../user/user-profile/user-profile';
-import {AdminTabsPage} from '../admin/admin-tabs/admin-tabs';
+import { AdminTabsPage } from '../admin/admin-tabs/admin-tabs';
+import { AngularFireAuth } from 'angularfire2/auth';
+import {Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
+import firebase from 'firebase';
 /**
  * Generated class for the LoginPage page.
  *
@@ -18,8 +18,7 @@ import {AdminTabsPage} from '../admin/admin-tabs/admin-tabs';
   templateUrl: 'login.html',
 })
 export class LoginPage {
-
-  constructor(public navCtrl: NavController, public navParams: NavParams, public menuCtrl:MenuController, private fb:Facebook ) {
+  constructor(public navCtrl: NavController, public navParams: NavParams,  public menuCtrl:MenuController, public fb: Facebook) {
   }
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
@@ -35,7 +34,7 @@ export class LoginPage {
           this.navCtrl.setRoot(UserProfilePage);
         }).catch(error=>{
           alert("Login Error");
-        });
+        })
       }
       else{
         console.log("An error occurred...");
@@ -43,12 +42,14 @@ export class LoginPage {
     }).catch( (e) => {
       console.log("Error logging in to facebook", e);
     });
+
+    
   }
+
   gotoAdmin(){
     this.navCtrl.setRoot(AdminTabsPage);
   }
   gotoUser(){
-
     this.navCtrl.setRoot(UserProfilePage);
   }
 }

@@ -1,34 +1,47 @@
 page-login {
-
-}
-#main_content{
-	background-color: #626d7f;
-}
-.no-scroll .scroll-content{
-     overflow: hidden;
-}
-#facebook{
-	background-color: #3b5998;
-	text-transform: none;
-	text-align: center;
-	width: 200px;
-	margin-top: 250%;
-}
-#google{
-	background-color: #CC3333;
-	text-transform: none;
-	text-align: center;
-	width: 200px;
-}
-#admin{
-	background-color: #30dd78;
-	text-transform: none;
-	text-align: center;
-	width: 200px;
-}
-#user{
-	background-color: #4f2fdd;
-	text-transform: none;
-	text-align: center;
-	width: 200px;
+	#main_content{
+	background-color: #D39027;
+	}
+	.no-scroll .scroll-content{
+	     overflow: hidden;
+	}
+	#facebook{
+		background-color: #3b5998;
+		text-transform: none;
+		text-align: center;
+		width: 200px;
+	}
+	#google{
+		background-color: #CC3333;
+		text-transform: none;
+		text-align: center;
+		width: 200px;
+	}
+	#admin{
+		background-color: #30dd78;
+		text-transform: none;
+		text-align: center;
+		width: 200px;
+	}
+	#user{
+		background-color: #4f2fdd;
+		text-transform: none;
+		text-align: center;
+		width: 200px;
+	}
+	img{
+	  height: 30vh;
+	  width: auto;
+	  margin: auto;
+	  display: block;
+	}
+	#welcome{
+		font-size: 27px;
+		color: #dee1e5;
+		font-weight: bold;
+	}
+	#phrase{
+		color: #dee1e5;
+		font-style: italic;
+	}
 }

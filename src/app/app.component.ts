@@ -4,9 +4,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginPage } from '../pages/login/login';
 //import { AdminTabsPage } from '../pages/admin/admin-tabs/admin-tabs';
-import { UserHomePage } from '../pages/user/user-home/user-home';
+// import {UserHomePage} from '../pages/user/user-home/user-home';
 import { UserProfilePage } from '../pages/user/user-profile/user-profile';
-import firebase from 'firebase';
 
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 
@@ -16,11 +15,10 @@ import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 export class MyApp {
   rootPage:any;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private fb:Facebook) {
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private fb: Facebook) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-
       this.fb.getLoginStatus().then( res =>{
           alert(res.status);
           if(res.status === 'connected')
@@ -35,7 +33,6 @@ export class MyApp {
       }).catch(e =>{
         console.log("Error: ", e)
       });
-
       statusBar.styleDefault();
       splashScreen.hide();
     });
