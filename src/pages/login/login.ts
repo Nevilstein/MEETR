@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
-import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
-import firebase from 'firebase';
-
 import { UserProfilePage } from '../user/user-profile/user-profile';
 import {AdminTabsPage} from '../admin/admin-tabs/admin-tabs';
 /**
@@ -19,31 +16,11 @@ import {AdminTabsPage} from '../admin/admin-tabs/admin-tabs';
 })
 export class LoginPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public menuCtrl:MenuController, private fb:Facebook ) {
+  constructor(public navCtrl: NavController, public facebook:Facebook, public navParams: NavParams, public menuCtrl:MenuController ) {
   }
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
   }  
-
-  facebookLogin(){
-    this.fb.login(['public_profile', 'user_photos', 'email', 'user_birthday']).then( (res: FacebookLoginResponse) => {
-      if(res.status === "connected"){
-        const fbCredential = firebase.auth.FacebookAuthProvider.credential(res.authResponse.accessToken)
-        firebase.auth().signInWithCredential(fbCredential).then( fs => {
-          console.log(fs.uid);
-          alert("Login Successful");
-          this.navCtrl.setRoot(UserProfilePage);
-        }).catch(error=>{
-          alert("Login Error");
-        });
-      }
-      else{
-        console.log("An error occurred...");
-      }
-    }).catch( (e) => {
-      console.log("Error logging in to facebook", e);
-    });
-  }
   gotoAdmin(){
     this.navCtrl.setRoot(AdminTabsPage);
   }
