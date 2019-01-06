@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import {LoginPage} from '../../login/login';
 import {UserEditPage} from '../user-edit/user-edit';
 import {UserSettingPage} from '../user-setting/user-setting';
-
+import firebase from 'firebase';
 /**
  * Generated class for the UserProfilePage page.
  *
@@ -18,14 +19,11 @@ import {UserSettingPage} from '../user-setting/user-setting';
 })
 export class UserProfilePage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private fb: Facebook) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad UserProfilePage');
-  }
-  goBack(){
-  	this.navCtrl.setRoot( LoginPage );
   }
   user_edit(){
   	this.navCtrl.setRoot(UserEditPage);
@@ -33,5 +31,16 @@ export class UserProfilePage {
   user_setting(){
     this.navCtrl.setRoot(UserSettingPage);
   }
+  facebookLogout(){
+    this.fb.logout().then( res => {
+      alert("Logged out.");
+      this.navCtrl.setRoot(LoginPage);
+      firebase.auth().signOut();
 
+      // CHECK LOGGED USER
+      // firebase.auth().onAuthStateChanged( fs =>{
+      //   console.log(fs);
+      // });
+    });
+  }
 }

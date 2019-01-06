@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
+import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
+import firebase from 'firebase';
+
 import { UserProfilePage } from '../user/user-profile/user-profile';
 import {AdminTabsPage} from '../admin/admin-tabs/admin-tabs';
-import {Facebook} from '@ionic-native/facebook';
-import firebase from 'firebase';
 /**
  * Generated class for the LoginPage page.
  *
@@ -18,40 +19,31 @@ import firebase from 'firebase';
 })
 export class LoginPage {
 
-  constructor(public navCtrl: NavController, public facebook:Facebook, public navParams: NavParams, public menuCtrl:MenuController ) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public menuCtrl:MenuController, private fb:Facebook ) {
   }
-
-  //FACEBOOK Login, working on Android Emulator, but not on ionic serve
-  facebookLogin(){
-    this.facebook.login(['email']).then(res=>{
-      const fbcredential = firebase.auth.FacebookAuthProvider.credential(res.authResponse.accessToken)
-      firebase.auth().signInWithCredential(fbcredential).then(fs=>{
-        alert("Login Successful")
-      }).catch(error=>{
-        alert("Login Error")
-      })
-    }).catch(error=>{
-        alert(JSON.stringify(error))
-    })
-  }  
-
-  //DO NOT DELETE, Reference siya sa fb login ko
-    /*
-    let provider = new firebase.auth.FacebookAuthProvider();  
-    firebase.auth().signInWithRedirect(provider).then(()=>{
-      firebase.auth().getRedirectResult().then((result)=>{
-        alert(JSON.stringify(result));
-      }).catch(function(error){
-        alert(JSON.stringify(error))
-      });
-    })
-    */
-  ///////////////////////////////////////////////
-
-  // REDIRECTS
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
   }  
+
+  facebookLogin(){
+    this.fb.login(['public_profile', 'user_photos', 'email', 'user_birthday']).then( (res: FacebookLoginResponse) => {
+      if(res.status === "connected"){
+        const fbCredential = firebase.auth.FacebookAuthProvider.credential(res.authResponse.accessToken)
+        firebase.auth().signInWithCredential(fbCredential).then( fs => {
+          console.log(fs.uid);
+          alert("Login Successful");
+          this.navCtrl.setRoot(UserProfilePage);
+        }).catch(error=>{
+          alert("Login Error");
+        });
+      }
+      else{
+        console.log("An error occurred...");
+      }
+    }).catch( (e) => {
+      console.log("Error logging in to facebook", e);
+    });
+  }
   gotoAdmin(){
     this.navCtrl.setRoot(AdminTabsPage);
   }
