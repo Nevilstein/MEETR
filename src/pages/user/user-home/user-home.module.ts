@@ -3,7 +3,6 @@ import { IonicPageModule } from 'ionic-angular';
 import { UserHomePage } from './user-home';
 import { SwipeCardsModule } from 'ng2-swipe-cards';
 
-
 @NgModule({
   declarations: [
     UserHomePage,
