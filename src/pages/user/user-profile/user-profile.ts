@@ -28,18 +28,18 @@ export class UserProfilePage {
   facebookLogout(){
     this.fb.logout().then( res => {
       alert("Logged out.");
-      this.navCtrl.setRoot(LoginPage);
+      this.navCtrl.push(LoginPage);
     });
   }
 
   goBack(){
-    this.navCtrl.setRoot(LoginPage);
+    this.navCtrl.push(LoginPage);
   }
   user_edit(){
-    this.navCtrl.setRoot(UserEditPage);
+    this.navCtrl.push(UserEditPage);
   }
   user_setting(){
-    this.navCtrl.setRoot(UserSettingPage);
+    this.navCtrl.push(UserSettingPage);
   }
 
 }
