@@ -3,4 +3,4 @@ npm install angularfire2 firebase --save
 npm install @ionic-native/facebook --save
 
 Plugins:
-ionic cordova plugin add cordova-plugin-facebook4 --variable APP_ID="472285416635133" --variable APP_NAME="Meetr"
+ionic cordova plugin add cordova-plugin-facebook4 --variable APP_ID="382855475853590" --variable APP_NAME="Meetr"
