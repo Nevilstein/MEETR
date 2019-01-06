@@ -3,6 +3,7 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
+import { SwipeCardsModule } from 'ng2-swipe-cards';
 
 import { MyApp } from './app.component';
 import { LoginPageModule } from '../pages/login/login.module';
@@ -11,6 +12,16 @@ import { UserEditPageModule } from '../pages/user/user-edit/user-edit.module';
 import { UserSettingPageModule } from '../pages/user/user-setting/user-setting.module';
 import { UserSettingPage } from '../pages/user/user-setting/user-setting';
 import { UserEditPage } from '../pages/user/user-edit/user-edit';
+import { UserChatPage } from '../pages/user/user-chat/user-chat';
+import { UserChatPageModule } from '../pages/user/user-chat/user-chat.module';
+import { UserHomePage } from '../pages/user/user-home/user-home';
+import { UserHomePageModule } from '../pages/user/user-home/user-home.module';
+import { UserTabsPage } from '../pages/user/user-tabs/user-tabs';
+import { UserTabsPageModule } from '../pages/user/user-tabs/user-tabs.module';
+import { UserReportPage } from '../pages/user/user-report/user-report';
+import { UserReportPageModule } from '../pages/user/user-report/user-report.module';
+import { UserCheckPage } from '../pages/user/user-check/user-check';
+import { UserCheckPageModule } from '../pages/user/user-check/user-check.module';
 import { AdminTabsPageModule} from '../pages/admin/admin-tabs/admin-tabs.module';
 import { AdminTabsPage} from '../pages/admin/admin-tabs/admin-tabs';
 import { AdminHomePage} from '../pages/admin/admin-home/admin-home';
@@ -20,7 +31,7 @@ import { AdminListPageModule} from '../pages/admin/admin-list/admin-list.module'
 import { AdminSettingPage} from '../pages/admin/admin-setting/admin-setting';
 import { AdminSettingPageModule} from '../pages/admin/admin-setting/admin-setting.module';
 import {Facebook} from '@ionic-native/facebook';
-import firebase from 'firebase';
+import firebase from 'firebase';  
 
 export const firebaseConfig={  
   apiKey: "AIzaSyCjTUixYv189FGdP3hQdztU_HCbtqvjJTU",
@@ -38,7 +49,8 @@ firebase.initializeApp(firebaseConfig)
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp,{tabsPlacement: 'top'}),
+    SwipeCardsModule,
     LoginPageModule,
     UserProfilePageModule,
     UserEditPageModule,
@@ -46,7 +58,12 @@ firebase.initializeApp(firebaseConfig)
     AdminTabsPageModule,
     AdminHomePageModule,
     AdminListPageModule,
-    AdminSettingPageModule
+    AdminSettingPageModule,
+    UserTabsPageModule,
+    UserHomePageModule,
+    UserChatPageModule,
+    UserReportPageModule,
+    UserCheckPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -56,7 +73,12 @@ firebase.initializeApp(firebaseConfig)
     AdminTabsPage,
     AdminHomePage,
     AdminListPage,
-    AdminSettingPage
+    AdminSettingPage,
+    UserTabsPage,
+    UserHomePage,
+    UserChatPage,
+    UserReportPage,
+    UserCheckPage
   ],
   providers: [
     StatusBar,
