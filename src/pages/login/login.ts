@@ -18,6 +18,7 @@ import firebase from 'firebase';
   templateUrl: 'login.html',
 })
 export class LoginPage {
+  public count : number =0;
   constructor(public navCtrl: NavController, public navParams: NavParams,  public menuCtrl:MenuController, public fb: Facebook) {
   }
   ionViewDidLoad() {
@@ -31,7 +32,7 @@ export class LoginPage {
         firebase.auth().signInWithCredential(fbCredential).then( fs => {
           console.log(fs.uid);
           alert("Login Successful");
-          this.navCtrl.setRoot(UserProfilePage);
+          this.navCtrl.push(UserProfilePage);
         }).catch(error=>{
           alert("Login Error");
         })
@@ -47,10 +48,16 @@ export class LoginPage {
   }
 
   gotoAdmin(){
-    this.navCtrl.setRoot(AdminTabsPage);
+    this.navCtrl.push(AdminTabsPage);
   }
   gotoUser(){
-    this.navCtrl.setRoot(UserProfilePage);
+    this.navCtrl.push(UserProfilePage);
+  }
+  public go_Admin(){
+    this.count++;
+    if(this.count==5){
+      this.navCtrl.push(AdminTabsPage);
+    }
   }
 }
 
