@@ -1,4 +1,3 @@
-
 import { Component,EventEmitter  } from '@angular/core';
 import { IonicPage, NavController, NavParams ,ModalController} from 'ionic-angular';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -42,7 +41,7 @@ export class UserHomePage {
 	"https://scontent-sin6-1.xx.fbcdn.net/v/t1.15752-9/48380193_769625740037828_4152776893222879232_n.png?_nc_cat=110&_nc_eui2=AeHABbs_djT4-MZhtcUxxgfTbky5UqXL04fHKSpX_lfTzozcpqJsWwT2Oh2ntXTFNp43FIaWytpU7VjglxACl1ZVB_Xu8s3tgt-rTWbvI7-HDA&_nc_ht=scontent-sin6-1.xx&oh=61b3b10e3cc7dafb5080d5dce28000c7&oe=5CBFA46E"
 	]
 
-	constructor(public navCtrl: NavController, public navParams: NavParams, private sanitizer: DomSanitizer, private alertCtrl: AlertController, private modal: ModalController) {
+	constructor(private sanitizer: DomSanitizer, private alertCtrl: AlertController, private modal: ModalController) {
 		for (let i = 0; i < this.images.length; i++) {
           this.attendants.push({
               id: i + 1,
