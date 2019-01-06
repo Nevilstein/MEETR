@@ -22,6 +22,6 @@ export class UserEditPage {
     console.log('ionViewDidLoad UserEditPage');
   }
   goBack(){
-  	this.navCtrl.push(UserProfilePage);
+  	this.navCtrl.setRoot(UserProfilePage);
   }
 }

@@ -5,7 +5,6 @@ import firebase from 'firebase';
 
 import { UserProfilePage } from '../user/user-profile/user-profile';
 import {AdminTabsPage} from '../admin/admin-tabs/admin-tabs';
-import {UserTabsPage} from '../user/user-tabs/user-tabs';
 /**
  * Generated class for the LoginPage page.
  *
@@ -19,11 +18,9 @@ import {UserTabsPage} from '../user/user-tabs/user-tabs';
   templateUrl: 'login.html',
 })
 export class LoginPage {
-  public count : number =0;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public menuCtrl:MenuController, private fb:Facebook ) {
   }
-
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
   }  
@@ -48,17 +45,11 @@ export class LoginPage {
     });
   }
   gotoAdmin(){
-    this.navCtrl.push(AdminTabsPage);
+    this.navCtrl.setRoot(AdminTabsPage);
   }
   gotoUser(){
 
-    this.navCtrl.push(UserTabsPage);
-  }
-  public go_Admin(){
-    this.count++;
-    if(this.count==5){
-      this.navCtrl.push(AdminTabsPage);
-    }
+    this.navCtrl.setRoot(UserProfilePage);
   }
 }
 

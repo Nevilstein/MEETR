@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { UserProfilePage } from '../user-profile/user-profile';
-import { LoginPage } from '../../login/login';
 
 /**
  * Generated class for the UserSettingPage page.
@@ -24,9 +23,6 @@ export class UserSettingPage {
     console.log('ionViewDidLoad UserSettingPage');
   }
   goBack(){
-  	this.navCtrl.push(UserProfilePage);
-  }
-  logout(){
-    this.navCtrl.push(LoginPage);
+  	this.navCtrl.setRoot(UserProfilePage);
   }
 }

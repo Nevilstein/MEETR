@@ -23,7 +23,7 @@ export class AdminHomePage {
     console.log('ionViewDidLoad AdminHomePage');
   }
   goBack(){
-  	this.navCtrl.push(LoginPage);
+  	this.navCtrl.setRoot(LoginPage);
   }
   click_card1() {
     const alert = this.alertCtrl.create({
