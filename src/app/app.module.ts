@@ -6,9 +6,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SwipeCardsModule } from 'ng2-swipe-cards';
 
 import { MyApp } from './app.component';
-import { LoginPage } from '../pages/login/login';
-import { UserProfilePage } from '../pages/user/user-profile/user-profile';
-
 import { LoginPageModule } from '../pages/login/login.module';
 import { UserProfilePageModule } from '../pages/user/user-profile/user-profile.module';
 import { UserEditPageModule } from '../pages/user/user-edit/user-edit.module';
@@ -48,55 +45,40 @@ firebase.initializeApp(firebaseConfig)
 
 @NgModule({
   declarations: [
-    MyApp,
-    LoginPage,
-    AdminHomePage,
-    AdminListPage,
-    AdminSettingPage,
-    AdminTabsPage,
-    UserEditPage,
-    UserHomePage,
-    UserProfilePage,
-    UserSettingPage,
-    UserChatPage,
-    UserReportPage,
-    UserCheckPage,
-    UserTabsPage
+    MyApp
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp,{tabsPlacement: 'top'}),
     SwipeCardsModule,
-    // LoginPageModule,
-    // UserProfilePageModule,
-    // UserEditPageModule,
-    // UserSettingPageModule,
-    // AdminTabsPageModule,
-    // AdminHomePageModule,
-    // AdminListPageModule,
-    // AdminSettingPageModule,
-    // UserTabsPageModule,
-    // UserHomePageModule,
-    // UserChatPageModule,
-    // UserReportPageModule,
-    // UserCheckPageModule
+    LoginPageModule,
+    UserProfilePageModule,
+    UserEditPageModule,
+    UserSettingPageModule,
+    AdminTabsPageModule,
+    AdminHomePageModule,
+    AdminListPageModule,
+    AdminSettingPageModule,
+    UserTabsPageModule,
+    UserHomePageModule,
+    UserChatPageModule,
+    UserReportPageModule,
+    UserCheckPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    LoginPage,
+    UserEditPage,
+    UserSettingPage,
+    AdminTabsPage,
     AdminHomePage,
     AdminListPage,
     AdminSettingPage,
-    AdminTabsPage,
-    UserEditPage,
+    UserTabsPage,
     UserHomePage,
-    UserProfilePage,
-    UserSettingPage,
     UserChatPage,
     UserReportPage,
-    UserCheckPage,
-    UserTabsPage
+    UserCheckPage
   ],
   providers: [
     StatusBar,
