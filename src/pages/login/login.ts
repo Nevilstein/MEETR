@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
 import { UserProfilePage } from '../user/user-profile/user-profile';
 import { AdminTabsPage } from '../admin/admin-tabs/admin-tabs';
+import {UserTabsPage} from '../user/user-tabs/user-tabs';
 import { AngularFireAuth } from 'angularfire2/auth';
 import {Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import firebase from 'firebase';
@@ -51,7 +52,7 @@ export class LoginPage {
     this.navCtrl.push(AdminTabsPage);
   }
   gotoUser(){
-    this.navCtrl.push(UserProfilePage);
+    this.navCtrl.push(UserTabsPage);
   }
   public go_Admin(){
     this.count++;
