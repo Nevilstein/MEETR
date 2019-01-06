@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import {LoginPage} from '../../login/login';
-import {UserEditPage} from '../user-edit/user-edit';
-import {UserSettingPage} from '../user-setting/user-setting';
+import { LoginPage } from '../../login/login';
+import { UserEditPage } from '../user-edit/user-edit';
+import { UserSettingPage } from '../user-setting/user-setting';
+import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 
 /**
  * Generated class for the UserProfilePage page.
@@ -18,20 +19,27 @@ import {UserSettingPage} from '../user-setting/user-setting';
 })
 export class UserProfilePage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private fb:Facebook) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad UserProfilePage');
   }
+  facebookLogout(){
+    this.fb.logout().then( res => {
+      alert("Logged out.");
+      this.navCtrl.setRoot(LoginPage);
+    });
+  }
+
   goBack(){
-  	this.navCtrl.push( LoginPage );
+    this.navCtrl.setRoot(LoginPage);
   }
   user_edit(){
-  	this.navCtrl.push(UserEditPage);
+    this.navCtrl.setRoot(UserEditPage);
   }
   user_setting(){
-    this.navCtrl.push(UserSettingPage);
+    this.navCtrl.setRoot(UserSettingPage);
   }
 
 }

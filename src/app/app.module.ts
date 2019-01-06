@@ -6,6 +6,9 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SwipeCardsModule } from 'ng2-swipe-cards';
 
 import { MyApp } from './app.component';
+import { LoginPage } from '../pages/login/login';
+import { UserProfilePage } from '../pages/user/user-profile/user-profile';
+
 import { LoginPageModule } from '../pages/login/login.module';
 import { UserProfilePageModule } from '../pages/user/user-profile/user-profile.module';
 import { UserEditPageModule } from '../pages/user/user-edit/user-edit.module';
@@ -30,7 +33,7 @@ import { AdminListPage} from '../pages/admin/admin-list/admin-list';
 import { AdminListPageModule} from '../pages/admin/admin-list/admin-list.module';
 import { AdminSettingPage} from '../pages/admin/admin-setting/admin-setting';
 import { AdminSettingPageModule} from '../pages/admin/admin-setting/admin-setting.module';
-import {Facebook} from '@ionic-native/facebook';
+import { Facebook } from '@ionic-native/facebook';
 import firebase from 'firebase';  
 
 export const firebaseConfig={  
@@ -45,40 +48,55 @@ firebase.initializeApp(firebaseConfig)
 
 @NgModule({
   declarations: [
-    MyApp
+    MyApp,
+    LoginPage,
+    AdminHomePage,
+    AdminListPage,
+    AdminSettingPage,
+    AdminTabsPage,
+    UserEditPage,
+    UserHomePage,
+    UserProfilePage,
+    UserSettingPage,
+    UserChatPage,
+    UserReportPage,
+    UserCheckPage,
+    UserTabsPage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp,{tabsPlacement: 'top'}),
     SwipeCardsModule,
-    LoginPageModule,
-    UserProfilePageModule,
-    UserEditPageModule,
-    UserSettingPageModule,
-    AdminTabsPageModule,
-    AdminHomePageModule,
-    AdminListPageModule,
-    AdminSettingPageModule,
-    UserTabsPageModule,
-    UserHomePageModule,
-    UserChatPageModule,
-    UserReportPageModule,
-    UserCheckPageModule
+    // LoginPageModule,
+    // UserProfilePageModule,
+    // UserEditPageModule,
+    // UserSettingPageModule,
+    // AdminTabsPageModule,
+    // AdminHomePageModule,
+    // AdminListPageModule,
+    // AdminSettingPageModule,
+    // UserTabsPageModule,
+    // UserHomePageModule,
+    // UserChatPageModule,
+    // UserReportPageModule,
+    // UserCheckPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    UserEditPage,
-    UserSettingPage,
-    AdminTabsPage,
+    LoginPage,
     AdminHomePage,
     AdminListPage,
     AdminSettingPage,
-    UserTabsPage,
+    AdminTabsPage,
+    UserEditPage,
     UserHomePage,
+    UserProfilePage,
+    UserSettingPage,
     UserChatPage,
     UserReportPage,
-    UserCheckPage
+    UserCheckPage,
+    UserTabsPage
   ],
   providers: [
     StatusBar,
