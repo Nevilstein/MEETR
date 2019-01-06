@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { UserProfilePage } from '../user-profile/user-profile';
+
 /**
- * Generated class for the UserEditPage page.
+ * Generated class for the UserChatPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -10,18 +10,16 @@ import { UserProfilePage } from '../user-profile/user-profile';
 
 @IonicPage()
 @Component({
-  selector: 'page-user-edit',
-  templateUrl: 'user-edit.html',
+  selector: 'page-user-chat',
+  templateUrl: 'user-chat.html',
 })
-export class UserEditPage {
+export class UserChatPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad UserEditPage');
+    console.log('ionViewDidLoad UserChatPage');
   }
-  goBack(){
-  	this.navCtrl.push(UserProfilePage);
-  }
+
 }

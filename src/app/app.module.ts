@@ -3,6 +3,7 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
+import { SwipeCardsModule } from 'ng2-swipe-cards';
 
 import { Facebook } from '@ionic-native/facebook';
 import * as firebase from 'firebase/app';
@@ -18,6 +19,7 @@ import { UserEditPage } from '../pages/user/user-edit/user-edit';
 import { UserHomePage } from '../pages/user/user-home/user-home';
 import { UserProfilePage } from '../pages/user/user-profile/user-profile';
 import { UserSettingPage } from '../pages/user/user-setting/user-setting';
+
 
 // import { LoginPageModule } from '../pages/login/login.module';
 // import { UserProfilePageModule } from '../pages/user/user-profile/user-profile.module';
@@ -70,6 +72,8 @@ var firebaseConfig = {
     // AdminListPageModule,
     // AdminSettingPageModule,
     // UserHomePageModule
+    IonicModule.forRoot(MyApp,{tabsPlacement: 'top'}),
+    SwipeCardsModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -83,6 +87,10 @@ var firebaseConfig = {
     UserHomePage,
     UserProfilePage,
     UserSettingPage
+    UserTabsPage,
+    UserChatPage,
+    UserReportPage,
+    UserCheckPage
   ],
   providers: [
     StatusBar,

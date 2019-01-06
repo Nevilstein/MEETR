@@ -26,10 +26,10 @@ export class UserProfilePage {
     console.log('ionViewDidLoad UserProfilePage');
   }
   user_edit(){
-  	this.navCtrl.setRoot(UserEditPage);
+  	this.navCtrl.push(UserEditPage);
   }
   user_setting(){
-    this.navCtrl.setRoot(UserSettingPage);
+    this.navCtrl.push(UserSettingPage);
   }
   facebookLogout(){
     this.fb.logout().then( res => {

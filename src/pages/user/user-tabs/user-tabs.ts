@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { UserProfilePage } from '../user-profile/user-profile';
-import { LoginPage } from '../../login/login';
+import { UserHomePage } from '../user-home/user-home';
+import { UserChatPage } from '../user-chat/user-chat';
 
 /**
- * Generated class for the UserSettingPage page.
+ * Generated class for the UserTabsPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -12,21 +13,19 @@ import { LoginPage } from '../../login/login';
 
 @IonicPage()
 @Component({
-  selector: 'page-user-setting',
-  templateUrl: 'user-setting.html',
+  selector: 'page-user-tabs',
+  templateUrl: 'user-tabs.html',
 })
-export class UserSettingPage {
+export class UserTabsPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
+  user_tab1root=UserProfilePage;
+  user_tab2root=UserHomePage;
+  user_tab3root=UserChatPage;
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad UserSettingPage');
+    console.log('ionViewDidLoad UserTabsPage');
   }
-  goBack(){
-  	this.navCtrl.push(UserProfilePage);
-  }
-  logout(){
-    this.navCtrl.push(LoginPage);
-  }
+
 }
