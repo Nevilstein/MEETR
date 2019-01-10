@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angul
 import { UserProfilePage } from '../user/user-profile/user-profile';
 import { AdminTabsPage } from '../admin/admin-tabs/admin-tabs';
 import {UserTabsPage} from '../user/user-tabs/user-tabs';
+import {UserGeoPage} from '../user/user-geo/user-geo';
 import { AngularFireAuth } from 'angularfire2/auth';
 import {Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import firebase from 'firebase';
@@ -48,6 +49,9 @@ export class LoginPage {
     
   }
 
+  gotoGeo(){
+    this.navCtrl.push(UserGeoPage);
+  }
   gotoAdmin(){
     this.navCtrl.push(AdminTabsPage);
   }
