@@ -6,11 +6,12 @@
 -->
 
 
-<ion-content padding>
+<ion-content>
 	<ion-navbar>
 		<ion-title>Geolocation</ion-title>	
-	 </ion-navbar>
-			
-	 <p>Lat: {{ lat }}</p>
-	 <p>Lng: {{ lng }}</p>
+	</ion-navbar>
+	<p hide>Lat: {{ lat }}</p>
+	<p hide>Lng: {{ lng }}</p>	
+	
+	<div #map id="map"></div>
 </ion-content>
