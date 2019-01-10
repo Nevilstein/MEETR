@@ -31,6 +31,7 @@ import { AdminListPageModule} from '../pages/admin/admin-list/admin-list.module'
 import { AdminSettingPage} from '../pages/admin/admin-setting/admin-setting';
 import { AdminSettingPageModule} from '../pages/admin/admin-setting/admin-setting.module';
 import { Facebook } from '@ionic-native/facebook';
+import { Camera } from '@ionic-native/camera';
 import firebase from 'firebase';  
 
 export const firebaseConfig={  
@@ -84,6 +85,7 @@ firebase.initializeApp(firebaseConfig)
     StatusBar,
     SplashScreen,
     Facebook,
+    Camera,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
