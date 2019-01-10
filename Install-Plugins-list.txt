@@ -2,5 +2,7 @@ Install:
 npm install angularfire2 firebase --save
 npm install @ionic-native/facebook --save
 npm install ng2-swipe-cards --save
+npm install --save @ionic-native/geolocation
 Plugins:
 ionic cordova plugin add cordova-plugin-facebook4 --variable APP_ID="382855475853590" --variable APP_NAME="Meetr"
+ionic cordova plugin add cordova-plugin-geolocation --variable GEOLOCATION_USAGE_DESCRIPTION="To locate you"
