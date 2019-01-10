@@ -19,13 +19,20 @@ import { Geolocation } from '@ionic-native/geolocation';
   templateUrl: 'user-geo.html',
 })
 export class UserGeoPage {
+	lat:any;
+	lng:any;
 
-	constructor(private sanitizer: DomSanitizer, private alertCtrl: AlertController, private modal: ModalController, private Geolocation:Geolocation) {
+	constructor(private sanitizer: DomSanitizer, private alertCtrl: AlertController, private modal: ModalController, private geo:Geolocation) {
 
 
 	}
 
-
+	ionViewDidLoad(){
+		this.geo.getCurrentPosition().then(pos=>{
+			this.lat = pos.coords.latitude;
+			this.lng = pos.coords.longitude;
+		}).catch(err => console.log(err));
+	}
 	onCardInteract(event){
    		console.log(event);
 	}
