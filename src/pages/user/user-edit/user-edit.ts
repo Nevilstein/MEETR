@@ -25,6 +25,8 @@ export class UserEditPage {
   takePhoto(){
     const options: CameraOptions = {
       quality: 70,
+      cameraDirection:1,
+      saveToPhotoAlbum:true,
       destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE
@@ -39,9 +41,11 @@ export class UserEditPage {
   uploadPhoto(){
     const options: CameraOptions = {
       quality: 70,
+      cameraDirection:1,
+      saveToPhotoAlbum:true,
       destinationType: this.camera.DestinationType.DATA_URL,
       sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
-      saveToPhotoAlbum:false 
+      saveToPhotoAlbum:false, 
     }
     this.camera.getPicture(options).then((imageData) => {
       this.myPhoto = 'data.image/jpeg;base64,' + imageData;
