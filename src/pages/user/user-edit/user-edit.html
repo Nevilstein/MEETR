@@ -13,7 +13,7 @@
     <ion-title style="display:inline-block">Edit</ion-title>
     <ion-buttons end>
 	    <button clear id="back" (click)="goBack()">
-	  		<ion-icon name="md-checkbox-outline" id="back" style="zoom:2.0;, display: inline-block;"></ion-icon>
+	  		<ion-icon name="md-checkbox-outline" id="back" style="zoom:2.0; display: inline-block;"></ion-icon>
 	  	</button>
   	</ion-buttons>
   </ion-navbar>
@@ -22,6 +22,20 @@
 
 
 <ion-content padding>
+
+	
+	<!-- testing of Upload Photo -->
+	<ion-col text-center >
+		<ion-avatar item-start style="margin: auto;">	
+			<img src="{{ myPhoto }}">	
+		</ion-avatar>	
+	</ion-col>
+	<!-- testing -->
+	<!-- testing -->
+	<button ion-button (click)="takePhoto()" full color="primary">Take a Picture</button>   
+	<button ion-button (click)="uploadPhoto()" full color="secondary">Upload Picture</button>  
+	<!-- testing -->
+
 	<ion-card>
 		<ion-card-header>
 			Edit Intro
