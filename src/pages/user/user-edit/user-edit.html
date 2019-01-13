@@ -27,13 +27,19 @@
 	<!-- testing of Upload Photo -->
 	<ion-col text-center >
 		<ion-avatar item-start style="margin: auto;">	
-			<img src="{{ myPhoto }}">	
+			<img src="{{ myPhoto }}" alt="User Image">	
 		</ion-avatar>	
 	</ion-col>
 	<!-- testing -->
 	<!-- testing -->
-	<button ion-button (click)="takePhoto()" full color="primary">Take a Picture</button>   
-	<button ion-button (click)="uploadPhoto()" full color="secondary">Upload Picture</button>  
+	<button ion-button icon-only block (click)="takePhoto()" full color="primary">
+		<ion-icon name="camera">
+		</ion-icon>
+	</button>   
+	<button ion-button icon-only block (click)="uploadPhoto()" full color="secondary">
+		<ion-icon name="image">
+		</ion-icon>
+	</button>  
 	<!-- testing -->
 
 	<ion-card>
