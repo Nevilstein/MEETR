@@ -25,25 +25,27 @@ export class UserGeoPage {
 	}
 
 	ionViewDidLoad(){
-		console.log(this.mapRef);
 		this.showMap();
 	}
 
+	// JAVASCRIPT GMAPS ----works
 	showMap(){
 		//map location
 		this.geo.getCurrentPosition().then(pos=>{
 			this.lat = pos.coords.latitude;
 			this.lng = pos.coords.longitude;
 		}).catch(err => console.log(err));
-		let location = new google.maps.LatLng(this.lat , this.lng);
-		//let location = new google.maps.LatLng(14.6037159,120.9630088);
+		//let location = new google.maps.LatLng(this.lat , this.lng);
+		let location = new google.maps.LatLng(14.6037159,120.9630088);
 		//map options
 		let options = {
 			center:location,
-			zoom:10
+			zoom:15,
+			mapTypeId: google.maps.MapTypeId.ROADMAP
 		}
 		this.map = new google.maps.Map(this.mapRef.nativeElement,options);
 	}
+	
 
 	onCardInteract(event){
    		console.log(event);
