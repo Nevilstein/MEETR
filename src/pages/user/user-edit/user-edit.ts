@@ -45,7 +45,6 @@ export class UserEditPage {
       saveToPhotoAlbum:true,
       destinationType: this.camera.DestinationType.DATA_URL,
       sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
-      saveToPhotoAlbum:false, 
     }
     this.camera.getPicture(options).then((imageData) => {
       this.myPhoto = 'data.image/jpeg;base64,' + imageData;
