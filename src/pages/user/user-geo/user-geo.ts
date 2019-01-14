@@ -46,8 +46,8 @@ export class UserGeoPage {
 		this.map = new google.maps.Map(this.mapRef.nativeElement,options);		//MAP INITIALIZATION
 		
 		var users = [
-			['user1', 14.6037159, 120.9630088, 4],
-			['user2', 20.6037159, 120.9630088, 5]
+			['user1', 14.6037159, 120.9630088, 2],
+			['user2', 20.6037159, 120.9630088, 1]
 		];
 
 		//var image = 'assets/imgs/avatar.jpg';
@@ -64,8 +64,8 @@ export class UserGeoPage {
 			  position: {lat: user[1], lng: user[2]},
 			  map: this.map,
 			  //icon: image,
-			  title: user[0],
-			  zIndex: user[3]
+            	title: user[0],
+            	zIndex: user[1]
 			});
 		  }
 	}
