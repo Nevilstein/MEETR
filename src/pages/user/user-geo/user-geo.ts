@@ -9,6 +9,7 @@ import { google } from 'google-maps';
 
 declare var google: any;
 
+
 @IonicPage()
 @Component({
   selector: 'page-user-geo',
@@ -20,6 +21,7 @@ export class UserGeoPage {
 	lng:any;
 	@ViewChild('map') mapRef:ElementRef;
 	map:any;
+	infoWindow:any;
 
 	constructor(private sanitizer: DomSanitizer, private alertCtrl: AlertController, private modal: ModalController, private geo:Geolocation) {
 	}
@@ -28,15 +30,56 @@ export class UserGeoPage {
 		this.showMap();
 	}
 
+
+	showMap(){
+		let map: any;
+		let infoWindow: any;
+		map = new google.maps.Map(document.getElementById('map'), {
+			center: {lat: -34.397, lng: 150.644},
+			zoom: 6
+		  });
+		  infoWindow = new google.maps.InfoWindow;
+  
+		  // Try HTML5 geolocation.
+		  if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(function(position) {
+			  var pos = {
+				lat: position.coords.latitude,
+				lng: position.coords.longitude
+			  };
+  
+			  infoWindow.setPosition(pos);
+			  infoWindow.setContent('Location found.');
+			  infoWindow.open(map);
+			  map.setCenter(pos);
+			}, function() {
+			  this.handleLocationError(true, infoWindow, map.getCenter(), map);
+			});
+		  } else {
+			// Browser doesn't support Geolocation
+			this.handleLocationError(false, infoWindow, map.getCenter(), map);
+		  }
+		}
+
+		handleLocationError(browserHasGeolocation, infoWindow, pos, map) {
+			infoWindow.setPosition(pos);
+			infoWindow.setContent(browserHasGeolocation ?
+								  'Error: The Geolocation service failed.' :
+								  'Error: Your browser doesn\'t support geolocation.');
+			infoWindow.open(map);
+		  }
+
+
+	/*
 	// JAVASCRIPT GMAPS ----works
 	showMap(){
 		//map location
 		this.geo.getCurrentPosition().then(pos=>{
-			this.lat = pos.coords.latitude;
-			this.lng = pos.coords.longitude;
+			//this.lat = pos.coords.latitude;
+			//this.lng = pos.coords.longitude;
+			let location = new google.maps.LatLng(this.lat , this.lng);
 		}).catch(err => console.log(err));
-		//let location = new google.maps.LatLng(this.lat , this.lng);
-		let location = new google.maps.LatLng(14.6037159,120.9630088);
+		//let location = new google.maps.LatLng(14.6037159,120.9630088);
 		//map options
 		let options = {
 			center:location,
@@ -45,6 +88,7 @@ export class UserGeoPage {
 		}
 		this.map = new google.maps.Map(this.mapRef.nativeElement,options);
 	}
+	*/
 	
 
 	onCardInteract(event){
