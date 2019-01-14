@@ -19,9 +19,8 @@ declare var google: any;
 export class UserGeoPage {
 	lat:any;
 	lng:any;
-	@ViewChild('map') mapRef:ElementRef;
 	map:any;
-	infoWindow:any;
+	@ViewChild('map') mapRef:ElementRef;
 
 	constructor(private sanitizer: DomSanitizer, private alertCtrl: AlertController, private modal: ModalController, private geo:Geolocation) {
 	}
@@ -29,66 +28,48 @@ export class UserGeoPage {
 	ionViewDidLoad(){
 		this.showMap();
 	}
-
-
+	
+	// JAVASCRIPT GMAPS API----works
 	showMap(){
-		let map: any;
-		let infoWindow: any;
-		map = new google.maps.Map(document.getElementById('map'), {
-			center: {lat: -34.397, lng: 150.644},
-			zoom: 6
-		  });
-		  infoWindow = new google.maps.InfoWindow;
-  
-		  // Try HTML5 geolocation.
-		  if (navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(function(position) {
-			  var pos = {
-				lat: position.coords.latitude,
-				lng: position.coords.longitude
-			  };
-  
-			  infoWindow.setPosition(pos);
-			  infoWindow.setContent('Location found.');
-			  infoWindow.open(map);
-			  map.setCenter(pos);
-			}, function() {
-			  this.handleLocationError(true, infoWindow, map.getCenter(), map);
-			});
-		  } else {
-			// Browser doesn't support Geolocation
-			this.handleLocationError(false, infoWindow, map.getCenter(), map);
-		  }
-		}
-
-		handleLocationError(browserHasGeolocation, infoWindow, pos, map) {
-			infoWindow.setPosition(pos);
-			infoWindow.setContent(browserHasGeolocation ?
-								  'Error: The Geolocation service failed.' :
-								  'Error: Your browser doesn\'t support geolocation.');
-			infoWindow.open(map);
-		  }
-
-
-	/*
-	// JAVASCRIPT GMAPS ----works
-	showMap(){
-		//map location
-		this.geo.getCurrentPosition().then(pos=>{
-			//this.lat = pos.coords.latitude;
-			//this.lng = pos.coords.longitude;
-			let location = new google.maps.LatLng(this.lat , this.lng);
+		this.geo.getCurrentPosition().then(pos=>{		//map location
+			this.lat = pos.coords.latitude;
+			this.lng = pos.coords.longitude;
+			//let location = new google.maps.LatLng(this.lat , this.lng);
 		}).catch(err => console.log(err));
-		//let location = new google.maps.LatLng(14.6037159,120.9630088);
-		//map options
-		let options = {
-			center:location,
+		let location = new google.maps.LatLng(14.6037159,120.9630088);
+		
+		let options = {			//map options
+			center:location,	
 			zoom:15,
 			mapTypeId: google.maps.MapTypeId.ROADMAP
 		}
-		this.map = new google.maps.Map(this.mapRef.nativeElement,options);
+		this.map = new google.maps.Map(this.mapRef.nativeElement,options);		//MAP INITIALIZATION
+		
+		var users = [
+			['user1', 14.6037159, 120.9630088, 4],
+			['user2', 20.6037159, 120.9630088, 5]
+		];
+
+		//var image = 'assets/imgs/avatar.jpg';
+		let beachMarker = new google.maps.Marker({		//map marker
+			position: {lat: 14.603, lng: 120.963},
+			map: this.map,
+			size: new google.maps.Size(10, 16)
+			//icon: image
+		});
+
+		for (var i = 0; i < users.length; i++) {
+			var user = users[i];
+			var marker = new google.maps.Marker({
+			  position: {lat: user[1], lng: user[2]},
+			  map: this.map,
+			  //icon: image,
+			  title: user[0],
+			  zIndex: user[3]
+			});
+		  }
 	}
-	*/
+	
 	
 
 	onCardInteract(event){
