@@ -1,11 +1,14 @@
 import { Component,EventEmitter, ViewChild, ElementRef  } from '@angular/core';
-import { IonicPage, NavController, NavParams ,ModalController} from 'ionic-angular';
+import { IonicPage, NavController, NavParams ,ModalController, Platform} from 'ionic-angular';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AlertController } from 'ionic-angular';
 import { UserReportPage } from '../user-report/user-report';
 import { UserCheckPage } from '../user-check/user-check';
 import { Geolocation } from '@ionic-native/geolocation';
 import { google } from 'google-maps';
+import { Subscription } from 'rxjs/Subscription';
+import { filter } from 'rxjs/operators'
+import { P } from '@angular/core/src/render3';
 
 declare var google: any;
 
@@ -22,10 +25,16 @@ export class UserGeoPage {
 	map:any;
 	latitude:any;
 	longitude:any;
+	currentMapTrack = null;
+	isTracking = false;
+	trackedRoute = [];
+	previousTracks = [];
+	positionSubscription:Subscription;
+
 
 	@ViewChild('map') mapRef:ElementRef;
 
-	constructor(private sanitizer: DomSanitizer, private alertCtrl: AlertController, private modal: ModalController, private geo:Geolocation) {
+	constructor(private sanitizer: DomSanitizer, private alertCtrl: AlertController, private modal: ModalController, private geo:Geolocation, private plt:Platform) {
 	}
 
 	ionViewDidLoad(){
@@ -47,36 +56,49 @@ export class UserGeoPage {
 			let location = new google.maps.LatLng(pos.coords.latitude , pos.coords.longitude);
 			this.map.setCenter(location);
 			this.map.setZoom(15)
-			let beachMarker = new google.maps.Marker({		//map marker
+			//var image = 'assets/imgs/avatar.jpg';
+			let Marker = new google.maps.Marker({		//map marker
 				position: {lat:pos.coords.latitude, lng:pos.coords.longitude},
 				map: this.map,
 				size: new google.maps.Size(10, 16)
 				//icon: image
 			});
 		}).catch(err => console.log(err));
-		
-		var users = [
-			['user1', 14.6037159, 120.9630088, 2],
-			['user2', 20.6037159, 120.9630088, 1]
-		];
-
-		//var image = 'assets/imgs/avatar.jpg';
-		
-		/*
-		for (var i = 0; i < users.length; i++) {
-			var user = users[i];
-			var marker = new google.maps.Marker({
-				position: {lat: user[1], lng: user[2]},
-				map: this.map,
-				//icon: image,
-            	title: user[0],
-            	zIndex: user[1]
-			});
-		  }
-		*/
 	}
 	
-	
+	startTracking(){
+		this.isTracking = true;
+		this.trackedRoute = [];
+
+		this.positionSubscription = this.geo.watchPosition()
+		.pipe(
+			filter(p => p.coords !== undefined)
+		)
+		.subscribe(data => {
+			setTimeout(() => {
+				this.trackedRoute.push({lat:data.coords.latitude, lng:data.coords.longitude});
+				this.redrawPath(this.trackedRoute);
+			});
+		})
+	}
+
+	redrawPath(path){
+		if(this.currentMapTrack){
+			this.currentMapTrack.setMap(null);
+		}
+
+		if(path.length > 1){
+			this.currentMapTrack = new google.maps.Polyline({
+				path:path,
+				geodesic:true,
+				strokeColor:'#ff00ff',
+				strokeOpacity:1.0,
+				strokeWeight:3
+			});
+
+			this.currentMapTrack.setMap(this.map);
+		}
+	}
 
 	onCardInteract(event){
    		console.log(event);
