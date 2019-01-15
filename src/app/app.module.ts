@@ -32,6 +32,8 @@ import { AdminListPage} from '../pages/admin/admin-list/admin-list';
 import { AdminListPageModule} from '../pages/admin/admin-list/admin-list.module';
 import { AdminSettingPage} from '../pages/admin/admin-setting/admin-setting';
 import { AdminSettingPageModule} from '../pages/admin/admin-setting/admin-setting.module';
+import { UserChatroomPage } from '../pages/user/user-chatroom/user-chatroom';	
+import { UserChatroomPageModule } from '../pages/user/user-chatroom/user-chatroom.module';
 
 //Plugins
 import { AngularFireModule } from 'angularfire2';
@@ -80,7 +82,8 @@ export const firebaseConfig = {
     UserHomePageModule,
     UserChatPageModule,
     UserReportPageModule,
-    UserCheckPageModule
+    UserCheckPageModule,
+	UserChatroomPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
