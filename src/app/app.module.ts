@@ -24,6 +24,8 @@ import { UserCheckPage } from '../pages/user/user-check/user-check';
 import { UserCheckPageModule } from '../pages/user/user-check/user-check.module';
 import { UserChatroomPage } from '../pages/user/user-chatroom/user-chatroom';
 import { UserChatroomPageModule } from '../pages/user/user-chatroom/user-chatroom.module';
+import { UserFormPageModule } from '../pages/user/user-form/user-form.module';
+import { UserFormPage } from '../pages/user/user-form/user-form';
 import { AdminTabsPageModule} from '../pages/admin/admin-tabs/admin-tabs.module';
 import { AdminTabsPage} from '../pages/admin/admin-tabs/admin-tabs';
 import { AdminHomePage} from '../pages/admin/admin-home/admin-home';
@@ -33,7 +35,7 @@ import { AdminListPageModule} from '../pages/admin/admin-list/admin-list.module'
 import { AdminSettingPage} from '../pages/admin/admin-setting/admin-setting';
 import { AdminSettingPageModule} from '../pages/admin/admin-setting/admin-setting.module';
 import { Facebook } from '@ionic-native/facebook';
-import firebase from 'firebase';  
+import firebase from 'firebase'; 
 
 export const firebaseConfig={  
   apiKey: "AIzaSyCjTUixYv189FGdP3hQdztU_HCbtqvjJTU",
@@ -51,7 +53,7 @@ firebase.initializeApp(firebaseConfig)
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp,{tabsPlacement: 'top'}),
+    IonicModule.forRoot(MyApp,{tabsPlacement: 'top',scrollAssist: false, autoFocusAssist: false}),
     SwipeCardsModule,
     LoginPageModule,
     UserProfilePageModule,
@@ -66,7 +68,8 @@ firebase.initializeApp(firebaseConfig)
     UserChatPageModule,
     UserReportPageModule,
     UserCheckPageModule,
-    UserChatroomPageModule
+    UserChatroomPageModule,
+    UserFormPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -82,7 +85,8 @@ firebase.initializeApp(firebaseConfig)
     UserChatPage,
     UserReportPage,
     UserCheckPage,
-    UserCheckPage
+    UserCheckPage,
+    UserFormPage
   ],
   providers: [
     StatusBar,

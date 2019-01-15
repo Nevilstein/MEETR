@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angul
 import { UserProfilePage } from '../user/user-profile/user-profile';
 import { AdminTabsPage } from '../admin/admin-tabs/admin-tabs';
 import {UserTabsPage} from '../user/user-tabs/user-tabs';
+import {UserFormPage} from '../user/user-form/user-form';
 import { AngularFireAuth } from 'angularfire2/auth';
 import {Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import firebase from 'firebase';
@@ -59,6 +60,9 @@ export class LoginPage {
     if(this.count==5){
       this.navCtrl.push(AdminTabsPage);
     }
+  }
+  gotoForm(){
+    this.navCtrl.push(UserFormPage)
   }
 }
 
