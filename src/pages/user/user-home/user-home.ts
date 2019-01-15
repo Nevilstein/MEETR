@@ -52,12 +52,8 @@ export class UserHomePage {
       	this.ready = true;
 		}
 	}
-
 	onCardInteract(event){
    		console.log(event);
-   		if(event.like==true){
-   			console.log("TRUEE");
-   		}
 	}
 	report_user(){
 		const report = this.modal.create(UserReportPage);

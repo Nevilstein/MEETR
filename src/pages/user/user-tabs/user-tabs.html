@@ -1,5 +1,5 @@
 <ion-content padding>
-	<ion-tabs id="tabs" ng-class="{'tabs-item-hide': hideTabs}" selectedIndex="1" >
+	<ion-tabs #userTab selectedIndex="1">
 		<ion-tab [root]="user_tab1root" tabTitle="Profile" tabIcon="person" tabsHideOnSubPages="true"></ion-tab>
 		<ion-tab [root]="user_tab2root" tabTitle="Swipe" tabIcon="logo-octocat" tabsHideOnSubPages="true"></ion-tab>
 		<ion-tab [root]="user_tab3root" tabTitle="Chats" tabIcon="chatbubbles" tabsHideOnSubPages="true"></ion-tab>

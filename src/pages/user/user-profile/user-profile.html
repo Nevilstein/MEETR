@@ -16,19 +16,19 @@
 </ion-header>-->
 
 
-<ion-content padding>
+<ion-content [hidden]="userProvider.loading === true" padding>
 	<ion-grid>
 		<ion-row>
 			<ion-col text-center >
 				<ion-avatar item-start style="margin: auto;">
-	     			<img src="../assets/imgs/avatar.jpg">
+	     			<img src="{{image}}">
 	   			</ion-avatar>
 			</ion-col>
 		</ion-row> 
 		<ion-row style="height: 5px;"></ion-row>
 		<ion-row>
 			<ion-col text-center>
-		    	<h4>Luweth Baltasiono,19</h4>
+		    	<h4>{{name}}, {{age}}</h4>
 		  </ion-col>
 		</ion-row> 
 	</ion-grid>
@@ -38,7 +38,7 @@
 		</ion-card-header>
 
 		<ion-card-content>
-			Add a bio
+			{{bio}}
 		</ion-card-content>
 	</ion-card>
 	<ion-card>
@@ -69,7 +69,4 @@
 			<ion-col col-2></ion-col>
 		</ion-row>
 	</ion-grid>
-	<ion-row style="margin-top:80px">
-		<button ion-button (click)="facebookLogout()">Logout</button>
-	</ion-row>
 </ion-content>
