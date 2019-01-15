@@ -34,20 +34,26 @@ export class UserGeoPage {
 	
 	// JAVASCRIPT GMAPS API----works
 	showMap(){
-		this.geo.getCurrentPosition().then(pos=>{		//map location
-			this.lat = pos.coords.latitude;
-			this.lng = pos.coords.longitude;
-			this.latitude = parseInt(this.lat);
-			this.longitude = parseInt(this.lng);
-		}).catch(err => console.log(err));
-		let location = new google.maps.LatLng(14.6037159,120.9630088);
-		//let location = new google.maps.LatLng(this.latitude , this.longitude);
-		let options = {			//map options
-			center:location,	
-			zoom:15,
-			mapTypeId: google.maps.MapTypeId.ROADMAP
+		let mapOptions = {			//map options
+			zoom:10,
+			mapTypeId:google.maps.MapTypeId.ROADMAP,
+			mapTypeControl:false,
+			streetViewControl:false,
+			fullscreenControl:false
 		}
-		this.map = new google.maps.Map(this.mapRef.nativeElement,options);		//MAP INITIALIZATION
+		this.map = new google.maps.Map(this.mapRef.nativeElement, mapOptions);		//MAP INITIALIZATION
+		
+		this.geo.getCurrentPosition().then(pos=>{		//map location
+			let location = new google.maps.LatLng(pos.coords.latitude , pos.coords.longitude);
+			this.map.setCenter(location);
+			this.map.setZoom(15)
+			let beachMarker = new google.maps.Marker({		//map marker
+				position: {lat:pos.coords.latitude, lng:pos.coords.longitude},
+				map: this.map,
+				size: new google.maps.Size(10, 16)
+				//icon: image
+			});
+		}).catch(err => console.log(err));
 		
 		var users = [
 			['user1', 14.6037159, 120.9630088, 2],
@@ -55,12 +61,7 @@ export class UserGeoPage {
 		];
 
 		//var image = 'assets/imgs/avatar.jpg';
-		let beachMarker = new google.maps.Marker({		//map marker
-			position: {lat: 14.603, lng: 120.963},
-			map: this.map,
-			size: new google.maps.Size(10, 16)
-			//icon: image
-		});
+		
 		/*
 		for (var i = 0; i < users.length; i++) {
 			var user = users[i];
