@@ -7,35 +7,36 @@
 
 
 <ion-content padding>
-	<div class="card-container" *ngIf="ready">
-	    <sc-card padding *ngFor="let attendant of attendants" 
-						[orientation]="cardDirection" 
-						[tinder-card]="cardOverlay" 
-						[callDestroy]="attendant.destroyEvent" 
-						[callLike]="attendant.likeEvent" 
-						(onLike)="onCardInteract($event)">
+	<sc-card padding class="cards" *ngFor="let attendant of attendants" 
+					[orientation]="cardDirection" 
+					[tinder-card]="cardOverlay" 
+					[callDestroy]="attendant.destroyEvent" 
+					[callLike]="attendant.likeEvent" 
+					(onLike)="onCardInteract($event)"
+					[style.background-image]="attendant.asBg">
 
-			<div class="user_img" [style.background-image]="attendant.asBg"></div>
-	    </sc-card>
+	</sc-card>
+	<div id="show"></div>
+	<div>
+		<ion-grid id="grid">
+			<ion-row>
+				<ion-col col-2></ion-col>
+				<ion-col col-4>
+					<ion-fab style="margin-bottom: 10px;">
+						<button ion-fab color="danger" (click)="report_user()">
+							<ion-icon name="warning" style="zoom:2.0;"></ion-icon>
+						</button>
+					</ion-fab>
+				</ion-col>
+				<ion-col col-4>
+					<ion-fab>
+						<button ion-fab color="default" style="margin-left: 40px;" (click)="check_user()">
+							<ion-icon name="person" style="zoom:2.0;"></ion-icon>
+						</button>
+					</ion-fab>
+				</ion-col>
+				<ion-col col-2></ion-col>
+			</ion-row>
+		</ion-grid>
 	</div>
-	<ion-grid id="grid">
-		<ion-row>
-			<ion-col col-2></ion-col>
-			<ion-col col-4>
-				<ion-fab style="margin-bottom: 10px;">
-					<button ion-fab color="danger" (click)="report_user()">
-						<ion-icon name="warning" style="zoom:2.0;"></ion-icon>
-					</button>
-				</ion-fab>
-			</ion-col>
-			<ion-col col-4>
-				<ion-fab>
-					<button ion-fab color="default" style="margin-left: 40px;" (click)="check_user()">
-						<ion-icon name="person" style="zoom:2.0;"></ion-icon>
-					</button>
-				</ion-fab>
-			</ion-col>
-			<ion-col col-2></ion-col>
-		</ion-row>
-	</ion-grid>
 </ion-content>
