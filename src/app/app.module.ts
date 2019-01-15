@@ -22,6 +22,8 @@ import { UserReportPage } from '../pages/user/user-report/user-report';
 import { UserReportPageModule } from '../pages/user/user-report/user-report.module';
 import { UserCheckPage } from '../pages/user/user-check/user-check';
 import { UserCheckPageModule } from '../pages/user/user-check/user-check.module';
+import { UserChatroomPage } from '../pages/user/user-chatroom/user-chatroom';
+import { UserChatroomPageModule } from '../pages/user/user-chatroom/user-chatroom.module';
 import { AdminTabsPageModule} from '../pages/admin/admin-tabs/admin-tabs.module';
 import { AdminTabsPage} from '../pages/admin/admin-tabs/admin-tabs';
 import { AdminHomePage} from '../pages/admin/admin-home/admin-home';
@@ -63,7 +65,8 @@ firebase.initializeApp(firebaseConfig)
     UserHomePageModule,
     UserChatPageModule,
     UserReportPageModule,
-    UserCheckPageModule
+    UserCheckPageModule,
+    UserChatroomPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -78,6 +81,7 @@ firebase.initializeApp(firebaseConfig)
     UserHomePage,
     UserChatPage,
     UserReportPage,
+    UserCheckPage,
     UserCheckPage
   ],
   providers: [
