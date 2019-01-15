@@ -8,4 +8,4 @@ npm install @types/google-maps --save-dev
 Plugins:
 ionic cordova plugin add cordova-plugin-facebook4 --variable APP_ID="382855475853590" --variable APP_NAME="Meetr"
 ionic cordova plugin add cordova-plugin-geolocation --variable GEOLOCATION_USAGE_DESCRIPTION="To locate you"
-$> ionic cordova plugin add cordova-plugin-googlemaps --variable API_KEY_FOR_ANDROID="AIzaSyCuM1MvV4ieX5IkrDXZh1lJ8WY3E1p4HZE" --variable API_KEY_FOR_IOS="AIzaSyBAkFsPQ4RD_JugsDFkAH7zCCHCl-_nipE"
+ionic cordova plugin add cordova-plugin-googlemaps --variable API_KEY_FOR_ANDROID="AIzaSyCuM1MvV4ieX5IkrDXZh1lJ8WY3E1p4HZE" --variable API_KEY_FOR_IOS="AIzaSyBAkFsPQ4RD_JugsDFkAH7zCCHCl-_nipE"

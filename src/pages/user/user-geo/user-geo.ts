@@ -20,6 +20,9 @@ export class UserGeoPage {
 	lat:any;
 	lng:any;
 	map:any;
+	latitude:any;
+	longitude:any;
+
 	@ViewChild('map') mapRef:ElementRef;
 
 	constructor(private sanitizer: DomSanitizer, private alertCtrl: AlertController, private modal: ModalController, private geo:Geolocation) {
@@ -34,10 +37,11 @@ export class UserGeoPage {
 		this.geo.getCurrentPosition().then(pos=>{		//map location
 			this.lat = pos.coords.latitude;
 			this.lng = pos.coords.longitude;
-			//let location = new google.maps.LatLng(this.lat , this.lng);
+			this.latitude = parseInt(this.lat);
+			this.longitude = parseInt(this.lng);
 		}).catch(err => console.log(err));
 		let location = new google.maps.LatLng(14.6037159,120.9630088);
-		
+		//let location = new google.maps.LatLng(this.latitude , this.longitude);
 		let options = {			//map options
 			center:location,	
 			zoom:15,
@@ -57,17 +61,18 @@ export class UserGeoPage {
 			size: new google.maps.Size(10, 16)
 			//icon: image
 		});
-
+		/*
 		for (var i = 0; i < users.length; i++) {
 			var user = users[i];
 			var marker = new google.maps.Marker({
-			  position: {lat: user[1], lng: user[2]},
-			  map: this.map,
-			  //icon: image,
+				position: {lat: user[1], lng: user[2]},
+				map: this.map,
+				//icon: image,
             	title: user[0],
             	zIndex: user[1]
 			});
 		  }
+		*/
 	}
 	
 	
