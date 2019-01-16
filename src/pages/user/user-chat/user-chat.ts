@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import {UserChatroomPage} from '../user-chatroom/user-chatroom';
 
 /**
  * Generated class for the UserChatPage page.
@@ -20,11 +19,7 @@ export class UserChatPage {
   }
 
   ionViewDidLoad() {
-  	
     console.log('ionViewDidLoad UserChatPage');
   }
 
-	user_Chat(){
-		this.navCtrl.push(UserChatroomPage);
-	}	
 }

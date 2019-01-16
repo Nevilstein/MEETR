@@ -1,24 +1,22 @@
 page-user-home {
-	.cards {
-        position: relative;
-        text-align: center;
-        height: 65vh !important;
-        width: 90vw !important;
-        background-size: 160% 100%;
-        background-repeat: no-repeat;
-        background-position: center; 
+	.card-container {
+        height: 90vw;
+        width: 90vw;
+        
     }
-    img {
-        height: 100% !important;
+    .user_img {
+        display: block;
         width: 100%;
-        background-size: cover;
+        height: 100%;
+        background-size: contain;
         background-repeat: no-repeat;
+        background-position: center;
     }
     #buttons{
-        margin-top: 80%;
+        margin-top: 100px;
     }
     #grid{
-        margin-top: 70vh;
+        margin-top: 80px;
     }
 
 }
