@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import {UserChatroomPage} from '../user-chatroom/user-chatroom';
 
 /**
- * Generated class for the UserChatPage page.
+ * Generated class for the UserChatroomPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -11,20 +10,16 @@ import {UserChatroomPage} from '../user-chatroom/user-chatroom';
 
 @IonicPage()
 @Component({
-  selector: 'page-user-chat',
-  templateUrl: 'user-chat.html',
+  selector: 'page-user-chatroom',
+  templateUrl: 'user-chatroom.html',
 })
-export class UserChatPage {
+export class UserChatroomPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
-  	
-    console.log('ionViewDidLoad UserChatPage');
+    console.log('ionViewDidLoad UserChatroomPage');
   }
 
-	user_Chat(){
-		this.navCtrl.push(UserChatroomPage);
-	}	
 }

@@ -15,6 +15,7 @@
 	    <button clear id="back" (click)="goBack()">
 	  		<ion-icon name="md-checkbox-outline" id="back" style="zoom:2.0;, display: inline-block;"></ion-icon>
 	  	</button>
+	  	<button></button>
   	</ion-buttons>
   </ion-navbar>
 
@@ -23,25 +24,38 @@
 
 <ion-content padding>
 	<ion-list>
-		<ion-label>Sample</ion-label>
+		<ion-label>Distance</ion-label>
 		<ion-item>
-		<ion-range [(ngModel)]="singleValue" color="danger" pin="true"></ion-range>
+			<ion-label>{{maxDistance}}</ion-label>
+			<ion-range [(ngModel)]="maxDistance" color="danger" max="150" pin="true"></ion-range>
+		</ion-item>
+
+		<ion-label>Age range</ion-label>
+		<ion-item>
+			<ion-label>{{ageRange.lower}} - {{ageRange.upper}}</ion-label>
+			<ion-range [(ngModel)]="ageRange" dualKnobs="true" min="18" max="50" color="danger" pin="true">
+				<ion-label range-left>18</ion-label>
+      			<ion-label range-right>50+</ion-label>
+			</ion-range>
+		</ion-item>
+
+		<ion-label>Show Me</ion-label>
+
+		<ion-item>
+			<ion-label>Male</ion-label>
+    		<ion-toggle [(ngModel)]="showGender.male" (ionChange)="showMaleChanged($event)"></ion-toggle>
+		</ion-item>
+		<ion-item>
+			<ion-label>Female</ion-label>
+    		<ion-toggle [(ngModel)]="showGender.female" (ionChange)="showFemaleChanged($event)"></ion-toggle>
 		</ion-item>
 
 		<ion-item>
-		<ion-range min="-200" max="200" [(ngModel)]="saturation" color="secondary">
-		  <ion-label range-left>-200</ion-label>
-		  <ion-label range-right>200</ion-label>
-		</ion-range>
-		</ion-item>
-
-		<ion-item>
-		<ion-range min="20" max="80" step="2" [(ngModel)]="brightness">
-		 <ion-icon small range-left name="sunny"></ion-icon>
-		 <ion-icon range-right name="sunny"></ion-icon>
-		</ion-range>
+			<ion-label>Account Visibility</ion-label>
+    		<ion-toggle [(ngModel)]="userVisible"></ion-toggle>
 		</ion-item>
 	</ion-list>
-	<button ion-button color="danger" (click)="logout()">Logout</button>
+	<button ion-button (click)="saveSetting()">Save</button>
+	<button ion-button color="danger" (click)="facebookLogout()">Logout</button>
 	
 </ion-content>
