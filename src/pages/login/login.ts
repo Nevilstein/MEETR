@@ -4,7 +4,8 @@ import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angul
 //Pages
 import { UserProfilePage } from '../user/user-profile/user-profile';
 import { AdminTabsPage } from '../admin/admin-tabs/admin-tabs';
-import { UserTabsPage } from '../user/user-tabs/user-tabs';
+import {UserTabsPage} from '../user/user-tabs/user-tabs';
+import {UserGeoPage} from '../user/user-geo/user-geo';
 
 //Plugins
 import { Observable } from 'rxjs';
@@ -178,10 +179,12 @@ export class LoginPage {
     return promise;
   }
 
+  gotoGeo(){
+    this.navCtrl.push(UserGeoPage);
+  }
   // LoginCheck(){
   //   var
   // }
-
   gotoAdmin(){
     this.navCtrl.push(AdminTabsPage);
   }

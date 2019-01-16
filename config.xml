@@ -88,6 +88,9 @@
         <variable name="APP_NAME" value="Meetr" />
         <variable name="FACEBOOK_ANDROID_SDK_VERSION" value="4.38.1" />
     </plugin>
+    <plugin name="cordova-plugin-geolocation" spec="4.0.1">
+        <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="To locate you" />
+    </plugin>
     <allow-navigation href="http://192.168.1.100:8103" />
     <allow-navigation href="http://192.168.1.100:8107" />
     <allow-navigation href="http://192.168.1.100:8100" />

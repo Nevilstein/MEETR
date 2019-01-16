@@ -24,6 +24,8 @@ import { UserReportPage } from '../pages/user/user-report/user-report';
 import { UserReportPageModule } from '../pages/user/user-report/user-report.module';
 import { UserCheckPage } from '../pages/user/user-check/user-check';
 import { UserCheckPageModule } from '../pages/user/user-check/user-check.module';
+import { UserGeoPage } from '../pages/user/user-geo/user-geo';
+import { UserGeoPageModule } from '../pages/user/user-geo/user-geo.module';
 import { AdminTabsPageModule} from '../pages/admin/admin-tabs/admin-tabs.module';
 import { AdminTabsPage} from '../pages/admin/admin-tabs/admin-tabs';
 import { AdminHomePage} from '../pages/admin/admin-home/admin-home';
@@ -42,8 +44,8 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { SwipeCardsModule } from 'ng2-swipe-cards';
 import { Facebook } from '@ionic-native/facebook';
-
-import firebase from 'firebase';
+import { Geolocation } from '@ionic-native/geolocation';
+import firebase from 'firebase';  
 
 //Provider
 import { UserProvider } from '../providers/user/user';  
@@ -83,7 +85,8 @@ export const firebaseConfig = {
     UserChatPageModule,
     UserReportPageModule,
     UserCheckPageModule,
-	UserChatroomPageModule
+    UserGeoPageModule,
+	  UserChatroomPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -98,12 +101,14 @@ export const firebaseConfig = {
     UserHomePage,
     UserChatPage,
     UserReportPage,
-    UserCheckPage
+    UserCheckPage,
+    UserGeoPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     Facebook,
+    Geolocation,
     AngularFireAuth,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     UserProvider
