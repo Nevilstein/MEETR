@@ -9,7 +9,7 @@ import { google } from 'google-maps';
 import { Subscription } from 'rxjs/Subscription';
 import { filter } from 'rxjs/operators'
 
-declare var google: any;
+declare var google:any;
 
 
 @IonicPage()
