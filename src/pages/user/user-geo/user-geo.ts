@@ -8,7 +8,6 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { google } from 'google-maps';
 import { Subscription } from 'rxjs/Subscription';
 import { filter } from 'rxjs/operators'
-import { P } from '@angular/core/src/render3';
 
 declare var google: any;
 
@@ -60,7 +59,8 @@ export class UserGeoPage {
 			let Marker = new google.maps.Marker({		//map marker
 				position: {lat:pos.coords.latitude, lng:pos.coords.longitude},
 				map: this.map,
-				size: new google.maps.Size(10, 16)
+				size: new google.maps.Size(10, 16),
+				center:location
 				//icon: image
 			});
 		}).catch(err => console.log(err));
