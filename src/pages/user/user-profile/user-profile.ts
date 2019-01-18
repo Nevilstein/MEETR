@@ -1,4 +1,4 @@
-import { Component, ViewChild, NgZone, ElementRef } from '@angular/core';
+import { Component, ViewChild, ViewChildren, NgZone, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 //Pages
@@ -34,15 +34,19 @@ import { UserProvider } from '../../../providers/user/user';
 })
 export class UserProfilePage {
   //Elements
-  // @ViewChild("interestInput") interestInput: TextInput;
+  // @ViewChild("interestInput") interestInput: ElementRef;
+  // @ViewChildren("interestItem") interestItems: ElementRef;
 
-  //Variables
+  //Display variables
   // profile = {};
   name: string;
   age: string;
   image: string;
   bio: string;
   interests = [];
+
+  //Element variables
+  interestInputValue: string = "";
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public fb:Facebook, private fireAuth: AngularFireAuth,
     private db: AngularFireDatabase, private userProvider: UserProvider, private zone: NgZone) {
@@ -117,10 +121,6 @@ export class UserProfilePage {
         this.image = data['photos'][0];
         this.bio = data['bio'];
         this.interests = Object.assign([], data['interests']);
-        // this.profile = data;
-        console.log(data);
-      }).then( () =>{
-        this.userProvider.loading = false;
       });
     })
 
@@ -133,14 +133,11 @@ export class UserProfilePage {
     // })
 
   }
-
-  goBack(){
-    this.navCtrl.push(LoginPage);
-  }
-  user_edit(){
+  
+  goToEdit(){
     this.navCtrl.push(UserEditPage);
   }
-  user_setting(){
+  goToSetting(){
     this.navCtrl.push(UserSettingPage);
   }
 

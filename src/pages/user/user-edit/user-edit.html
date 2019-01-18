@@ -28,7 +28,7 @@
 			Edit Intro
 		</ion-card-header>
 		<ion-card-content>
-			Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+			<ion-textarea [(ngModel)]="bio" (ionChange)="bioChanged()" placeholder="About you"></ion-textarea>
 		</ion-card-content>
 	</ion-card>
 	<ion-card>
@@ -36,8 +36,33 @@
 			Edit Interests
 		</ion-card-header>
 		<ion-card-content>
-			Swimming, Books, Golf
+			<span *ngFor="let interest of interests; let i = index" style="border-radius: 25px; background-color: whitesmoke; margin: 20px 5px; padding: 5px" #interestItem>{{interest}} <ion-icon (click)="deleteInterest(i)" name="ios-close-circle-outline"></ion-icon></span>
+		</ion-card-content>
+		<ion-input type="text" [(ngModel)]="interestInputValue" placeholder="Enter Interest" style="width: 80%;" (keyup.enter)=addInterest(interestInput.value) #interestInput></ion-input>
+		<!-- <button ion-button (click)="addInterest(interestInput.value)">Add</button> -->
+	</ion-card>
+	<ion-card>
+		<ion-card-header>
+			Gender
+		</ion-card-header>
+		<ion-card-content>
+			<ion-list>
+				<ion-item>
+			    	<ion-label>Male</ion-label>
+			    	<ion-checkbox [(ngModel)]="isMale" (ionChange)="chooseMale()"></ion-checkbox>
+			  	</ion-item>
+			</ion-list>
+		</ion-card-content>
+		<ion-card-content>
+			<ion-list>
+				<ion-item>
+			    	<ion-label>Female</ion-label>
+			    	<ion-checkbox [(ngModel)]="isFemale" (ionChange)="chooseFemale()"></ion-checkbox>
+			  	</ion-item>
+			</ion-list>
 		</ion-card-content>
 	</ion-card>
 
+	<!-- Save needed? or Realtime changes -->
+	<!-- <button ion-button (click)="saveProfile()">Save</button>	 -->
 </ion-content>
