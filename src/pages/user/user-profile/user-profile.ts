@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams} from 'ionic-angular';
+import { Component, ViewChild, NgZone, ElementRef } from '@angular/core';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 //Pages
 import { LoginPage } from '../../login/login';
@@ -10,7 +10,7 @@ import { UserSettingPage } from '../user-setting/user-setting';
 //Plugin
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { Observable } from 'rxjs';
+// import { Observable } from 'rxjs';
 import moment from 'moment';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 
@@ -24,13 +24,20 @@ import { UserProvider } from '../../../providers/user/user';
  * Ionic pages and navigation.
  */
 
+// @ViewChild('interestInput') interestInput: ElementRef;
+
+
 @IonicPage()
 @Component({
   selector: 'page-user-profile',
   templateUrl: 'user-profile.html',
 })
 export class UserProfilePage {
-  profile = [];
+  //Elements
+  // @ViewChild("interestInput") interestInput: TextInput;
+
+  //Variables
+  // profile = {};
   name: string;
   age: string;
   image: string;
@@ -38,9 +45,8 @@ export class UserProfilePage {
   interests = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public fb:Facebook, private fireAuth: AngularFireAuth,
-    private db: AngularFireDatabase, private userProvider: UserProvider) {
-      // console.log(this.userProvider.loading);
-      this.loadProfile();
+    private db: AngularFireDatabase, private userProvider: UserProvider, private zone: NgZone) {
+
     // this.db.list('profile', ref => ref.orderByKey().equalTo("dHOyWdIpR6QDbux69irHeeqPxsv1")).snapshotChanges().subscribe( snapshot => {
     //     var something = [];
     //     snapshot.forEach( element => {
@@ -68,7 +74,8 @@ export class UserProfilePage {
     // })
   }
   ionViewDidLoad() {
-    console.log('ionViewDidLoad UserProfilePage');
+    this.loadProfile();
+
     // var id = ;
     // console.log(id);
     // this.fireAuth.authState.subscribe( authRes =>{
@@ -109,8 +116,8 @@ export class UserProfilePage {
         this.age = data['age'];
         this.image = data['photos'][0];
         this.bio = data['bio'];
-        // this.interests = '';
-        // this.profile.push(data); 
+        this.interests = Object.assign([], data['interests']);
+        // this.profile = data;
         console.log(data);
       }).then( () =>{
         this.userProvider.loading = false;
