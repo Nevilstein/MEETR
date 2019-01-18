@@ -1,0 +1,57 @@
+<!--
+  Generated template for the UserFormPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-content padding>
+
+	<ion-slides>
+		<ion-slide>
+			<img style="height: 150px !important;" src="../../assets/imgs/gender1.png">
+			<h3>Are you a</h3>
+			<ion-list>
+			<ion-item>
+				<ion-label>Male</ion-label>
+				<ion-toggle [(ngModel)]="isMale" (ionChange)="toggleMale()"></ion-toggle>
+			</ion-item>
+			<ion-item>
+				<ion-label>Female</ion-label>
+				<ion-toggle color="danger" [(ngModel)]="isFemale" (ionChange)="toggleFemale()"></ion-toggle>
+			</ion-item>
+			
+		</ion-list>
+
+		</ion-slide>
+		<ion-slide>
+			<!-- Change to Multi-value input -->
+			<img style="height: 150px !important;" src="../../assets/imgs/cloud.png">
+			<h3>Give us atleast 3 interests to work with</h3>
+			<ion-list>
+				<ion-item>
+				<ion-label floating>1st interest</ion-label>
+				<ion-input type="text" [(ngModel)]="interest1"></ion-input>
+				</ion-item>
+
+				<ion-item>
+				<ion-label floating>2nd interest</ion-label>
+				<ion-input type="text" [(ngModel)]="interest2"></ion-input>
+				</ion-item>
+
+				<ion-item>
+				<ion-label floating>3rd interest</ion-label>
+				<ion-input type="text" [(ngModel)]="interest3"></ion-input>
+				</ion-item>
+			</ion-list>
+		</ion-slide>
+	</ion-slides>
+	<ion-fab right bottom [hidden]="slides.isEnd()">
+    	<button ion-fab color="secondary" [disabled]="!next" (click)="gotoNext()"><ion-icon name="arrow-dropright"></ion-icon></button>
+  	</ion-fab>
+  	<ion-fab left bottom [hidden]="slides.isBeginning()">
+    	<button ion-fab color="danger" [disabled]="!back" (click)="goPrev()"><ion-icon name="arrow-dropleft"></ion-icon></button>
+  	</ion-fab>
+  	<ion-fab right bottom [hidden]="!slides.isEnd()">
+    	<button ion-fab color="secondary" [disabled]="!next" (click)="formFinished()">Finish</button>
+  	</ion-fab>
+</ion-content>

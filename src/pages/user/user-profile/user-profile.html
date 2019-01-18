@@ -16,7 +16,8 @@
 </ion-header>-->
 
 
-<ion-content [hidden]="userProvider.loading === true" padding>
+<!-- <ion-content [hidden]="userProvider.loading === true" padding> -->
+<ion-content padding>
 	<ion-grid>
 		<ion-row>
 			<ion-col text-center >
@@ -46,7 +47,7 @@
 			Interests
 		</ion-card-header>
 		<ion-card-content>
-			Add an interest
+			<span *ngFor="let interest of interests" style="border-radius: 25px; background-color: whitesmoke; margin: 5px; padding: 5px">{{interest}}</span>
 		</ion-card-content>
 	</ion-card>
 	<ion-grid>
