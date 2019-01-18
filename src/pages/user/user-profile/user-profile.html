@@ -47,7 +47,7 @@
 			Interests
 		</ion-card-header>
 		<ion-card-content>
-			<span *ngFor="let interest of interests" style="border-radius: 25px; background-color: whitesmoke; margin: 5px; padding: 5px">{{interest}}</span>
+			<span *ngFor="let interest of interests" style="margin:10px">{{interest}}</span>
 		</ion-card-content>
 	</ion-card>
 	<ion-grid>
@@ -55,14 +55,14 @@
 			<ion-col col-2></ion-col>
 			<ion-col col-4>
 				<ion-fab style="margin-bottom: 10px;">
-					<button ion-fab color="secondary" (click)="user_edit()">
+					<button ion-fab color="secondary" (click)="goToEdit()">
 						<ion-icon name="create" id="edit" style="zoom:2.0;"></ion-icon>
 					</button>
 				</ion-fab>
 			</ion-col>
 			<ion-col col-4>
 				<ion-fab>
-					<button ion-fab color="default" style="margin-left: 40px;" (click)="user_setting()">
+					<button ion-fab color="default" style="margin-left: 40px;" (click)="goToSetting()">
 						<ion-icon name="construct" id="settings" style="zoom:2.0;"></ion-icon>
 					</button>
 				</ion-fab>
