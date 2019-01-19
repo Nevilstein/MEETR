@@ -24,6 +24,28 @@
 <ion-content padding>
 	<!-- UPLOAD PHOTO HERE -->
 	<ion-card>
+
+		<ion-card-content>
+			<!-- Loaded Images -->
+			<div *ngFor="let image of profileImages; let i = index" style="height: 200px; width:150px; margin:20px">
+				<img height="200" width="150" src="{{image}}">
+				<span><ion-icon (click)="deletePhoto(i, image)" name="close-circle"></ion-icon></span>
+			</div>
+			
+			<!-- Empty Images -->
+			<div *ngFor="let image of emptyImageCounter(profileImages.length); let i = index" (click)="uploadPhoto()">
+				<div style="background-color: whitesmoke; height: 200px; width: 150px; margin:20px">
+					<!-- Uploading animation here instead of <p>-->
+					<div *ngIf="isUploading && i===0">
+						<p>Loading...</p>
+					</div>
+					<span [hidden]="isUploading" (click)="uploadPhoto()"><ion-icon name="add-circle"></ion-icon></span>
+				</div>
+			</div>
+		</ion-card-content>	
+		
+	</ion-card>
+	<ion-card>
 		<ion-card-header>
 			Edit Intro
 		</ion-card-header>

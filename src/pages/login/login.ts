@@ -63,7 +63,8 @@ export class LoginPage {
         if(fireRes!=null && fbRes.status === 'connected'){
           // console.log(fireRes.uid);
           // alert("Logged in successfully.");
-          this.getFacebookData(fbRes.authResponse.userID).then( fbData => {
+          console.log(fbRes);
+          this.getFacebookData(fbRes.authResponse.userID, fbRes.authResponse.accessToken).then( fbData => {
             this.db.database.ref('profile').child(fireRes.uid).once('value', snapshot =>{
               var maxAge = 50;
               var ageLower = fbData['age'], ageUpper = fbData['age']+5;
@@ -73,6 +74,7 @@ export class LoginPage {
                   ageLower = 45;
                   ageUpper = 50;
                 }
+
 
                 var profile = {
                   name: fireRes.displayName,
@@ -88,6 +90,7 @@ export class LoginPage {
                   dateCreated: firebase.database.ServerValue.TIMESTAMP,
                   lastLogin: firebase.database.ServerValue.TIMESTAMP,
                   status: 'active',
+                  // friendCount: fbData['friend_count'],
                   isLoggedIn: true
                 }
                 this.zone.run(() => {    //if snapshot doesn't exist redirect to wizard form
@@ -118,7 +121,7 @@ export class LoginPage {
   }
 
   facebookLogin(){
-    this.fb.login(['public_profile', 'user_photos', 'email', 'user_birthday'])
+    this.fb.login(['public_profile', 'user_photos', 'email', 'user_birthday', 'user_friends'])
       .then( (res: FacebookLoginResponse) => {
         if(res.status === "connected"){
           this.firebaseLogin(res);  
@@ -139,11 +142,14 @@ export class LoginPage {
     });
   }
 
-  getFacebookData(userid) {
+  getFacebookData(userid, fbToken) {
     var promise = new Promise((resolve, reject) => {
-      this.fb.api("/"+userid+"/?fields=id,email,picture,birthday,age_range",["public_profile"])
+      this.fb.api("/"+userid+"/?fields=id,email,picture.type(large),birthday,age_range,friends",["public_profile"])
         .then(res => {
+          // 'https://graph.facebook.com/'+userid+'?fields=id&access_token='+fbToken;
+          res['friend_count'] = res.friends.summary.total_count;
           res['age'] = moment().diff(moment(res.birthday, "MM/DD/YYYY"), 'years');
+          console.log(res);
           resolve(res);
         })
         .catch(error => {
