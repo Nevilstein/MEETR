@@ -7,6 +7,9 @@ import { UserProfilePage } from '../user-profile/user-profile';
 //Plugin
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireStorage, AngularFireUploadTask } from 'angularfire2/storage';
+// import { storage } from 'firebase';
+import { Camera, CameraOptions } from '@ionic-native/camera';
 
 //Providers
 import { UserProvider } from '../../../providers/user/user';
@@ -25,13 +28,19 @@ import { UserProvider } from '../../../providers/user/user';
 export class UserEditPage {
   //Display variables
   interests = [];
+  profileImages = [];
   bio: string = "";
   isMale: boolean;
   isFemale: boolean;
+  image:string;
+
   //Element variables
   interestInputValue: string = "";
+  isUploading: boolean = false;
+  uploadTask: AngularFireUploadTask;
+
   constructor(public navCtrl: NavController, public navParams: NavParams, private fireAuth: AngularFireAuth, 
-    private db: AngularFireDatabase, private userProvider: UserProvider) {
+    private db: AngularFireDatabase, private userProvider: UserProvider, private camera: Camera, private storage: AngularFireStorage) {
   }
 
   ionViewDidLoad() {
@@ -49,6 +58,7 @@ export class UserEditPage {
       this.interests = Object.assign([], data['interests']);
       this.isMale = data['gender'].male;
       this.isFemale = data['gender'].female;
+      this.profileImages = Object.assign([], data['photos']);
     });
   }
   addInterest(interest){
@@ -58,9 +68,9 @@ export class UserEditPage {
     this.interestInputValue = null;
     this.dbUpdateProfile();
   }
-  deleteInterest(interestNumber){
+  deleteInterest(interestIndex){
     if(this.interests.length > 1){
-      this.interests.splice(interestNumber, 1);
+      this.interests.splice(interestIndex, 1);
       this.dbUpdateProfile();
     }
   }
@@ -71,7 +81,8 @@ export class UserEditPage {
       gender: {
          male: this.isMale,
          female: this.isFemale
-      }
+      },
+      photos: this.profileImages
     });
   }
   bioChanged(){
@@ -84,5 +95,53 @@ export class UserEditPage {
   chooseFemale(){
     this.isMale = !this.isFemale;
     this.dbUpdateProfile();
+  }
+
+  uploadPhoto(){
+    const options: CameraOptions = {
+      quality: 100,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      // encodingType: this.camera.EncodingType.JPEG,
+      // mediaType: this.camera.MediaType.PICTURE
+      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+      allowEdit: true,
+      targetHeight: 300,
+      targetWidth: 300
+    }
+
+    this.camera.getPicture(options).then((imageData) => {
+      // imageData is either a base64 encoded string or a file URI
+      // If it's base64 (DATA_URL):
+      const filePath = `imageProfile/meetr-image_${ new Date().getTime() }.jpg`;
+      const fileRef = this.storage.ref(filePath);
+      const image = 'data:image/jpg;base64,' + imageData;
+
+      this.uploadTask = fileRef.putString(image, 'data_url');  //Send image to firebase storage
+      this.uploadTask.then( () =>{    //get URL of image stored in firebase storage
+        fileRef.getDownloadURL().subscribe(url => {
+          this.profileImages.push(url);
+          this.dbUpdateProfile();
+        });
+      })
+      this.uploadTask.percentageChanges().subscribe(value => {
+        const maxLoad = 100;
+        this.isUploading = maxLoad === value ? false: true;
+      })  //loading for upload
+    }, (error) => {
+      console.log("Upload Error: ", error);
+    });
+  }
+
+  deletePhoto(photoIndex, imageURL){
+    if(this.profileImages.length > 1){
+      this.profileImages.splice(photoIndex, 1);
+      this.storage.storage.refFromURL(imageURL).delete();  //remove from firebase storage by URL
+      this.dbUpdateProfile();
+    }
+  }
+
+  emptyImageCounter(numImages){
+    let maxImages = 6;
+    return new Array((maxImages-numImages));
   }
 }

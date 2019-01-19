@@ -26,6 +26,8 @@ import { UserCheckPage } from '../pages/user/user-check/user-check';
 import { UserCheckPageModule } from '../pages/user/user-check/user-check.module';
 import { UserGeoPage } from '../pages/user/user-geo/user-geo';
 import { UserGeoPageModule } from '../pages/user/user-geo/user-geo.module';
+import { UserFormPage } from '../pages/user/user-form/user-form';
+import { UserFormPageModule } from '../pages/user/user-form/user-form.module';
 import { AdminTabsPageModule} from '../pages/admin/admin-tabs/admin-tabs.module';
 import { AdminTabsPage} from '../pages/admin/admin-tabs/admin-tabs';
 import { AdminHomePage} from '../pages/admin/admin-home/admin-home';
@@ -40,10 +42,11 @@ import { UserChatroomPageModule } from '../pages/user/user-chatroom/user-chatroo
 //Plugins
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
-import { AngularFireAuthModule } from 'angularfire2/auth';
-import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireAuth, AngularFireAuthModule } from 'angularfire2/auth';
+import { AngularFireStorageModule } from 'angularfire2/storage';
 import { SwipeCardsModule } from 'ng2-swipe-cards';
 import { Facebook } from '@ionic-native/facebook';
+import { Camera } from '@ionic-native/camera';
 import { Geolocation } from '@ionic-native/geolocation';
 import firebase from 'firebase';  
 
@@ -72,6 +75,7 @@ export const firebaseConfig = {
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireAuthModule,
     AngularFireDatabaseModule,
+    AngularFireStorageModule,
     LoginPageModule,
     UserProfilePageModule,
     UserEditPageModule,
@@ -86,7 +90,8 @@ export const firebaseConfig = {
     UserReportPageModule,
     UserCheckPageModule,
     UserGeoPageModule,
-	  UserChatroomPageModule
+    UserFormPageModule,
+	UserChatroomPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -102,6 +107,7 @@ export const firebaseConfig = {
     UserChatPage,
     UserReportPage,
     UserCheckPage,
+    UserFormPage,
     UserGeoPage
   ],
   providers: [
@@ -110,6 +116,7 @@ export const firebaseConfig = {
     Facebook,
     Geolocation,
     AngularFireAuth,
+    Camera,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     UserProvider
   ]
