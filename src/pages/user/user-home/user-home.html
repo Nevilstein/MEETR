@@ -6,16 +6,26 @@
 -->
 
 
-<ion-content padding>
-	<sc-card padding class="cards" *ngFor="let attendant of attendants" 
-					[orientation]="cardDirection" 
-					[tinder-card]="cardOverlay" 
-					[callDestroy]="attendant.destroyEvent" 
-					[callLike]="attendant.likeEvent" 
-					(onLike)="onCardInteract($event)"
-					[style.background-image]="attendant.asBg">
+<ion-content class="home_content" padding>
+	<div class="card-container" *ngIf="ready">
+		<sc-card padding *ngFor="let attendant of attendants" 
+						[orientation]="cardDirection" 
+						[tinder-card]="cardOverlay" 
+						[callDestroy]="attendant.destroyEvent" 
+						[callLike]="attendant.likeEvent" 
+						(onLike)="onCardInteract($event)">
 
-	</sc-card>
+			<div class="user_img" [style.background-image]="attendant.asBg"></div>
+			<ion-card class="info">
+				<ion-card-header>
+					<h2 style="font-weight: bold;" text-center>NAME HERE</h2>
+				</ion-card-header>
+				<ion-card-content>
+					<h3>CONTENT HERE</h3>
+				</ion-card-content>
+			</ion-card>
+        </sc-card>
+    </div>
 	<div id="show"></div>
 	<div>
 		<ion-grid id="grid">

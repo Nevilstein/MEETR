@@ -38,10 +38,11 @@ $colors: (
   secondary:  #32db64,
   danger:     #f53d3d,
   light:      #f4f4f4,
-  dark:       #222
+  dark:       #222,
+  meetr:	  #566677
 );
 
-
+$toolbar-md-title-text-color: map-get($colors, light);
 // App iOS Variables
 // --------------------------------------------------
 // iOS only Sass variables can go here

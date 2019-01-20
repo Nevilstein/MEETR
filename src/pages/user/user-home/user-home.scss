@@ -1,4 +1,24 @@
 page-user-home {
+    .home_content{
+        background-color: #1a2128;
+    }
+    .card-container {
+        height: 90vw;
+        width: 90vw;
+    }
+    .user_img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+    .info{
+        height: 70px;
+        width: 90vw;
+        margin-left: -17px;
+    }
 	.cards {
         position: relative;
         text-align: center;
@@ -14,11 +34,8 @@ page-user-home {
         background-size: cover;
         background-repeat: no-repeat;
     }
-    #buttons{
-        margin-top: 80%;
-    }
     #grid{
-        margin-top: 70vh;
+        margin-top: 50%;
     }
 
 }
