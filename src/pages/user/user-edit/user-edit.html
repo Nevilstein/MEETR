@@ -33,13 +33,14 @@
 			</div>
 			
 			<!-- Empty Images -->
-			<div class="other_image" *ngFor="let image of emptyImageCounter(profileImages.length); let i = index" (click)="uploadPhoto()">
+			<div class="other_image" *ngFor="let image of emptyImageCounter(profileImages.length); let i = index">
 				<div id="images">
 					<!-- Uploading animation here instead of <p>-->
-					<div *ngIf="isUploading && i===0">
+					<div [hidden]="!(isUploading && i===0)">
 						<p>Loading...</p>
+						<!-- <img src="{{currentImage}}"> -->
 					</div>
-					<ion-icon name="add-circle" [hidden]="isUploading" (click)="uploadPhoto()"></ion-icon>
+					<span [hidden]="isUploading && i===0" (click)="uploadPhoto()"><ion-icon name="add-circle"></ion-icon></span>
 				</div>
 			</div>
 		</ion-card-content>	
