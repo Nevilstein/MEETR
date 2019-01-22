@@ -123,6 +123,7 @@ export class UserProfilePage {
         this.interests = Object.assign([], data['interests']);
       });
     })
+    this.userProvider.getUserProfile().snapshotChanges()
 
     // this.userProvider.getUserProfile().on('value', snapshot => {  //Classic Firebase
     //   console.log(snapshot);
@@ -141,4 +142,7 @@ export class UserProfilePage {
     this.navCtrl.push(UserSettingPage);
   }
 
+  swipe(event){
+    console.log(event.direction);
+  }
 }

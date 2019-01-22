@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { HttpClientModule } from '@angular/common/http'; 
 
+//Components
 import { MyApp } from './app.component';
 
 //Pages
@@ -48,6 +49,7 @@ import { SwipeCardsModule } from 'ng2-swipe-cards';
 import { Facebook } from '@ionic-native/facebook';
 import { Camera } from '@ionic-native/camera';
 import { Geolocation } from '@ionic-native/geolocation';
+// import { GoogleMap } from '@ionic-native/google-maps';
 import firebase from 'firebase';  
 
 //Provider
@@ -65,11 +67,11 @@ export const firebaseConfig = {
 
 @NgModule({
   declarations: [
-    MyApp
+    MyApp,
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp,{tabsPlacement: 'top'}),
+    IonicModule.forRoot(MyApp),
     HttpClientModule,
     SwipeCardsModule,
     AngularFireModule.initializeApp(firebaseConfig),

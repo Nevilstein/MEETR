@@ -27,22 +27,12 @@
 			<!-- Change to Multi-value input -->
 			<img style="height: 150px !important;" src="../../assets/imgs/cloud.png">
 			<h3>Give us atleast 3 interests to work with</h3>
-			<ion-list>
-				<ion-item>
-				<ion-label floating>1st interest</ion-label>
-				<ion-input type="text" [(ngModel)]="interest1"></ion-input>
-				</ion-item>
-
-				<ion-item>
-				<ion-label floating>2nd interest</ion-label>
-				<ion-input type="text" [(ngModel)]="interest2"></ion-input>
-				</ion-item>
-
-				<ion-item>
-				<ion-label floating>3rd interest</ion-label>
-				<ion-input type="text" [(ngModel)]="interest3"></ion-input>
-				</ion-item>
-			</ion-list>
+			<ion-card>
+				<ion-card-content>
+					<span *ngFor="let interest of interests; let i = index" style="border-radius: 25px; background-color: whitesmoke; margin: 20px 5px; padding: 5px" #interestItem>{{interest}} <ion-icon (click)="deleteInterest(i)" name="ios-close-circle-outline"></ion-icon></span>
+				</ion-card-content>
+				<ion-input type="text" [(ngModel)]="interestInputValue" placeholder="Enter Interest" style="width: 80%;" (keyup.enter)=addInterest(interestInput.value) #interestInput></ion-input>
+			</ion-card>
 		</ion-slide>
 	</ion-slides>
 	<ion-fab right bottom [hidden]="slides.isEnd()">

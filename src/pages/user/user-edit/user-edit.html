@@ -13,7 +13,7 @@
     <ion-title style="display:inline-block">Edit</ion-title>
     <ion-buttons end>
 	    <button clear id="back" (click)="goBack()">
-	  		<ion-icon name="md-checkbox-outline" id="back" style="zoom:2.0; display: inline-block;"></ion-icon>
+	  		<ion-icon name="md-checkbox-outline" id="back" style="zoom:2.0; display: inline-block; color:white;"></ion-icon>
 	  	</button>
   	</ion-buttons>
   </ion-navbar>
@@ -21,25 +21,26 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content class="edit_content" padding>
 	<!-- UPLOAD PHOTO HERE -->
 	<ion-card>
 
 		<ion-card-content>
 			<!-- Loaded Images -->
-			<div *ngFor="let image of profileImages; let i = index" style="height: 200px; width:150px; margin:20px">
-				<img height="200" width="150" src="{{image}}">
-				<span><ion-icon (click)="deletePhoto(i, image)" name="close-circle"></ion-icon></span>
+			<div class="default_image" *ngFor="let image of profileImages; let i = index" >
+				<img src="{{image}}">
+				<ion-icon (click)="deletePhoto(i, image)" name="close-circle" ></ion-icon>
 			</div>
 			
 			<!-- Empty Images -->
-			<div *ngFor="let image of emptyImageCounter(profileImages.length); let i = index" (click)="uploadPhoto()">
-				<div style="background-color: whitesmoke; height: 200px; width: 150px; margin:20px">
+			<div class="other_image" *ngFor="let image of emptyImageCounter(profileImages.length); let i = index">
+				<div id="images">
 					<!-- Uploading animation here instead of <p>-->
-					<div *ngIf="isUploading && i===0">
+					<div [hidden]="!(isUploading && i===0)">
 						<p>Loading...</p>
+						<!-- <img src="{{currentImage}}"> -->
 					</div>
-					<span [hidden]="isUploading" (click)="uploadPhoto()"><ion-icon name="add-circle"></ion-icon></span>
+					<span [hidden]="isUploading && i===0" (click)="uploadPhoto()"><ion-icon name="add-circle"></ion-icon></span>
 				</div>
 			</div>
 		</ion-card-content>	

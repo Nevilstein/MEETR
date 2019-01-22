@@ -11,25 +11,37 @@ import { UserCheckPage } from '../user-check/user-check';
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
  */
-
 @IonicPage()
 @Component({
   selector: 'page-user-home',
   templateUrl: 'user-home.html',
 })
 export class UserHomePage {
+
+	// constructor(public navCtrl: NavController) {
+		
+	// }
+
+
+	//OLD VERSION STARTS HERE
+
 	ready = false;
 	attendants = [];
 	cardDirection = "xy";
+	cardNumber: number = 0;
 	cardOverlay: any = {
 	  like: {
 	      backgroundColor: '#28e93b'
 	  },
 	  dislike: {
 	      backgroundColor: '#e92828'
+	  },
+	  superlike:{
+	  	backgroundColor: '#0080FF'
 	  }
 	};
 
+	// images = [];
 	images=["../assets/imgs/luwelle.jpg",
 	"../assets/imgs/seth.jpg",
 	"../assets/imgs/harvey.jpg",
@@ -44,7 +56,7 @@ export class UserHomePage {
 	constructor(private sanitizer: DomSanitizer, private alertCtrl: AlertController, private modal: ModalController) {
 		for (let i = 0; i < this.images.length; i++) {
           this.attendants.push({
-              id: i + 1,
+              // id: i + 1,
               likeEvent: new EventEmitter(),
               destroyEvent: new EventEmitter(),
               asBg: sanitizer.bypassSecurityTrustStyle('url('+this.images[i]+')')
@@ -55,9 +67,16 @@ export class UserHomePage {
 
 	onCardInteract(event){
    		console.log(event);
-   		if(event.like==true){
-   			console.log("TRUEE");
-   		}
+   		var i = this.getRandomInt(0, this.images.length);
+   		this.attendants.splice(1, 1);
+   		this.attendants.push({
+		  // id: i + 1,
+		  likeEvent: new EventEmitter(),
+		  destroyEvent: new EventEmitter(),
+		  asBg: this.sanitizer.bypassSecurityTrustStyle('url('+this.images[i]+')')
+		});
+		this.cardNumber++;
+		console.log(this.cardNumber);
 	}
 	report_user(){
 		const report = this.modal.create(UserReportPage);
@@ -67,4 +86,12 @@ export class UserHomePage {
 		const check = this.modal.create(UserCheckPage);
 		check.present();
 	}	
+	swipeEvent(event){
+		console.log(event);
+	}
+	getRandomInt(min, max) {	//sample to keep cards going
+	    min = Math.ceil(min);
+	    max = Math.floor(max);
+	    return Math.floor(Math.random() * (max - min)) + min;
+	}
 }

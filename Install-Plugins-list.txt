@@ -6,7 +6,9 @@ npm install ng2-swipe-cards --save
 npm install --save @ionic-native/geolocation
 npm install @types/google-maps --save-dev
 npm install --save @ionic-native/camera
-Npm install rxjs@^6.0 rxjs-compat --save
+npm install rxjs@^6.0 rxjs-compat --save
+npm install geolib --save
+
 Plugins:
 ionic cordova plugin add cordova-plugin-facebook4 --variable APP_ID="382855475853590" --variable APP_NAME="Meetr"
 ionic cordova plugin add cordova-plugin-geolocation --variable GEOLOCATION_USAGE_DESCRIPTION="To locate you"

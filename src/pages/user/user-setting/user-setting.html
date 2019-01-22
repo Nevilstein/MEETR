@@ -13,7 +13,7 @@
     <ion-title style="display:inline-block">Setting</ion-title>
     <ion-buttons end>
 	    <button clear id="back" (click)="goBack()">
-	  		<ion-icon name="md-checkbox-outline" id="back" style="zoom:2.0;, display: inline-block;"></ion-icon>
+	  		<ion-icon name="md-checkbox-outline" style="zoom:2.0;, display: inline-block; color:white;"></ion-icon>
 	  	</button>
 	  	<button></button>
   	</ion-buttons>
@@ -22,15 +22,15 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content class="setting_content" padding>
 	<ion-list>
-		<ion-label>Distance</ion-label>
+		<ion-label class="labels">Distance</ion-label>
 		<ion-item>
 			<ion-label>{{maxDistance}}</ion-label>
 			<ion-range [(ngModel)]="maxDistance" color="danger" max="150" pin="true"></ion-range>
 		</ion-item>
 
-		<ion-label>Age range</ion-label>
+		<ion-label class="labels">Age range</ion-label>
 		<ion-item>
 			<ion-label>{{ageRange.lower}} - {{ageRange.upper}}</ion-label>
 			<ion-range [(ngModel)]="ageRange" dualKnobs="true" min="18" max="50" color="danger" pin="true">
@@ -39,7 +39,7 @@
 			</ion-range>
 		</ion-item>
 
-		<ion-label>Show Me</ion-label>
+		<ion-label class="labels">Show Me</ion-label>
 
 		<ion-item>
 			<ion-label>Male</ion-label>

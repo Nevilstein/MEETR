@@ -147,7 +147,7 @@ export class LoginPage {
       this.fb.api("/"+userid+"/?fields=id,email,picture.type(large),birthday,age_range,friends",["public_profile"])
         .then(res => {
           // 'https://graph.facebook.com/'+userid+'?fields=id&access_token='+fbToken;
-          res['friend_count'] = res.friends.summary.total_count;
+          // res['friend_count'] = res.friends.summary.total_count;
           res['age'] = moment().diff(moment(res.birthday, "MM/DD/YYYY"), 'years');
           console.log(res);
           resolve(res);

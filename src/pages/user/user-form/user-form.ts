@@ -30,9 +30,8 @@ export class UserFormPage {
   back: boolean = false;
   isMale: boolean = true;
   isFemale: boolean = false;
-  interest1: string;
-  interest2: string;
-  interest3: string;
+  interests = [];
+  interestInputValue;
 
   @ViewChild(Slides) slides: Slides;
   constructor(public navCtrl: NavController, public navParams: NavParams, public db: AngularFireDatabase, 
@@ -48,7 +47,7 @@ export class UserFormPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad UserFormPage');
-    this.slides.lockSwipes(true);
+    // this.slides.lockSwipes(true);
   }
   toggleFemale() {
     this.isMale = !this.isFemale;
@@ -76,10 +75,7 @@ export class UserFormPage {
         male: this.isMale,
         female: this.isFemale
       },
-      interests:[
-      this.interest1,
-      this.interest2,
-      this.interest3],
+      interests: this.interests,
       showGender:{
         male: !this.isMale,
         female: !this.isFemale
@@ -93,6 +89,18 @@ export class UserFormPage {
     });
   }
 
+  addInterest(interest){
+    // console.log(this.interestInput._value);
+    // this.interestInput.clearTextInput();
+    this.interests.push(interest);
+    this.interestInputValue = null;
+  }
+  deleteInterest(interestNumber){
+    this.interests.splice(interestNumber, 1);
+  }
+  clearInterest(){
+    this.interests = [];
+  } 
   // slideMoved(slideIndex){
   //   switch(slideIndex) {
   //     case 0 :{  //Gender
