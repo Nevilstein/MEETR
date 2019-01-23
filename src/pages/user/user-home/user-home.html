@@ -7,17 +7,21 @@
 
 
 <ion-content class="home_content" padding>
-	<div class="card-container" *ngIf="ready">
-		<sc-card padding *ngFor="let attendant of attendants" 
+	<div class="card-container" *ngIf="!isReady" style="background-color: whitesmoke">
+		LOADING...
+	</div>
+	<div class="card-container" *ngIf="isReady">
+		<sc-card padding *ngFor="let card of stackedUsers; let i = index"
+						[class.back-cards]="i!==0"
 						[orientation]="cardDirection" 
 						[tinder-card]="cardOverlay" 
-						[callDestroy]="attendant.destroyEvent" 
-						[callLike]="attendant.likeEvent" 
+						[callDestroy]="card.destroyEvent" 
+						[callLike]="card.likeEvent" 
 						(onLike)="onCardInteract($event)">
 
-			<div class="user_img" [style.background-image]="attendant.asBg"></div>
+			<div class="user_img" [style.background-image]="card.asBg"></div>
 			<ion-card class="info" style="padding-top: 5px;">
-				<h2 style="font-weight: bold;" text-center>Luwelle Baltazar, 19</h2>
+				<h2 style="font-weight: bold;" text-center>{{card.name}}, 19</h2>
 				<ion-item>
 					<ion-icon name="logo-facebook" style="color: #3b5998;" item-start></ion-icon>
 						Friends

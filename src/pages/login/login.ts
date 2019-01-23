@@ -79,6 +79,7 @@ export class LoginPage {
                 var profile = {
                   name: fireRes.displayName,
                     // locations: '',  //for adding location feature?
+                  birthday: fbData['birthday'],
                   maxDistance: 80,
                   ageRange: {min: ageLower, max: ageUpper},
                   isVisible: true,
