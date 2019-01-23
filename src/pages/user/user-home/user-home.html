@@ -6,19 +6,32 @@
 -->
 
 
-<ion-content padding>
-	<sc-card padding class="cards" *ngFor="let attendant of attendants" 
-					[orientation]="cardDirection" 
-					[tinder-card]="cardOverlay" 
-					[callDestroy]="attendant.destroyEvent" 
-					[callLike]="attendant.likeEvent" 
-					(onLike)="onCardInteract($event)"
-					[style.background-image]="attendant.asBg">
+<ion-content class="home_content" padding>
+	<div class="card-container" *ngIf="ready">
+		<sc-card padding *ngFor="let attendant of attendants" 
+						[orientation]="cardDirection" 
+						[tinder-card]="cardOverlay" 
+						[callDestroy]="attendant.destroyEvent" 
+						[callLike]="attendant.likeEvent" 
+						(onLike)="onCardInteract($event)">
 
-	</sc-card>
+			<div class="user_img" [style.background-image]="attendant.asBg"></div>
+			<ion-card class="info" style="padding-top: 5px;">
+				<h2 style="font-weight: bold;" text-center>Luwelle Baltazar, 19</h2>
+				<ion-item>
+					<ion-icon name="logo-facebook" style="color: #3b5998;" item-start></ion-icon>
+						Friends
+					<ion-badge item-end>5,000</ion-badge>
+				</ion-item>
+			</ion-card>
+        </sc-card>
+    </div>
 	<div id="show"></div>
 	<div>
 		<ion-grid id="grid">
+			<ion-row>
+				<ion-col><button ion-button (click)="match_overlay()">Show match overlay</button></ion-col>
+			</ion-row>
 			<ion-row>
 				<ion-col col-2></ion-col>
 				<ion-col col-4>

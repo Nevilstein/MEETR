@@ -3,4 +3,26 @@ page-user-form {
 		height: 100px;
 		width: auto;
 	}
+	.form_content{
+		background-color: #1a2128;
+	}
+	.form_text{
+		color: white;
+	}
+	.interest{
+		border-radius: 30px; 
+		background-color: #ef8dd7; 
+		margin: 5px 5px;
+		padding: 5px;
+		display: inline-flex;
+	}
+	.icon{
+		color: white;
+		font-size: 20px;
+		margin-left: 5px;
+
+	}
+	.scroll-content {
+    padding-bottom: 0 !important;
+	}
 }

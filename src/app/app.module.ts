@@ -38,6 +38,8 @@ import { AdminSettingPage} from '../pages/admin/admin-setting/admin-setting';
 import { AdminSettingPageModule} from '../pages/admin/admin-setting/admin-setting.module';
 import { UserChatroomPage } from '../pages/user/user-chatroom/user-chatroom';	
 import { UserChatroomPageModule } from '../pages/user/user-chatroom/user-chatroom.module';
+import { UserMatchPage } from '../pages/user/user-match/user-match';
+import { UserMatchPageModule } from '../pages/user/user-match/user-match.module';
 
 //Plugins
 import { AngularFireModule } from 'angularfire2';
@@ -91,7 +93,8 @@ export const firebaseConfig = {
     UserCheckPageModule,
     UserGeoPageModule,
     UserFormPageModule,
-	UserChatroomPageModule
+	UserChatroomPageModule,
+    UserMatchPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -108,7 +111,8 @@ export const firebaseConfig = {
     UserReportPage,
     UserCheckPage,
     UserFormPage,
-    UserGeoPage
+    UserGeoPage,
+    UserMatchPage
   ],
   providers: [
     StatusBar,

@@ -1,3 +1,70 @@
 page-user-edit {
+	.toolbar-background {
+ 	 	background-color: #566677;
+	}
+	.edit_content{
+		background-color: #1a2128;
+	}
+	.default_image img{
+		height: 70px; 
+		width: 70px; 
+		margin-right: 10px; 
+		margin-bottom: 10px;
+		float: left;
+		text-align: center;
+	}
+	.default_image ion-icon{
+		font-size: 40px;
+		float: left;
+		margin-left: -60px;
+		margin-top: 9px;
+		color: white;
+		opacity: 0.8;
+	}
+	.other_image ion-icon{
+		position: absolute;
+		font-size: 40px;
+		margin-left: -16px;
+		margin-top: 10px;
+	}
+	#images{
+		background-color: whitesmoke; 
+		text-align: center;
+		height: 70px; 
+		width: 70px; 
+		margin-bottom:20px;
+		margin-right: 10px; 
+		float: left;
+	}
+	.card_content{
+		text-align: center;
+		margin-left: 6vw;
+	}
+	ion-spinner * {
+	  width: 28px;
+	  height: 28px;
+	  stroke: #444;
+	  fill: #222;
+	  duration:3000;
+	}
+	.interests{
+		background-color: dark;
+		border-radius: 30px; 
+		background-color: #ef8dd7; 
+		margin: 5px 5px;
+		padding: 5px;
+		display: inline-flex;
+	}
+	.interests ion-icon{
+		color: white;
+		font-size: 20px;
+		margin-left: 5px;
 
+	}
+	.header{
+		font-weight: bold;
+	}
+	.input_interest{
+		border-radius: 10px;
+	}
 }

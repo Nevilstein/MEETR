@@ -7,7 +7,7 @@
 
 
 
-<ion-content padding>
+<ion-content class="chat_content" padding>
 	<ion-searchbar style="width: 100%;"
 	[(ngModel)]="myInput"
 	[showCancelButton]="shouldShowCancel"
@@ -17,10 +17,10 @@
 
 	<ion-list>
 		<ion-item-sliding #item >
-			<button ion-item (click)="user_Chat()">
+			<button ion-item class="chat_content" (click)="user_Chat()">
 					<img class="circle-pic" src="../assets/imgs/harvey.jpg" item-start>
-				<h2>Harvey Revillas</h2>
-    			<p>chingchong boi</p>
+				<h2 class="content">Harvey Revillas</h2>
+    			<p class="content">chingchong boi</p>
 			</button>
 			<ion-item-options side="left">
 			  <button ion-button ion-button class="chat_buttons" color="secondary" (click)="favorite(item)">
@@ -39,10 +39,10 @@
 		</ion-item-sliding>
 
 		<ion-item-sliding #item>
-			<button ion-item (click)="user_Chat()">
+			<button ion-item class="chat_content" (click)="user_Chat()">
 					<img class="circle-pic" src="../assets/imgs/luwelle.jpg" item-start>
-				<h2>Luwelle Baltazar</h2>
-    			<p>uwuwuwuwuwuuwuw</p>
+				<h2 class="content">Luwelle Baltazar</h2>
+    			<p class="content">uwuwuwuwuwuuwuw</p>
 			</button>
 			<ion-item-options side="left">
 			  <button ion-button class="chat_buttons" ion-button color="secondary" (click)="favorite(item)">
@@ -61,10 +61,10 @@
 		</ion-item-sliding>
 
 		<ion-item-sliding #item>
-			<button ion-item (click)="user_Chat()">
+			<button ion-item class="chat_content" (click)="user_Chat()">
 					<img class="circle-pic" src="../assets/imgs/seth.jpg" item-start>
-				<h2>Seth Siono</h2>
-    			<p>qwqqwqwwqqwqwqwwweeeee</p>
+				<h2 class="content">Seth Siono</h2>
+    			<p class="content">qwqqwqwwqqwqwqwwweeeee</p>
 			</button>
 			<ion-item-options side="left">
 			  <button ion-button class="chat_buttons" ion-button color="secondary" (click)="favorite(item)">

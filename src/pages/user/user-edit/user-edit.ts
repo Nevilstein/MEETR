@@ -32,7 +32,7 @@ export class UserEditPage {
   bio: string = "";
   isMale: boolean;
   isFemale: boolean;
-  image:string;
+  currentImage:string;
 
   //Element variables
   interestInputValue: string = "";
@@ -48,7 +48,7 @@ export class UserEditPage {
     console.log('ionViewDidLoad UserEditPage');
   }
   goBack(){
-  	this.navCtrl.push(UserProfilePage);
+    this.navCtrl.push(UserProfilePage);
   }
 
   loadProfile(){
@@ -74,7 +74,7 @@ export class UserEditPage {
       this.dbUpdateProfile();
     }
   }
-  dbUpdateProfile(){
+  dbUpdateProfile(){  //Update all values in profile
     this.db.list('profile').update(this.fireAuth.auth.currentUser.uid, {
       interests: this.interests,
       bio: this.bio,
@@ -114,19 +114,27 @@ export class UserEditPage {
       // If it's base64 (DATA_URL):
       const filePath = `imageProfile/meetr-image_${ new Date().getTime() }.jpg`;
       const fileRef = this.storage.ref(filePath);
-      const image = 'data:image/jpg;base64,' + imageData;
+      this.currentImage = 'data:image/jpg;base64,' + imageData;
 
-      this.uploadTask = fileRef.putString(image, 'data_url');  //Send image to firebase storage
-      this.uploadTask.then( () =>{    //get URL of image stored in firebase storage
-        fileRef.getDownloadURL().subscribe(url => {
+      this.uploadTask = fileRef.putString(this.currentImage, 'data_url');  //Send image to firebase storage
+      this.uploadTask.then( () =>{    
+        fileRef.getDownloadURL().subscribe(url => {  //get URL of image stored in firebase storage
           this.profileImages.push(url);
           this.dbUpdateProfile();
         });
       })
       this.uploadTask.percentageChanges().subscribe(value => {
         const maxLoad = 100;
-        this.isUploading = maxLoad === value ? false: true;
-      })  //loading for upload
+        // this.isUploading = maxLoad === value ? false: true;
+        if(maxLoad === value){
+          // setTimeout(()=>{    //this is a simple hack for displaying issues
+            this.isUploading = false;
+          // }, 700);  //0.7 seconds refresh for image
+        }
+        else{
+          this.isUploading = true;
+        }
+      });
     }, (error) => {
       console.log("Upload Error: ", error);
     });
