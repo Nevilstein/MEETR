@@ -4,12 +4,12 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<ion-content padding>
+<ion-content class="form_content" padding>
 
 	<ion-slides>
 		<ion-slide>
 			<img style="height: 150px !important;" src="../../assets/imgs/gender1.png">
-			<h3>Are you a</h3>
+			<h3 class="form_text">Are you a</h3>
 			<ion-list>
 			<ion-item>
 				<ion-label>Male</ion-label>
@@ -26,13 +26,21 @@
 		<ion-slide>
 			<!-- Change to Multi-value input -->
 			<img style="height: 150px !important;" src="../../assets/imgs/cloud.png">
-			<h3>Give us atleast 3 interests to work with</h3>
+			<h3 class="form_text">Give us atleast 3 interests to work with</h3>
 			<ion-card>
 				<ion-card-content>
-					<span *ngFor="let interest of interests; let i = index" style="border-radius: 25px; background-color: whitesmoke; margin: 20px 5px; padding: 5px" #interestItem>{{interest}} <ion-icon (click)="deleteInterest(i)" name="ios-close-circle-outline"></ion-icon></span>
+					<span class="interest" *ngFor="let interest of interests; let i = index" #interestItem>{{interest}} <ion-icon class="icon" (click)="deleteInterest(i)" name="md-close-circle"></ion-icon></span>
 				</ion-card-content>
 				<ion-input type="text" [(ngModel)]="interestInputValue" placeholder="Enter Interest" style="width: 80%;" (keyup.enter)=addInterest(interestInput.value) #interestInput></ion-input>
 			</ion-card>
+		</ion-slide>
+		<ion-slide>
+			<img style="height: 150px !important;" src="../../assets/imgs/pin.png">
+			<h3 class="form_text">Allow Meetr to access your location?</h3>
+			<ion-item>
+				<ion-label>Allow</ion-label>
+				<ion-checkbox checked="false"></ion-checkbox>
+			</ion-item>
 		</ion-slide>
 	</ion-slides>
 	<ion-fab right bottom [hidden]="slides.isEnd()">

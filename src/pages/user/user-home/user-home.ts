@@ -4,6 +4,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { AlertController } from 'ionic-angular';
 import { UserReportPage } from '../user-report/user-report';
 import { UserCheckPage } from '../user-check/user-check';
+import { UserMatchPage } from '../user-match/user-match';
 
 /**
  * Generated class for the UserHomePage page.
@@ -67,4 +68,8 @@ export class UserHomePage {
 		const check = this.modal.create(UserCheckPage);
 		check.present();
 	}	
+	match_overlay(){
+		const match = this.modal.create(UserMatchPage);
+		match.present();
+	}
 }

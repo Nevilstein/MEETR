@@ -38,7 +38,7 @@
 			Bio
 		</ion-card-header>
 
-		<ion-card-content>
+		<ion-card-content text-center>
 			{{bio}}
 		</ion-card-content>
 	</ion-card>
@@ -47,7 +47,7 @@
 			Interests
 		</ion-card-header>
 		<ion-card-content>
-			<span *ngFor="let interest of interests" style="margin:10px">{{interest}}</span>
+			<span class="interests" *ngFor="let interest of interests" >{{interest}}</span>
 		</ion-card-content>
 	</ion-card>
 	<ion-grid>

@@ -39,7 +39,15 @@ $colors: (
   danger:     #f53d3d,
   light:      #f4f4f4,
   dark:       #222,
-  meetr:	  #566677
+  meetr:	  #566677,
+  match: 	  (
+  				base: #419b4e,
+  				contrast: #ffffff
+  		),
+  keep_swiping: (
+  				base: #9b3636,
+  				contrast: #ffffff
+  	) 
 );
 
 $toolbar-md-title-text-color: map-get($colors, light);

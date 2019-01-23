@@ -1,0 +1,103 @@
+@font-face {
+    font-family: 'hipster_script_proregular';
+    src: url('../../assets/fonts/hipster_script_pro-webfont.woff2') format('woff2'),
+         url('../../assets/fonts/hipster_script_pro-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes tada {
+  from {
+    transform: scale3d(1, 1, 1);
+  }
+
+  10%,
+  20% {
+    transform: scale3d(0.9, 0.9, 0.9) rotate3d(0, 0, 1, -3deg);
+  }
+
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 3deg);
+  }
+
+  40%,
+  60%,
+  80% {
+    transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, -3deg);
+  }
+
+  to {
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+page-user-match {
+	.match_content{
+		background: rgba(0,0,0,0.7);
+	}
+	#match_text{
+		font-family: hipster_script_proregular !important;
+		color: white;
+		font-size: 10vh;
+	}
+	#mini_text{
+		color: white; 
+		font-style: italic; 
+		font-size: 2.5vh;
+	}
+	.match_buttons{
+		width: 200px;
+	}
+	ion-avatar > img{
+		object-fit: cover;
+		border-style: solid;
+  		border-width: 3px; 
+  		border-color: white;
+	}
+	.chat_button{
+		margin-top: 10vh;
+	}
+	.fadeInLeft {
+  		animation-name: fadeInLeft;
+  		animation-duration: 1s;
+	}
+	.fadeInRight {
+  		animation-name: fadeInRight;
+  		animation-duration: 1s;
+	}
+	#sub_text{
+		margin-top: 10vh;
+	}
+	.tada{
+		color: white; 
+		font-style: italic;
+		font-size: 2.5vh;
+		animation-name: tada;
+  		animation-duration: 2s;
+	}
+}

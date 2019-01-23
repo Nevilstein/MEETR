@@ -1,5 +1,5 @@
 import { Component, NgZone } from '@angular/core';
-import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, MenuController, LoadingController } from 'ionic-angular';
 
 //Pages
 import { UserProfilePage } from '../user/user-profile/user-profile';
@@ -32,7 +32,7 @@ import firebase from 'firebase';
 export class LoginPage {
   count;
   loading: boolean = true;
-  constructor(public navCtrl: NavController, public navParams: NavParams,  public menuCtrl:MenuController, public fb: Facebook, 
+  constructor(public loadingCtrl: LoadingController,public navCtrl: NavController, public navParams: NavParams,  public menuCtrl:MenuController, public fb: Facebook, 
     private fireAuth: AngularFireAuth, private db: AngularFireDatabase, private zone: NgZone) {
     
   }
@@ -167,6 +167,17 @@ export class LoginPage {
   }
   gotoUser(){
     this.navCtrl.push(UserTabsPage);
+  }
+  presentLoadingDefault() {
+  let loading = this.loadingCtrl.create({
+    content: 'Please wait...'
+  });
+
+  loading.present();
+
+  setTimeout(() => {
+    loading.dismiss();
+  }, 5000);
   }
 }
 
