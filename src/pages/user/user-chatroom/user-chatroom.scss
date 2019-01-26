@@ -9,15 +9,23 @@ page-user-chatroom {
 		width:40px;
 	    height:40px;
 	    -webkit-border-radius: 40%;
-	    border-radius: 40%;
+	    border-radius: 50%;
+	    object-fit: cover;
+	    border-style: solid;
+	    border-color: white;
+  		border-width: 2px;
 	}
 	.chatroom_content{
-		background-color: #1a2128;
+		background-color: #29263E;
 	}
 	.toolbar-background {
- 	 	background-color: #566677;
+ 	 	background-color: #29263E;
 	}
 	.more{
 		color: white;
+	}
+	ion-footer{
+		border-radius: 40px;
+		background-color: white;
 	}
 }

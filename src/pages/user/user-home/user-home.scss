@@ -1,6 +1,6 @@
 page-user-home {
     .home_content{
-        background-color: #1a2128;
+        background-color: #29263E;
     }
     .card-container {
         height: 90vw;
@@ -26,16 +26,13 @@ page-user-home {
         width: 90vw !important;
         background-size: 160% 100%;
         background-repeat: no-repeat;
-        background-position: center; 
+        background-position: center;
     }
     img {
         height: 100% !important;
         width: 100%;
         background-size: cover;
         background-repeat: no-repeat;
-    }
-    #grid{
-        margin-top: 50%;
     }
 
 }
