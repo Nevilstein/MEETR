@@ -4,6 +4,10 @@ page-user-chat {
     height:50px;
     -webkit-border-radius: 50%;
     border-radius: 50%;
+    object-fit: cover;
+	border-style: solid;
+	border-color: white;
+	border-width: 2px;
 	}
 	.chat_buttons{
 		width:50px;
@@ -12,7 +16,7 @@ page-user-chat {
 		zoom:2.0;
 	}
 	.chat_content{
-		background-color: #1a2128;
+		background-color: #29263E;
 	}
 	.chats{
 		background: #1a2128 !important;

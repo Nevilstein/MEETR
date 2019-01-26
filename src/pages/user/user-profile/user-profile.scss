@@ -19,15 +19,29 @@ ion-avatar > img{
 	color: white !important;
 }
 .profile_content{
-	background-color: #1a2128;
+	background-color: #29263E;
 }
 .name{
 	color: white;
 }
+.cards{
+	background-color: #35324e;
+}
+.header{
+	color: white;
+	font-weight: bold;
+}
+#bio{
+	color: white;
+}
 .interests{
-	background-color: #8bdcf9; 
+	@include linear-gradient(left,$pinky);
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
 	margin: 2px 5px;
 	padding: 5px;
 	display: inline-flex;
 	border-radius: 30px; 
+	color: white;
 }

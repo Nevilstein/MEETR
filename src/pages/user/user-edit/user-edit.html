@@ -23,7 +23,7 @@
 
 <ion-content class="edit_content" padding>
 	<!-- UPLOAD PHOTO HERE -->
-	<ion-card  id="card_wrapper">
+	<ion-card class="cards">
 
 		<ion-card-content class="card_content" text-center>
 			<!-- Loaded Images -->
@@ -46,15 +46,15 @@
 		</ion-card-content>	
 		
 	</ion-card>
-	<ion-card>
+	<ion-card class="cards">
 		<ion-card-header class="header" text-center>
 			Edit Intro
 		</ion-card-header>
 		<ion-card-content>
-			<ion-textarea [(ngModel)]="bio" (ionChange)="bioChanged()" placeholder="About you"></ion-textarea>
+			<ion-textarea style="color: white;" [(ngModel)]="bio" (ionChange)="bioChanged()" placeholder="About you"></ion-textarea>
 		</ion-card-content>
 	</ion-card>
-	<ion-card>
+	<ion-card class="cards">
 		<ion-card-header class="header" text-center>
 			Edit Interests
 		</ion-card-header>
@@ -64,13 +64,13 @@
 		<ion-input class="input_interest" type="text" [(ngModel)]="interestInputValue" floating placeholder="Add Interest" style="width: 80%;" (keyup.enter)=addInterest(interestInput.value) #interestInput></ion-input>
 		<!-- <button ion-button (click)="addInterest(interestInput.value)">Add</button> -->
 	</ion-card>
-	<ion-card>
+	<ion-card class="cards">
 		<ion-card-header class="header" text-center>
 			Gender
 		</ion-card-header>
 		<ion-card-content>
 			<ion-list>
-				<ion-item>
+				<ion-item class="gender">
 			    	<ion-label>Male</ion-label>
 			    	<ion-checkbox [(ngModel)]="isMale" (ionChange)="chooseMale()"></ion-checkbox>
 			  	</ion-item>
@@ -78,7 +78,7 @@
 		</ion-card-content>
 		<ion-card-content>
 			<ion-list>
-				<ion-item>
+				<ion-item class="gender">
 			    	<ion-label>Female</ion-label>
 			    	<ion-checkbox [(ngModel)]="isFemale" (ionChange)="chooseFemale()"></ion-checkbox>
 			  	</ion-item>

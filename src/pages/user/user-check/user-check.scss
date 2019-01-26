@@ -1,5 +1,29 @@
 page-user-check {
 	.toolbar-background {
- 	 	background-color: #566677;
+ 	 	background-color: #29263E;
+	}
+	.check{
+		background-color: #29263E;
+	}
+	ion-slide{
+		height: 40vh !important;
+		width: 100vw !important;
+		object-fit: contain;
+	}
+	.swiper-pagination-bullet {
+		background: #34bbff;
+		margin: 0 3px;
+	}
+	.name{
+		color: white;
+	}
+	.location{
+		color: white;
+		margin-top: -7px;
+	}
+	.head{
+		@include linear-gradient(left,$pinky);
+		-webkit-background-clip: text; 
+		-webkit-text-fill-color: transparent; 
 	}
 }

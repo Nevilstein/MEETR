@@ -90,6 +90,17 @@
     <allow-navigation href="http://192.168.1.100:8103" />
     <allow-navigation href="http://192.168.1.100:8107" />
     <allow-navigation href="http://192.168.1.100:8100" />
+    <allow-navigation href="http://192.168.1.101:8100" />
+    <allow-navigation href="http://192.168.43.234:8100" />
+    <allow-navigation href="http://192.168.43.234:8101" />
+    <allow-navigation href="http://192.168.43.234:8102" />
+    <allow-navigation href="http://192.168.43.234:8103" />
+    <allow-navigation href="http://192.168.43.234:8104" />
+    <allow-navigation href="http://192.168.1.100:8105" />
+    <allow-navigation href="http://192.168.43.234:8105" />
+    <allow-navigation href="http://192.168.43.234:8106" />
+    <allow-navigation href="http://192.168.43.234:8107" />
+    <allow-navigation href="http://192.168.43.234:8108" />
     <plugin name="cordova-plugin-facebook4" spec="^4.1.0">
         <variable name="APP_ID" value="382855475853590" />
         <variable name="APP_NAME" value="Meetr" />
@@ -102,17 +113,6 @@
         <variable name="API_KEY_FOR_ANDROID" value="AIzaSyCuM1MvV4ieX5IkrDXZh1lJ8WY3E1p4HZE" />
         <variable name="API_KEY_FOR_IOS" value="AIzaSyBAkFsPQ4RD_JugsDFkAH7zCCHCl-_nipE" />
     </plugin>
-    <allow-navigation href="http://192.168.1.101:8100" />
-    <allow-navigation href="http://192.168.43.234:8100" />
-    <allow-navigation href="http://192.168.43.234:8101" />
-    <allow-navigation href="http://192.168.43.234:8102" />
-    <allow-navigation href="http://192.168.43.234:8103" />
-    <allow-navigation href="http://192.168.43.234:8104" />
     <plugin name="cordova-plugin-camera" spec="^4.0.3" />
-    <allow-navigation href="http://192.168.1.100:8105" />
-    <allow-navigation href="http://192.168.43.234:8105" />
-    <allow-navigation href="http://192.168.43.234:8106" />
-    <allow-navigation href="http://192.168.43.234:8107" />
-    <allow-navigation href="http://192.168.43.234:8108" />
     <engine name="android" spec="7.1.4" />
 </widget>

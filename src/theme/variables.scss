@@ -13,7 +13,7 @@ $app-direction: ltr;
 
 
 @import "ionic.globals";
-
+@import './gradient-mixins';
 
 // Shared Variables
 // --------------------------------------------------
@@ -47,9 +47,10 @@ $colors: (
   keep_swiping: (
   				base: #9b3636,
   				contrast: #ffffff
-  	) 
+  	) ,
+  tab : #29263E
 );
-
+$card-md-border-radius: 10px;
 $toolbar-md-title-text-color: map-get($colors, light);
 // App iOS Variables
 // --------------------------------------------------
