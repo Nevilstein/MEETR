@@ -12,10 +12,9 @@
   	</button>-->
     <ion-title style="display:inline-block">Setting</ion-title>
     <ion-buttons end>
-	    <button clear id="back" (click)="goBack()">
+	    <button clear id="back" (click)="saveSetting()">
 	  		<ion-icon name="md-checkbox-outline" style="zoom:2.0;, display: inline-block; color:white;"></ion-icon>
 	  	</button>
-	  	<button></button>
   	</ion-buttons>
   </ion-navbar>
 
@@ -25,7 +24,7 @@
 <ion-content class="setting_content" padding>
 	<ion-list>
 		<ion-label class="labels">Distance</ion-label>
-		<ion-item>
+		<ion-item class="">
 			<ion-label>{{maxDistance}}</ion-label>
 			<ion-range [(ngModel)]="maxDistance" color="danger" max="150" pin="true"></ion-range>
 		</ion-item>
@@ -55,7 +54,6 @@
     		<ion-toggle [(ngModel)]="userVisible"></ion-toggle>
 		</ion-item>
 	</ion-list>
-	<button ion-button (click)="saveSetting()">Save</button>
-	<button ion-button color="danger" (click)="facebookLogout()">Logout</button>
+	<button ion-button color="danger" block (click)="facebookLogout()">Logout</button>
 	
 </ion-content>

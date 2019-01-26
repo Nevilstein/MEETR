@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
+import { UserGeoPage } from '../user-geo/user-geo';
 /**
  * Generated class for the UserChatroomPage page.
  *
@@ -21,5 +21,7 @@ export class UserChatroomPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad UserChatroomPage');
   }
-
+  gotoGeo(){
+    this.navCtrl.push(UserGeoPage);
+  }
 }
