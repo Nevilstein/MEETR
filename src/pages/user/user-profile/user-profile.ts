@@ -39,8 +39,9 @@ export class UserProfilePage {
 
   //Display variables
   // profile = {};
-  name: string;
-  age: string;
+  profileObservable;
+  firstName: string;
+  age: number;
   image: string;
   bio: string;
   interests = [];
@@ -77,6 +78,9 @@ export class UserProfilePage {
     //   }
     // })
   }
+  ionViewWillUnload(){
+    this.profileObservable.unsubscribe();
+  }
   ionViewDidLoad() {
     this.loadProfile();
 
@@ -111,18 +115,17 @@ export class UserProfilePage {
     //   console.log(error);;
     // });
 
-    this.userProvider.getUserProfile().snapshotChanges().subscribe( snapshot => {  //Angularfire2
-      var data = snapshot[0].payload.toJSON();
-      // data['id'] = snapshot[0].key;
-      this.userProvider.getFbProfile().then(fbRes => {
-        data = Object.assign({}, data, fbRes);
-        this.name = data['first_name'];
-        this.age = data['age'];
-        this.image = data['photos'][0];
-        this.bio = data['bio'];
-        this.interests = Object.assign([], data['interests']);
+    this.db.list('profile', ref => ref.orderByKey().equalTo(this.fireAuth.auth.currentUser.uid))
+      .snapshotChanges().subscribe( snapshot => {  //Angularfire2
+          var data = snapshot[0].payload.val();
+          this.firstName = data['firstName'];
+          this.age = moment().diff(moment(data['birthday'], "MM/DD/YYYY"), 'years');
+          this.image = data['photos'][0];
+          this.bio = data['bio'];
+          this.interests = Object.assign([], data['interests']);
+
       });
-    })
+
 
     // this.userProvider.getUserProfile().on('value', snapshot => {  //Classic Firebase
     //   console.log(snapshot);

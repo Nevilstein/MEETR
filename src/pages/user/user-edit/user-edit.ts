@@ -52,14 +52,15 @@ export class UserEditPage {
   }
 
   loadProfile(){
-    this.userProvider.getUserProfile().snapshotChanges().subscribe( snapshot => {  //Angularfire2
-      var data = snapshot[0].payload.toJSON();
-      this.bio = data['bio'];
-      this.interests = Object.assign([], data['interests']);
-      this.isMale = data['gender'].male;
-      this.isFemale = data['gender'].female;
-      this.profileImages = Object.assign([], data['photos']);
-    });
+    this.db.list('profile', ref => ref.orderByKey().equalTo(this.fireAuth.auth.currentUser.uid))
+      .snapshotChanges().subscribe( snapshot => {  //Angularfire2
+        var data = snapshot[0].payload.toJSON();
+        this.bio = data['bio'];
+        this.interests = Object.assign([], data['interests']);
+        this.isMale = data['gender'].male;
+        this.isFemale = data['gender'].female;
+        this.profileImages = Object.assign([], data['photos']);
+      });
   }
   addInterest(interest){
     // console.log(this.interestInput._value);
@@ -143,7 +144,14 @@ export class UserEditPage {
   deletePhoto(photoIndex, imageURL){
     if(this.profileImages.length > 1){
       this.profileImages.splice(photoIndex, 1);
-      this.storage.storage.refFromURL(imageURL).delete();  //remove from firebase storage by URL
+      // console.log(this.storage.storage.refFromURL(imageURL))
+
+      try{  //try catch if image is not found in storage  //temporarily
+        this.storage.storage.refFromURL(imageURL).delete();//remove from firebase storage by URL
+      }
+      catch(error){
+        console.log(error);
+      }
       this.dbUpdateProfile();
     }
   }
