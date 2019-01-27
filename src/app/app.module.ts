@@ -53,7 +53,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 import firebase from 'firebase';  
 
 //Provider
-import { UserProvider } from '../providers/user/user';  
+import { AuthProvider } from '../providers/auth/auth';  
 
 export const firebaseConfig = {
     apiKey: "AIzaSyCjTUixYv189FGdP3hQdztU_HCbtqvjJTU",
@@ -122,7 +122,7 @@ export const firebaseConfig = {
     AngularFireAuth,
     Camera,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    UserProvider
+    AuthProvider
   ]
 })
 export class AppModule {}

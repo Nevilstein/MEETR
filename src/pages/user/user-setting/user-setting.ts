@@ -13,7 +13,6 @@ import moment from 'moment';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 
 //Providers
-import { UserProvider } from '../../../providers/user/user';
 /**
  * Generated class for the UserSettingPage page.
  *
@@ -27,37 +26,47 @@ import { UserProvider } from '../../../providers/user/user';
   templateUrl: 'user-setting.html',
 })
 export class UserSettingPage {
+  //Observer/Subscription
+  profileObserver;
+
+  //Variables
   maxDistance: number;
   ageRange = {};
   showGender = {};
   userVisible: boolean;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private fireAuth: AngularFireAuth, 
-    private fb: Facebook, private db: AngularFireDatabase, private appCtrl: App, private userProvider: UserProvider ) {
-    this.loadSetting();
+    private fb: Facebook, private db: AngularFireDatabase, private appCtrl: App, ) {
+ 
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad UserSettingPage');
+    this.loadSetting();
   }
+  ionViewWillUnload(){
+    this.profileObserver.unsubscribe();
+  }
+
   goBack(){
   	this.navCtrl.pop();
   }
   
   loadSetting(){
-    this.userProvider.getUserProfile().snapshotChanges().subscribe(snapshot =>{
-      var data = snapshot[0].payload.toJSON();
-      this.maxDistance = data['maxDistance'];
-      this.ageRange = {
-        lower: data['ageRange'].min,
-        upper: data['ageRange'].max
-      };
-      this.showGender = {
-        male: data['showGender'].male,
-        female: data['showGender'].female
-      };
-      this.userVisible = data['isVisible'];
-    });
+    this.profileObserver = this.db.list('profile', ref => ref.orderByKey().equalTo(this.fireAuth.auth.currentUser.uid))
+      .snapshotChanges().subscribe(snapshot =>{
+        var data = snapshot[0].payload.toJSON();
+        this.maxDistance = data['maxDistance'];
+        this.ageRange = {
+          lower: data['ageRange'].min,
+          upper: data['ageRange'].max
+        };
+        this.showGender = {
+          male: data['showGender'].male,
+          female: data['showGender'].female
+        };
+        this.userVisible = data['isVisible'];
+      });
   }
 
   facebookLogout(){

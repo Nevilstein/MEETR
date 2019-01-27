@@ -12,7 +12,6 @@ import { AngularFireStorage, AngularFireUploadTask } from 'angularfire2/storage'
 import { Camera, CameraOptions } from '@ionic-native/camera';
 
 //Providers
-import { UserProvider } from '../../../providers/user/user';
 /**
  * Generated class for the UserEditPage page.
  *
@@ -40,7 +39,7 @@ export class UserEditPage {
   uploadTask: AngularFireUploadTask;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private fireAuth: AngularFireAuth, 
-    private db: AngularFireDatabase, private userProvider: UserProvider, private camera: Camera, private storage: AngularFireStorage) {
+    private db: AngularFireDatabase, private camera: Camera, private storage: AngularFireStorage) {
   }
 
   ionViewDidLoad() {

@@ -15,6 +15,9 @@ import geolib from 'geolib';
 import moment from 'moment';
 import firebase from 'firebase';
 import { Observable } from 'rxjs/Observable';
+
+//Providers
+import { AuthProvider } from '../../../providers/auth/auth';
 /**
  * Generated class for the UserHomePage page.
  *
@@ -32,14 +35,20 @@ export class UserHomePage {
 		
 	// }
 
+	authUser = this.authProvider.authUser;  //ID of authenticated user
+
 	myProfile = [];		//current user profile
 	myCoordinates= {};	//current user coordinates
 	userList = [];		//list of all users qualified for current user
 	stackedUsers = [];	//stacked users
 	isReady = false;
 	val = 0;
+
+	//Observers/Subscriptions
 	cardObserver = [];
-	matchObserver ;
+	profileChangedObserver;
+	geolocationObserver
+
 	//OLD VERSION STARTS HERE
 
 	// ready = true;
@@ -55,129 +64,61 @@ export class UserHomePage {
 	};
 
 	constructor(private sanitizer: DomSanitizer, private alertCtrl: AlertController, private modalCtrl: ModalController, 
-		private fireAuth: AngularFireAuth, private db: AngularFireDatabase) {
-		// for (let i = 0; i < this.images.length; i++) {
-          // this.attendants.push({
-          //     // id: i + 1,
-          //     likeEvent: new EventEmitter(),
-          //     destroyEvent: new EventEmitter(),
-          //     asBg: sanitizer.bypassSecurityTrustStyle('url('+this.images[i]+')')
-          // });
-  //     	this.ready = true;
-		// }
+		private fireAuth: AngularFireAuth, private db: AngularFireDatabase, private authProvider: AuthProvider) {
+		
 	}
 
 	ionViewDidLoad(){
-		this.getLocation();
-		this.stackStart();
+		this.changedProfile();	//stacking starts inside this function
+	    this.getLocation();
 	}
 
 	ionViewWillUnload(){
-		// remove all user card subscription here
+		this.cardObserver.forEach( value => {
+			value.unsubscribe();
+		})
+		this.profileChangedObserver.unsubscribe();
+		this.geolocationObserver.unsubscribe();
 	}
-	// listenMatch(isStart){
- //    let currentUser = this.fireAuth.auth.currentUser.uid;
-	//       this.matchObserver = this.db.list('likes', ref=> ref.child(currentUser).orderByChild("like").equalTo(true))
-	//         .snapshotChanges().subscribe( snapshot =>{
-	//           console.log(snapshot);
-	//           // if(snapshot.length !== 0){
-	//           //   let userKey = snapshot[0].key;
-	//           //   this.db.list('getLikes', ref=> ref.child(userKey).child(currentUser))
-	//           //     .query.once('value').then( childSnap =>{
-	//           //       console.log(childSnap);
-	//           //       if(childSnap.val()){
-	//           //         // this.navCtrl.push(UserMatchPage, {userKey});
-	//           //       }
-	//           //     });
-	//           // }
-	//         });
-	//       // this.matchListener2 = this.db.list('getLikes', ref => ref.orderByKey().equalTo(currentUser))
-	//       //   .snapshotChanges().subscribe( snapshot => {
-	//       //     console.log(snapshot);
-	//       //   });
-	//     // }
-	//     // else{
-	//     //   this.matchListener.unsubscribe();
-	//     //   this.matchListener2.unsubscribe();
-	//     // }
-	//   }
+
+	changedProfile(){	//if user changed profile the stack restarts
+		this.profileChangedObserver = this.db.list('profile', ref => ref.orderByKey().equalTo(this.authUser))
+			.stateChanges().subscribe( snapshot =>{
+				this.isReady = false; //loading of cards
+				this.myProfile = Object.assign([],snapshot.payload.toJSON());
+				this.myProfile['id'] = snapshot.key;
+				this.stackStart();
+			});
+	}
 	onCardInteract(event, swipedUser){	//add swiped user id for the match database
    		// console.log(event);
-   		// ADD AGE TO ALL STACKED USERS
-   		//ADD UPDATE TO MATCH DATABASE => userid: boolean, date and cooldown if disliked
-   		//REMOVE SUBSCRIPTION OF stacked to avoid errors
-   		//No delay in card destroy
 
    		// setTimeout(() =>{
    		// 	this.stackedUsers.splice(0, 1);	//remove 1st stack after adding to db
    		// 	console.log('time');
    		// },500);
-   		this.userLike(swipedUser.id, event);
-   		this.stackedUsers.splice(0, 1);	//remove 1st stack after adding to db
-   		if(this.userList.length>0){
-	   		var i = this.getRandomInt(0, this.userList.length);
-	   		this.userList.splice(i, 1);
-	   		this.getNewCard();
-	   	}
-	   	else{
-	   		if(!(this.stackedUsers.length>0)){
-	   			setTimeout(() =>{
-	   				this.stackStart();
-	   			},500);	//0.5  seconds refresh
-	   		}
-	   	}
-  //  		this.stackedUsers.push({
-		// likeEvent: new EventEmitter(),
-		// destroyEvent: new EventEmitter(),
-		// asBg: this.sanitizer.bypassSecurityTrustStyle('url('+this.images[i]+')')
-		// });
-	}
+   		this.userLike(swipedUser.id, event);	//add interacted user to db
 
-	userLike(userID, event){
-		let currentUser = this.fireAuth.auth.currentUser.uid;
-
-		this.db.list('likes', ref => ref.child(currentUser)).set(userID, {
-			like: event.like,
-			timestamp: firebase.database.ServerValue.TIMESTAMP,
+   		var deletePromise = new Promise( resolve => {	//wait for user/card to be destroyed fully
+   			setTimeout(() => {
+   				this.stackedUsers.splice(0, 1);	//remove 1st stack after adding to db
+   				resolve(true);
+   			},200);
+   		});
+   		deletePromise.then( () => {
+   			if(this.userList.length>0){
+		   		var i = this.getRandomInt(0, this.userList.length);
+		   		this.userList.splice(i, 1);
+		   		this.getNewCard();
+		   	}
+		   	else{
+		   		if(!(this.stackedUsers.length>0)){
+		   			setTimeout(() =>{
+		   				this.stackStart();
+		   			},500);	//0.5  seconds refresh
+		   		}
+		   	}
 		});
-		this.db.list('likes', ref => ref.child(userID).child(currentUser))
-			.query.once('value').then( snapshot => {
-				if(snapshot.val().like && event.like){
-					let currentDate = moment().format('x');
-					this.db.list('chat', ref => ref.child(currentUser)).push({
-						// messages:{	//add starting message? from the second one that liked
-
-						// },
-						members:{
-							[currentUser]: true,
-							[userID]: true,
-						},
-						timestamp: currentDate,
-						createdDate: currentDate
-					}).then( uniqueSnap => {	//second liker creates room
-						this.db.list('chat', ref => ref.child(userID)).set(uniqueSnap.key, {
-							// messages:{	//add starting message? from the second one that liked
-
-							// },
-							members:{
-								[currentUser]: true,
-								[userID]: true,
-							},
-							timestamp: currentDate,
-							createdDate: currentDate
-						});	//first also gets the room key
-						this.db.list('match', ref => ref.child(currentUser)).set(userID, {
-							isSeen: true,
-							timestamp: currentDate
-						})		//update both users about match
-						this.db.list('match', ref => ref.child(userID)).set(currentUser, {
-							isSeen: false,
-							timestamp: currentDate
-						});
-					})
-					this.modalCtrl.create(UserMatchPage, {userMatchKey:userID}).present();
-				}
-			});
 	}
 
 	getNewCard(){
@@ -200,6 +141,59 @@ export class UserHomePage {
 					subscription.unsubsribe();
 				});
 				this.cardSubscribe();	//resubscribe all cards
+			});
+	}
+
+	userLike(userID, event){
+		this.db.list('likes', ref => ref.child(this.authUser)).set(userID, {
+			like: event.like,
+			timestamp: firebase.database.ServerValue.TIMESTAMP,
+		});
+		this.db.list('likes', ref => ref.child(userID).child(this.authUser))
+			.query.once('value').then( snapshot => {
+				if(snapshot.val().like && event.like){
+					let currentDate = moment().format('x');
+					this.db.list('chat', ref => ref.child(this.authUser)).push({
+						// messages:{	//add starting message? from the second one that liked
+
+						// },
+						members:{
+							[this.authUser]: true,
+							[userID]: true,
+						},
+						timestamp: currentDate,
+						createdDate: currentDate
+					}).then( uniqueSnap => {	//second liker creates room
+						console.log('hey1')
+						this.db.list('chat', ref => ref.child(userID)).set(uniqueSnap.key, {
+							// messages:{	//add starting message? from the second one that liked
+
+							// },
+							members:{
+								[this.authUser]: true,
+								[userID]: true,
+							},
+							timestamp: currentDate,
+							createdDate: currentDate
+						}).then(() =>{
+							console.log('hey2');
+						})	//first also gets the room key
+						this.db.list('match', ref => ref.child(this.authUser)).set(userID, {
+							isSeen: true,
+							timestamp: currentDate
+						})		//update both users about match
+						this.db.list('match', ref => ref.child(userID)).set(this.authUser, {
+							isSeen: false,
+							timestamp: currentDate
+						});
+						console.log('hey3');
+					}).then(() => {
+						console.log('hey4');
+						this.modalCtrl.create(UserMatchPage, {userMatchKey:userID}).present();
+					});
+				}
+			}).then(() =>{
+				console.log('hey5');
 			});
 	}
 
@@ -229,24 +223,19 @@ export class UserHomePage {
 			resolve(true);
 		});
 		stackPromise.then(()=>{
-			console.log('hey');
 			this.cardSubscribe();	//added a listener to check for changes in database
 			this.isReady = true;
 		})
 	}
 
 	stackStart(){
-		this.db.list('profile', ref => ref.orderByKey().equalTo(this.fireAuth.auth.currentUser.uid))
-			.stateChanges().subscribe( snapshot =>{
-				// console.log(snapshot);
-				this.userList = [];		//refresh user list and cards if current user profile is changed
-				this.stackedUsers = [];
-
-				this.isReady = false; //loading of cards
-				this.myProfile = Object.assign([],snapshot.payload.toJSON());
-				this.myProfile['id'] = snapshot.key;
-				this.getUsers();
-			});
+		this.userList = [];		//refresh user list and cards if current user profile is changed
+		this.stackedUsers = [];
+		this.cardObserver.forEach( subscription => {
+			subscription.unsubscribe();
+		});
+		this.isReady = false; //loading of cards
+		this.getUsers();
 	}
 
 	cardSubscribe(){
@@ -269,7 +258,7 @@ export class UserHomePage {
 	}
 
 	getLocation(){
-		this.db.list('location', ref=> ref.orderByKey().equalTo(this.fireAuth.auth.currentUser.uid))
+		this.geolocationObserver = this.db.list('location', ref=> ref.orderByKey().equalTo(this.authUser))
 			.snapshotChanges().subscribe( snapshot => {
 				let data = snapshot[0].payload.toJSON();
 				this.myCoordinates = {
@@ -285,7 +274,7 @@ export class UserHomePage {
 				this.db.list('profile', ref => ref.orderByChild('gender/male')
 					.equalTo(true)).query.once('value').then( snapshot =>{
 						snapshot.forEach( element =>{
-							if(element.key !== this.fireAuth.auth.currentUser.uid){	//avoid getting self
+							if(element.key !== this.authUser){	//avoid getting self
 								let data = element.val();
 								data.id = element.key;
 								data.age = moment().diff(moment(data['birthday'], "MM/DD/YYYY"), 'years');
@@ -306,7 +295,7 @@ export class UserHomePage {
 					.equalTo(true)).query.once('value').then( snapshot => {
 						snapshot.forEach(element =>{
 							console.log("female");
-							if(element.key !== this.fireAuth.auth.currentUser.uid){ //avoid getting self
+							if(element.key !== this.authUser){ //avoid getting self
 								let data = element.val();
 								data.id = element.key;
 								data.age = moment().diff(moment(data['birthday'], "MM/DD/YYYY"), 'years');
@@ -322,34 +311,11 @@ export class UserHomePage {
 			}
 		});
 		Promise.all([malePromise, femalePromise]).then( () =>{	//wait to retrieve userbyGender promise to get values
-			// if(this.userList.length !== 0){
-				this.filterByLocation();
-			// }
+			this.filterByLocation();
 		});
-
-		// var genderPromise = new Promise( resolve => {
-		// 	this.db.list('profile').query.once('value').then( snapshot =>{
-		// 		snapshot.forEach( element =>{
-		// 			if(element.key !== this.fireAuth.auth.currentUser.uid){	//avoid getting self
-		// 				let data = element.val();
-		// 				data.id = element.key;
-		// 				data.age = moment().diff(moment(data['birthday'], "MM/DD/YYYY"), 'years');
-		// 				console.log(this.myProfile['showGender'],"=",data['gender'])
-		// 				// if(this.myProfile['showGender'] === data.gender){
-		// 				// 	this.userList.push(data);
-		// 				// }
-		// 			}
-		// 		}); 
-		// 		resolve(true);
-		// 	})
-		// });
-		// genderPromise.then( users => {
-		// 	console.log(this.userList);
-		// 	this.filterByLocation();
-		// })
 	}
 	filterByLocation(){
-		let userCount = 0;
+		let newList = [];
 		let userLength = this.userList.length;
 		var locationPromise = new Promise(resolve => {
 			this.userList.forEach( (value, index) =>{
@@ -368,25 +334,24 @@ export class UserHomePage {
 						let isInRange = geolib.isPointInCircle(
 						    otherPoint,myPoint,
 						    this.myProfile['maxDistance']*1000);	//check if in distance preference
-						if(!isInRange){	//remove users not in range
-							this.userList.splice(index, 1);
+						if(isInRange){	//remove users not in range
+							newList.push(value);
 						}
-					}).then(() =>{	//checks if all users are checked
-						userCount++;
-						if(userCount == userLength){
+					}).then(() =>{
+						if(index+1 === userLength){
 							resolve(true);
 						}
 					});
 			})
 		});
 		locationPromise.then(() => {
-			// console.log(this.userList);
+			this.userList = newList;	//change update current list
 			this.filterByAge();
 		});
 	}
 
 	filterByAge(){
-		let userCount = 0;
+		let newList = [];
 		let userLength = this.userList.length;
 		var agePromise = new Promise(resolve => {
 			this.userList.forEach( (value, index) =>{
@@ -400,49 +365,44 @@ export class UserHomePage {
 						let isInRange = ((age >= ageRange.min && 
 							age<=ageRange.max) ? true : false);	//check if in range of age preference
 						console.log(isInRange);
-						if(!isInRange){	//remove users not in range
-							this.userList.splice(index, 1);
+						if(isInRange){	//remove users not in range
+							newList.push(value);
 						}
-					}).then(() =>{	//checks if all users are checked
-						userCount++;
-						if(userCount == userLength){
+					}).then(() =>{
+						if(index+1 === userLength){
 							resolve(true);
 						}
 					});
 			});
 		});
 		agePromise.then(() => {
+			this.userList = newList;
 			this.checkLikeStatus();
-			// this.stackUser();
 		});
 	}
 	checkLikeStatus(){
+		let newList = [];
 		let userLength = this.userList.length;
 		var likedPromise = new Promise(resolve =>{
 			this.userList.forEach( (value, index) => {
-				this.db.list('match', ref => ref.child(this.fireAuth.auth.currentUser.uid).child(value.id))
+				this.db.list('match', ref => ref.child(this.authUser).child(value.id))
 				.query.once('value').then( matchSnap => {
-					if(matchSnap.val()){
-						this.userList.splice(index, 1);
-					}
-					else{
-						this.db.list('likes', ref => ref.child(this.fireAuth.auth.currentUser.uid).child(value.id))
+					if(!matchSnap.val()){	//if not found in match collection
+						this.db.list('likes', ref => ref.child(this.authUser).child(value.id))
 						.query.once('value').then( likeSnap =>{
-							if(likeSnap.val()){
+							if(likeSnap.val()){	//if liked/unliked
 								let data = likeSnap.val();
-								if(data.likes){
-									this.userList.splice(index, 1);
-								}
-								else{
-									let dayUnix = 86400000;
-									console.log(moment().valueOf()-data.timestamp);
-									if((moment().valueOf()-data.timestamp) < dayUnix){
-										this.userList.splice(index, 1);
-									}
+								let dayUnix = 86400000;
+								let timeUnliked = moment().valueOf()-data.timestamp;
+								if(!data.likes && timeUnliked >= dayUnix){	//if unliked and in cooldown(1 day cooldown)
+									newList.push(value);
 								}
 							}
-						}).then( () => {
-							if(index == userLength){
+							else{	//if not liked/unliked yet
+								newList.push(value);
+							}
+						}).then(() =>{
+							if(index+1 === userLength){
 								resolve(true);
 							}
 						});
@@ -451,17 +411,25 @@ export class UserHomePage {
 			})
 		});
 		likedPromise.then(() =>{
+			this.userList = newList;
 			this.stackUser();
 		})
 	}
 	stackUser(){
 		let numOfCards = ((this.userList.length<20) ? this.userList.length : 20);	//safety check if low count of users
-			for(let i=0; i<numOfCards; i++){
-				let num = this.getRandomInt(0,this.userList.length);	//temporarily use random? :P
-				this.stackedUsers.push(this.userList[num]);
-				this.userList.splice(num,1);	//remove the user from list
-			}
-		this.setCards();
+		for(let i=0; i<numOfCards; i++){
+			let num = this.getRandomInt(0,this.userList.length);	//temporarily use random? :P
+			this.stackedUsers.push(this.userList[num]);
+			this.userList.splice(num,1);	//remove the user from list
+		}
+		if(numOfCards>0){
+			this.setCards();
+		}
+		else{
+			console.log("start again");
+			this.stackStart();	//loop to find users again
+			// this.findUserCount++;	//findUserCount to check how many times the app looked for match; it notifies user to update interest
+		}
 	}
 
 	report_user(){

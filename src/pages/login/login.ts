@@ -16,7 +16,8 @@ import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import moment from 'moment';
 import firebase from 'firebase';
 
-
+//Providers
+import { AuthProvider } from '../../providers/auth/auth';
 
 /**
  * Generated class for the LoginPage page.
@@ -33,19 +34,25 @@ import firebase from 'firebase';
 export class LoginPage {
   count;
   loading: boolean = true;
+  loginSubscription;
   constructor(public loadingCtrl: LoadingController,public navCtrl: NavController, public navParams: NavParams,  public menuCtrl:MenuController, public fb: Facebook, 
-    private fireAuth: AngularFireAuth, private db: AngularFireDatabase, private zone: NgZone, private storage: AngularFireStorage) {
+    private fireAuth: AngularFireAuth, private db: AngularFireDatabase, private zone: NgZone, private storage: AngularFireStorage,
+    private authProvider: AuthProvider) {
     
   }
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
     console.log(moment().format("YYYY/MM/DD HH:mm:ss"));
-    // this.fb.logout();
     this.loginRedirect();
-  }  
+  } 
+
+  ionViewWillUnload(){
+    this.loginSubscription.unsubscribe();
+  }
 
   loginRedirect(){
-    this.fireAuth.authState.subscribe( fireRes =>{
+    this.loginSubscription = this.fireAuth.authState.subscribe( fireRes =>{
       this.fb.getLoginStatus().then(fbRes =>{
         if(fireRes!=null && fbRes.status === 'connected'){
           // console.log(fireRes.uid);
@@ -97,7 +104,7 @@ export class LoginPage {
                   isLoggedIn: true
                 }).then( () =>{
                   this.zone.run(() => {
-                    this.loading = false
+                    this.loading = false;
                     this.navCtrl.setRoot(UserTabsPage);
                   });
                 });
