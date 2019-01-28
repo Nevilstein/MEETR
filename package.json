@@ -33,13 +33,14 @@
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-facebook4": "^4.1.0",
     "cordova-plugin-geolocation": "^4.0.1",
-    "cordova-plugin-googlemaps": "^2.4.6",
+    "cordova-plugin-googlemaps": "^2.5.0",
     "cordova-plugin-ionic-keyboard": "^2.1.3",
     "cordova-plugin-ionic-webview": "^2.3.2",
     "cordova-plugin-splashscreen": "^5.0.2",
     "cordova-plugin-statusbar": "^2.4.2",
     "cordova-plugin-whitelist": "^1.3.3",
-    "firebase": "^5.8.0",
+    "firebase": "^5.8.1",
+    "geolib": "^2.0.24",
     "ionic-angular": "3.9.2",
     "ionicons": "3.0.0",
     "ng2-swipe-cards": "^1.1.1",
@@ -68,7 +69,8 @@
       "cordova-plugin-facebook4": {
         "APP_ID": "382855475853590",
         "APP_NAME": "Meetr",
-        "FACEBOOK_ANDROID_SDK_VERSION": "4.38.1"
+        "FACEBOOK_ANDROID_SDK_VERSION": "4.38.1",
+        "FACEBOOK_HYBRID_APP_EVENTS": "false"
       },
       "cordova-plugin-geolocation": {
         "GEOLOCATION_USAGE_DESCRIPTION": "To locate you"

@@ -3,7 +3,7 @@
     <name>Meetr</name>
     <description>An awesome Ionic/Cordova dating app.</description>
     <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
-    <content src="index.html" />
+    <content original-src="index.html" src="http://192.168.1.100:8103" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -109,7 +109,7 @@
     <plugin name="cordova-plugin-geolocation" spec="^4.0.1">
         <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="To locate you" />
     </plugin>
-    <plugin name="cordova-plugin-googlemaps" spec="^2.4.6">
+    <plugin name="cordova-plugin-googlemaps" spec="^2.5.0">
         <variable name="API_KEY_FOR_ANDROID" value="AIzaSyCuM1MvV4ieX5IkrDXZh1lJ8WY3E1p4HZE" />
         <variable name="API_KEY_FOR_IOS" value="AIzaSyBAkFsPQ4RD_JugsDFkAH7zCCHCl-_nipE" />
     </plugin>
