@@ -13,7 +13,7 @@ import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage:any;
+  rootPage: any;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private fb: Facebook) {
     platform.ready().then(() => {
@@ -21,10 +21,11 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       // statusBar.styleDefault();
       // splashScreen.hide();
-      setTimeout(()=>{  //wag alisin, need muna magload ang plugins bago lumipat sa LoginPage
-         this.rootPage = LoginPage;
-      })
-      splashScreen.hide();
+      statusBar.styleLightContent();
+      setTimeout(() => {
+        splashScreen.hide();
+        this.rootPage = LoginPage;
+      }, 100);
     });
   }
 }

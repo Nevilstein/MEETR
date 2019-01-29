@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { HttpClientModule } from '@angular/common/http'; 
 
+//Components
 import { MyApp } from './app.component';
 
 //Pages
@@ -38,8 +39,6 @@ import { AdminSettingPage} from '../pages/admin/admin-setting/admin-setting';
 import { AdminSettingPageModule} from '../pages/admin/admin-setting/admin-setting.module';
 import { UserChatroomPage } from '../pages/user/user-chatroom/user-chatroom';	
 import { UserChatroomPageModule } from '../pages/user/user-chatroom/user-chatroom.module';
-import { UserMatchPage } from '../pages/user/user-match/user-match';
-import { UserMatchPageModule } from '../pages/user/user-match/user-match.module';
 
 //Plugins
 import { AngularFireModule } from 'angularfire2';
@@ -53,7 +52,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 import firebase from 'firebase';  
 
 //Provider
-import { AuthProvider } from '../providers/auth/auth';  
+import { UserProvider } from '../providers/user/user';  
 
 export const firebaseConfig = {
     apiKey: "AIzaSyCjTUixYv189FGdP3hQdztU_HCbtqvjJTU",
@@ -67,7 +66,7 @@ export const firebaseConfig = {
 
 @NgModule({
   declarations: [
-    MyApp
+    MyApp,
   ],
   imports: [
     BrowserModule,
@@ -93,8 +92,7 @@ export const firebaseConfig = {
     UserCheckPageModule,
     UserGeoPageModule,
     UserFormPageModule,
-	UserChatroomPageModule,
-    UserMatchPageModule
+	UserChatroomPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -111,8 +109,7 @@ export const firebaseConfig = {
     UserReportPage,
     UserCheckPage,
     UserFormPage,
-    UserGeoPage,
-    UserMatchPage
+    UserGeoPage
   ],
   providers: [
     StatusBar,
@@ -122,7 +119,7 @@ export const firebaseConfig = {
     AngularFireAuth,
     Camera,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AuthProvider
+    UserProvider
   ]
 })
 export class AppModule {}

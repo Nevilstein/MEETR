@@ -38,6 +38,7 @@ export class UserEditPage {
   isMale: boolean;
   isFemale: boolean;
   currentImage:string;
+  category = [];
 
   //Element variables
   interestInputValue: string = "";
