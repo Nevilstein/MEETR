@@ -11,8 +11,7 @@
 	<ion-searchbar style="width: 100%;"
 	[(ngModel)]="myInput"
 	[showCancelButton]="shouldShowCancel"
-	(ionInput)="onInput($event)"
-	(ionCancel)="onCancel($event)">
+	(ionInput)="searchInput($event)">
 	</ion-searchbar>
 
 	<ion-list>

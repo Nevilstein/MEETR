@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 
 //Page
 import { UserProfilePage } from '../user-profile/user-profile';
+import { UserInterestPage } from '../user-interest/user-interest';
 
 //Plugin
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
@@ -39,6 +40,7 @@ export class UserEditPage {
   isFemale: boolean;
   currentImage:string;
   category = [];
+  interestList =[];  //list of interest that must be in database
 
   //Element variables
   interestInputValue: string = "";
@@ -49,7 +51,10 @@ export class UserEditPage {
   profileObserver;
   constructor(public navCtrl: NavController, public navParams: NavParams, private fireAuth: AngularFireAuth, 
     private db: AngularFireDatabase, private camera: Camera, private storage: AngularFireStorage, 
-    private authProvider: AuthProvider) {
+    private authProvider: AuthProvider, private modalCtrl: ModalController) {
+    this.interestList = ['Aesthetic', 'Animals', 'Anime & Manga', 'Art', 'Beauty', 'Books',
+      'Esports', 'Fashion', 'Food', 'Health & Fitness', 'Horror', 'Kpop/K-Drama', 'LGBTQ+',
+      'Movies', 'Music', 'Science', 'Travel', 'TV & Web-Series', 'Video Games', 'Writing']
   }
 
   ionViewDidLoad() {
@@ -73,7 +78,18 @@ export class UserEditPage {
         this.isMale = data['gender'].male;
         this.isFemale = data['gender'].female;
         this.profileImages = Object.assign([], data['photos']);
+        this.interestList = this.interests.concat(this.interestList);  //add interests shown in option
+        this.interestList = this.removeDuples(this.interestList);
       });
+  }
+  removeDuples(interests){
+    let newList = [];
+    interests.forEach( element =>{
+      if(!(newList.indexOf(element) > -1)){
+        newList.push(element);
+      }
+    });
+    return newList;
   }
   addInterest(interest){
     // console.log(this.interestInput._value);
@@ -180,5 +196,14 @@ export class UserEditPage {
   }
   deleteCategory(index){
     this.category.splice(index, 1);
+  }
+  editInterest(){
+    setInterval(() =>{
+      console.log(this.interests);
+    },2000);
+    this.modalCtrl.create(UserInterestPage, {
+      interests: this.interestList, 
+      myInterests: this.interests
+    }).present();
   }
 }

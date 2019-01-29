@@ -58,41 +58,22 @@
 		<ion-card-header class="header" text-center>
 			Edit Interests
 		</ion-card-header>
-		<ion-card-content>
-			<span class="interests" *ngFor="let interest of interests; let i = index"  #interestItem>{{interest}} <ion-icon (click)="deleteInterest(i)" name="md-close-circle"></ion-icon></span>
-			<span class="interests" *ngFor="let cat of category; let i = index"  #interestItem>{{cat}} </span>
+		<ion-card-content (click)="editInterest()">
+			<span class="interests" *ngFor="let interest of interests; let i = index">{{interest}}</span>
+			<!-- <span class="interests" *ngFor="let cat of category; let i = index" #interestItem>{{cat}} </span> -->
 		</ion-card-content>
-		<ion-list id="categories">
+		<!-- <ion-list id="categories">
 			<ion-item>
 				<ion-label>Choose topics</ion-label>
-					<ion-select [(ngModel)]="category" multiple="true" cancelText="Cancel" okText="Okay!">
-					<ion-option value="Aesthetic">Aesthetic</ion-option>
-					<ion-option value="Animals">Animals</ion-option>
-					<ion-option value="Anime & Manga">Anime & Manga</ion-option>
-					<ion-option value="Art">Art</ion-option>
-					<ion-option value="Beauty">Beauty</ion-option>
-					<ion-option value="Books">Books</ion-option>
-					<ion-option value="Esports">Esports</ion-option>
-					<ion-option value="Fashion">Fashion</ion-option>
-					<ion-option value="Food">Food</ion-option>
-					<ion-option value="Health & Fitness">Health & Fitness</ion-option>
-					<ion-option value="Horror">Horror</ion-option>
-					<ion-option value="Kpop/K-Drama">Kpop/K-Drama</ion-option>
-					<ion-option value="LGBTQ+">LGBTQ+</ion-option>
-					<ion-option value="Movies">Movies</ion-option>
-					<ion-option value="Music">Music</ion-option>
-					<ion-option value="Science">Science</ion-option>
-					<ion-option value="Travel">Travel</ion-option>
-					<ion-option value="TV & Web-Series">TV & Web-Series</ion-option>
-					<ion-option value="Video Games">Video Games</ion-option>
-					<ion-option value="Writing">Writing</ion-option>
-			</ion-select>
+				<ion-select [(ngModel)]="category" (ionChange)="check()" multiple="true" cancelText="CANCEL" okText="OK">
+					<ion-option *ngFor="let list of interestList" value="ion-list">{{list}}</ion-option>
+				</ion-select>
 			</ion-item>
-		</ion-list>
-		<ion-input class="input_interest" type="text" [(ngModel)]="interestInputValue" floating placeholder="Add custom Interest" style="width: 80%;" (keyup.enter)=addInterest(interestInput.value) #interestInput></ion-input>
+		</ion-list> -->
+		<!-- <ion-input class="input_interest" type="text" [(ngModel)]="interestInputValue" floating placeholder="Add custom Interest" style="width: 80%;" (keyup.enter)=addInterest(interestInput.value) #interestInput></ion-input> -->
 		<!-- <button ion-button (click)="addInterest(interestInput.value)">Add</button> -->
 	</ion-card>
-	<ion-card class="cards">
+	<!-- <ion-card class="cards">
 		<ion-card-header class="header" text-center>
 			Gender
 		</ion-card-header>
@@ -112,7 +93,7 @@
 			  	</ion-item>
 			</ion-list>
 		</ion-card-content>
-	</ion-card>
+	</ion-card> -->
 
 	<!-- Save needed? or Realtime changes -->
 	<!-- <button ion-button (click)="saveProfile()">Save</button>	 -->

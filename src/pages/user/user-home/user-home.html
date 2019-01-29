@@ -44,7 +44,7 @@
 				<h2 style="font-weight: bold;" text-center>{{card.firstName}} {{card.lastName}}, {{card.age}}</h2>
 				<ion-item>
 					<ion-icon name="logo-facebook" style="color: #3b5998;" item-start></ion-icon>
-					<ion-badge item-start>{{card.friendCount}}</ion-badge>
+					<ion-badge item-start><ion-icon name="people"></ion-icon> {{card.friendCount}}</ion-badge>
 					<button id="button" ion-button item-end (click)="check_user()">
 						<ion-icon id="eye" name="eye"></ion-icon>
 					</button>
