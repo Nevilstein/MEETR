@@ -1,3 +1,14 @@
+//animation css
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
 page-user-home {
     .home_content{
         background-color: #29263E;
@@ -5,6 +16,8 @@ page-user-home {
     .card-container {
         height: 90vw;
         width: 90vw;
+        animation-name: zoomIn;
+        animation-duration: 2s;
     }
     .user_img {
         display: block;
@@ -38,13 +51,16 @@ page-user-home {
         pointer-events: none;
     }
     #button{
+        @include linear-gradient(top,$pinky);
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        background-size: cover;
         z-index: 999;
     }
     #eye{
         font-size: 35px;
     }
 }
-
 
 //loading css{
 

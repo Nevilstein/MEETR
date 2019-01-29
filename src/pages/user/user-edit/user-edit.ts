@@ -27,6 +27,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 export class UserEditPage {
   //Display variables
   interests = [];
+  category = [];
   profileImages = [];
   bio: string = "";
   isMale: boolean;
@@ -34,6 +35,7 @@ export class UserEditPage {
   currentImage:string;
 
   //Element variables
+  categories: string="";
   interestInputValue: string = "";
   isUploading: boolean = false;
   uploadTask: AngularFireUploadTask;
@@ -158,5 +160,13 @@ export class UserEditPage {
   emptyImageCounter(numImages){
     let maxImages = 6;
     return new Array((maxImages-numImages));
+  }
+  get_category(category){
+    for(var i=0; i<category.length; i++){
+      this.category.push(category[i]);
+    }
+  }
+  deleteCategory(index){
+    this.category.splice(index, 1);
   }
 }

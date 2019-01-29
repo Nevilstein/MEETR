@@ -224,7 +224,10 @@ export class UserHomePage {
 		});
 		stackPromise.then(()=>{
 			this.cardSubscribe();	//added a listener to check for changes in database
-			this.isReady = true;
+			setTimeout(()=>{    //<<<---    using ()=> syntax
+			      this.isReady = true;
+			 }, 3000);
+			
 		})
 	}
 
