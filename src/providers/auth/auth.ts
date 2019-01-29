@@ -19,6 +19,7 @@ import { Facebook } from '@ionic-native/facebook';
 @Injectable()
 export class AuthProvider {
 	authUser;
+	currentTab: number;
   constructor(public http: HttpClient, private fireAuth: AngularFireAuth, private zone: NgZone, private appCtrl: App, 
   	private fb: Facebook) {
     console.log('Hello AuthProvider Provider');

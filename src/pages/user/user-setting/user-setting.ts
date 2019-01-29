@@ -11,8 +11,10 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { Observable } from 'rxjs';
 import moment from 'moment';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
+import firebase from 'firebase';
 
 //Providers
+import { AuthProvider } from '../../../providers/auth/auth';
 /**
  * Generated class for the UserSettingPage page.
  *
@@ -26,6 +28,8 @@ import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
   templateUrl: 'user-setting.html',
 })
 export class UserSettingPage {
+
+  authUser = this.authProvider.authUser;
   //Observer/Subscription
   profileObserver;
 
@@ -36,7 +40,7 @@ export class UserSettingPage {
   userVisible: boolean;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private fireAuth: AngularFireAuth, 
-    private fb: Facebook, private db: AngularFireDatabase, private appCtrl: App, ) {
+    private fb: Facebook, private db: AngularFireDatabase, private appCtrl: App, private authProvider: AuthProvider) {
  
   }
 
@@ -53,7 +57,7 @@ export class UserSettingPage {
   }
   
   loadSetting(){
-    this.profileObserver = this.db.list('profile', ref => ref.orderByKey().equalTo(this.fireAuth.auth.currentUser.uid))
+    this.profileObserver = this.db.list('profile', ref => ref.orderByKey().equalTo(this.authUser))
       .snapshotChanges().subscribe(snapshot =>{
         var data = snapshot[0].payload.toJSON();
         this.maxDistance = data['maxDistance'];
@@ -71,13 +75,20 @@ export class UserSettingPage {
 
   facebookLogout(){
     this.fb.logout().then( res => {  //signout fb
-      this.db.list('profile').update(this.fireAuth.auth.currentUser.uid, {
+      this.db.list('profile').update(this.authUser, {
           isLoggedIn: false
       }).then(() => {
-        this.fireAuth.auth.signOut();
-        alert("Logged out.");
-        this.appCtrl.getRootNav().setRoot(LoginPage);
-      })
+        this.db.list('activity').update(this.authUser, {  //start with active
+          isActive:{
+            status: true,
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+          }
+        }).then(() =>{
+          this.fireAuth.auth.signOut();
+          alert("Logged out.");
+          this.appCtrl.getRootNav().setRoot(LoginPage);
+        });
+      });
     });
   }
 
@@ -86,7 +97,7 @@ export class UserSettingPage {
   // }
 
   saveSetting(){
-    this.db.list('profile').update(this.fireAuth.auth.currentUser.uid, {
+    this.db.list('profile').update(this.authUser, {
         maxDistance: this.maxDistance,
         showGender: this.showGender,
         ageRange: {min:this.ageRange['lower'], max:this.ageRange['upper']},

@@ -16,6 +16,7 @@ import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 
 //Providers
 import { AuthProvider } from '../../../providers/auth/auth';
+import { UserProvider } from '../../../providers/user/user';
 /**
  * Generated class for the UserProfilePage page.
  *
@@ -55,8 +56,8 @@ export class UserProfilePage {
   interestInputValue: string = "";
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public fb:Facebook, private fireAuth: AngularFireAuth,
-    private db: AngularFireDatabase, private zone: NgZone, private authProvider: AuthProvider) {
-
+    private db: AngularFireDatabase, private zone: NgZone, private authProvider: AuthProvider, 
+    private userProvider: UserProvider) {
   }
   ionViewDidLoad() {
     this.loadProfile();
@@ -66,15 +67,14 @@ export class UserProfilePage {
   }
 
   loadProfile(){
-    this.profileObserver = this.db.list('profile', ref => ref.orderByKey().equalTo(this.fireAuth.auth.currentUser.uid))
-      .snapshotChanges().subscribe( snapshot => {  //Angularfire2
-          var data = snapshot[0].payload.val();
-          this.firstName = data['firstName'];
-          this.age = moment().diff(moment(data['birthday'], "MM/DD/YYYY"), 'years');
-          this.image = data['photos'][0];
-          this.bio = data['bio'];
-          this.interests = Object.assign([], data['interests']);
-
+    this.profileObserver = this.db.list('profile', ref => ref.orderByKey().equalTo(this.authUser))
+      .snapshotChanges().subscribe( snapshot => {  //Angularfire2 
+        var data = snapshot[0].payload.val();
+        this.firstName = data['firstName'];
+        this.age = moment().diff(moment(data['birthday'], "MM/DD/YYYY"), 'years');
+        this.image = data['photos'][0];
+        this.bio = data['bio'];
+        this.interests = Object.assign([], data['interests']);
       });
   }
   

@@ -12,6 +12,9 @@ import { AngularFireStorage, AngularFireUploadTask } from 'angularfire2/storage'
 import { Camera, CameraOptions } from '@ionic-native/camera';
 
 //Providers
+import { AuthProvider } from '../../../providers/auth/auth';
+
+//Providers
 /**
  * Generated class for the UserEditPage page.
  *
@@ -25,9 +28,11 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
   templateUrl: 'user-edit.html',
 })
 export class UserEditPage {
+
+  authUser = this.authProvider.authUser;
+
   //Display variables
   interests = [];
-  category = [];
   profileImages = [];
   bio: string = "";
   isMale: boolean;
@@ -35,25 +40,31 @@ export class UserEditPage {
   currentImage:string;
 
   //Element variables
-  categories: string="";
   interestInputValue: string = "";
   isUploading: boolean = false;
   uploadTask: AngularFireUploadTask;
 
+  //Observer/Subscription
+  profileObserver;
   constructor(public navCtrl: NavController, public navParams: NavParams, private fireAuth: AngularFireAuth, 
-    private db: AngularFireDatabase, private camera: Camera, private storage: AngularFireStorage) {
+    private db: AngularFireDatabase, private camera: Camera, private storage: AngularFireStorage, 
+    private authProvider: AuthProvider) {
   }
 
   ionViewDidLoad() {
     this.loadProfile();
     console.log('ionViewDidLoad UserEditPage');
   }
+  ionViewWillUnload(){
+    this.profileObserver.unsubscribe();
+  }
+
   goBack(){
     this.navCtrl.push(UserProfilePage);
   }
 
   loadProfile(){
-    this.db.list('profile', ref => ref.orderByKey().equalTo(this.fireAuth.auth.currentUser.uid))
+    this.profileObserver = this.db.list('profile', ref => ref.orderByKey().equalTo(this.authUser))
       .snapshotChanges().subscribe( snapshot => {  //Angularfire2
         var data = snapshot[0].payload.toJSON();
         this.bio = data['bio'];
@@ -77,7 +88,7 @@ export class UserEditPage {
     }
   }
   dbUpdateProfile(){  //Update all values in profile
-    this.db.list('profile').update(this.fireAuth.auth.currentUser.uid, {
+    this.db.list('profile').update(this.authUser, {
       interests: this.interests,
       bio: this.bio,
       gender: {

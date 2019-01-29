@@ -69,10 +69,17 @@ export class UserTabsPage {
     this.trackLocation();
     this.listenToPlatform();
     this.listenToMatches();
-    
+
+    this.db.list('activity').update(this.authUser, {  //start with active
+      isActive:{
+        status: true,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      }
+    });
+
     this.tabRef.ionChange.subscribe(res =>{
       console.log("tab index =",res.index);
-      this.tabIndex = res.index;
+      this.authProvider.currentTab = res.index;
     });
     
   }
@@ -108,7 +115,6 @@ export class UserTabsPage {
     this.onMatchObserver = this.db.list('match', ref => ref.child(currentUser).orderByChild('timestamp').limitToLast(1))
       .snapshotChanges().subscribe( snapshot => {
         if(snapshot.length>0){  //starters don't have matches, it might give error
-          console.log(snapshot);
           let data = snapshot[0].payload.val();
           data['id'] = snapshot[0].key;
 
@@ -116,7 +122,7 @@ export class UserTabsPage {
             this.db.list('match', ref => ref.child(currentUser)).update(data['id'], {
               isSeen: true
             });
-            if(!this.isPaused){
+            if(!this.isPaused && this.authProvider.currentTab === 1){
               const match = this.modalCtrl.create(UserMatchPage, {
                 userMatchKey: data['id']
               });
@@ -141,7 +147,8 @@ export class UserTabsPage {
           timestamp: firebase.database.ServerValue.TIMESTAMP
         }
       });
-    })
+    });
+
     this.pauseObserver =this.platform.pause.subscribe(() =>{
       this.isPaused = true;
       this.db.list('activity').update(this.authUser, {

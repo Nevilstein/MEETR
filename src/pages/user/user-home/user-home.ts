@@ -43,7 +43,7 @@ export class UserHomePage {
 	stackedUsers = [];	//stacked users
 	isReady = false;
 	val = 0;
-
+	findUserCount = 0;
 	//Observers/Subscriptions
 	cardObserver = [];
 	profileChangedObserver;
@@ -97,10 +97,11 @@ export class UserHomePage {
    		// 	this.stackedUsers.splice(0, 1);	//remove 1st stack after adding to db
    		// 	console.log('time');
    		// },500);
-   		this.userLike(swipedUser.id, event);	//add interacted user to db
 
+		this.userLike(swipedUser.id, event);	//add interacted user to db
    		var deletePromise = new Promise( resolve => {	//wait for user/card to be destroyed fully
    			setTimeout(() => {
+   				// let swipedIndex = this.stackedUsers.indexOf(swipedUser);
    				this.stackedUsers.splice(0, 1);	//remove 1st stack after adding to db
    				resolve(true);
    			},200);
@@ -127,7 +128,6 @@ export class UserHomePage {
 		this.userList.splice(num,1);	//remove from userList
 		this.db.list('profile', ref => ref.orderByKey().equalTo(newUserCard['id']))
 			.query.once('value').then( snapshot =>{
-				console.log(snapshot);
 				let data = snapshot[0].val();	//apply observer/listener to user data
 				data["id"] = snapshot[0].key;
 				data = {...data, ...{
@@ -151,50 +151,41 @@ export class UserHomePage {
 		});
 		this.db.list('likes', ref => ref.child(userID).child(this.authUser))
 			.query.once('value').then( snapshot => {
-				if(snapshot.val().like && event.like){
-					let currentDate = moment().format('x');
-					this.db.list('chat', ref => ref.child(this.authUser)).push({
-						// messages:{	//add starting message? from the second one that liked
-
-						// },
-						members:{
-							[this.authUser]: true,
-							[userID]: true,
-						},
-						timestamp: currentDate,
-						createdDate: currentDate
-					}).then( uniqueSnap => {	//second liker creates room
-						console.log('hey1')
-						this.db.list('chat', ref => ref.child(userID)).set(uniqueSnap.key, {
-							// messages:{	//add starting message? from the second one that liked
-
-							// },
-							members:{
-								[this.authUser]: true,
-								[userID]: true,
-							},
+				if(snapshot.val()){		//if like is found
+					if(snapshot.val().like && event.like){
+						let currentDate = moment().valueOf();
+						this.db.list('chat', ref => ref.child(this.authUser)).push({
+							sender:	this.authUser,
+							receiver: userID,
+							unseenCount: 0,
+							matchStatus: true,
 							timestamp: currentDate,
-							createdDate: currentDate
-						}).then(() =>{
-							console.log('hey2');
-						})	//first also gets the room key
-						this.db.list('match', ref => ref.child(this.authUser)).set(userID, {
-							isSeen: true,
-							timestamp: currentDate
-						})		//update both users about match
-						this.db.list('match', ref => ref.child(userID)).set(this.authUser, {
-							isSeen: false,
-							timestamp: currentDate
+							createdDate: currentDate,
+							geoStatus: false
+						}).then( uniqueSnap => {	//second liker creates room
+							this.db.list('chat', ref => ref.child(userID)).set(uniqueSnap.key, {
+								sender:	userID,
+								receiver: this.authUser,
+								unseenCount: 0,
+								matchStatus: true,
+								timestamp: currentDate,
+								createdDate: currentDate,
+								geoStatus: false
+							})	//first also gets the room key
+							this.db.list('match', ref => ref.child(this.authUser)).set(userID, {
+								isSeen: true,
+								timestamp: currentDate
+							})		//update both users about match
+							this.db.list('match', ref => ref.child(userID)).set(this.authUser, {
+								isSeen: false,
+								timestamp: currentDate
+							});
+						}).then(() => {
+							this.modalCtrl.create(UserMatchPage, {userMatchKey:userID}).present();
 						});
-						console.log('hey3');
-					}).then(() => {
-						console.log('hey4');
-						this.modalCtrl.create(UserMatchPage, {userMatchKey:userID}).present();
-					});
+					}
 				}
-			}).then(() =>{
-				console.log('hey5');
-			});
+			})
 	}
 
 	setCards(){
@@ -225,9 +216,8 @@ export class UserHomePage {
 		stackPromise.then(()=>{
 			this.cardSubscribe();	//added a listener to check for changes in database
 			setTimeout(()=>{    //<<<---    using ()=> syntax
-			      this.isReady = true;
-			 }, 3000);
-			
+			    this.isReady = true;
+			}, 3000);
 		})
 	}
 
@@ -341,6 +331,7 @@ export class UserHomePage {
 							newList.push(value);
 						}
 					}).then(() =>{
+						console.log(index+1, "===", userLength);
 						if(index+1 === userLength){
 							resolve(true);
 						}
@@ -357,26 +348,29 @@ export class UserHomePage {
 		let newList = [];
 		let userLength = this.userList.length;
 		var agePromise = new Promise(resolve => {
-			this.userList.forEach( (value, index) =>{
-				this.db.list('profile', ref => ref.child(value['id']))
-					.query.once('value').then( snapshot => {
-						let data = snapshot.val();
-						data.id = snapshot.key;
-						let age = value.age;
-						let ageRange = this.myProfile['ageRange'];	//age range preference of user
-						console.log(age, ageRange.min, ageRange.max);
-						let isInRange = ((age >= ageRange.min && 
-							age<=ageRange.max) ? true : false);	//check if in range of age preference
-						console.log(isInRange);
-						if(isInRange){	//remove users not in range
-							newList.push(value);
-						}
-					}).then(() =>{
-						if(index+1 === userLength){
-							resolve(true);
-						}
+			if(userLength>0){
+				this.userList.forEach( (value, index) =>{
+					this.db.list('profile', ref => ref.child(value['id']))
+						.query.once('value').then( snapshot => {
+							let data = snapshot.val();
+							data.id = snapshot.key;
+							let age = value.age;
+							let ageRange = this.myProfile['ageRange'];	//age range preference of user
+							console.log(age, ageRange.min, ageRange.max);
+							let isInRange = ((age >= ageRange.min && 
+								age<=ageRange.max) ? true : false);	//check if in range of age preference
+							console.log(isInRange);
+							if(isInRange){	//remove users not in range
+								newList.push(value);
+							}
+						}).then(() =>{
+							if(index+1 === userLength){
+								resolve(true);
+							}
+						});
 					});
-			});
+			}
+			
 		});
 		agePromise.then(() => {
 			this.userList = newList;
@@ -410,6 +404,11 @@ export class UserHomePage {
 							}
 						});
 					}
+					else{	//if found in match
+						if(index+1 === userLength){
+							resolve(true);
+						}
+					}
 				})
 			})
 		});
@@ -421,7 +420,7 @@ export class UserHomePage {
 	stackUser(){
 		let numOfCards = ((this.userList.length<20) ? this.userList.length : 20);	//safety check if low count of users
 		for(let i=0; i<numOfCards; i++){
-			let num = this.getRandomInt(0,this.userList.length);	//temporarily use random? :P
+			let num = this.getRandomInt(0, this.userList.length);	//temporarily use random? :P
 			this.stackedUsers.push(this.userList[num]);
 			this.userList.splice(num,1);	//remove the user from list
 		}
@@ -429,8 +428,16 @@ export class UserHomePage {
 			this.setCards();
 		}
 		else{
-			console.log("start again");
-			this.stackStart();	//loop to find users again
+			setTimeout( () => {
+				if(this.findUserCount === 10){
+					alert("No users around. Please update your preference.");
+				}
+				else{
+					this.findUserCount++;
+					this.stackStart();
+				}
+			}, 3000);
+			//loop to find users again
 			// this.findUserCount++;	//findUserCount to check how many times the app looked for match; it notifies user to update interest
 		}
 	}
