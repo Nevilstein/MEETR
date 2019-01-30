@@ -9,16 +9,18 @@
   <ion-navbar class="head">
     <ion-row *ngIf="((profilePromise | async) && (activePromise | async )) as head ">
     	<img id="user_img" src="{{userPhoto}}" >
-      <ion-title id="name" style="display: inline-block;, margin-bottom: 100px;">{{userFirstName}} {{userLastName}}</ion-title>
-       <button style="background-color: transparent; display: inline-block;" >
-          <ion-icon class="more" name="pin" style="zoom:2.0;" (click)="gotoGeo()"></ion-icon>
-        </button>
-      <p *ngIf="isActive && activeWhen" style="color:green">Active {{activeWhen}}</p> 
-      <p *ngIf="!isActive && activeWhen" style="color:whitesmoke">Active {{activeWhen}}</p> 
+      <ion-title id="name">{{userFirstName}} {{userLastName}}</ion-title>
+        <!-- <button style="background-color: transparent; display: inline-block;" >
+          <ion-icon class="gps" name="pin" (click)="gotoGeo()"></ion-icon>
+        </button>  -->
+      <div class="active">
+        <small *ngIf="isActive && activeWhen" style="color:green">Active {{activeWhen}}</small> 
+        <small *ngIf="!isActive && activeWhen" style="color:whitesmoke">Active {{activeWhen}}</small> 
+      </div>
     </ion-row>
       <ion-buttons end>
-  	    <button style="background-color: transparent;" >
-  	    	<ion-icon class="more" name="md-more" style="zoom:2.0;"></ion-icon>
+  	    <button style="background-color: transparent;">
+  	    	<ion-icon class="more" name="md-more"  (click)="presentPopover($event)" ></ion-icon>
   	    </button>
   	  </ion-buttons>
   </ion-navbar>
@@ -26,8 +28,8 @@
 </ion-header>
 
 
-<ion-content class="chatroom_content" padding>
-  <div class="chatwindow">
+<ion-content #scrollMe class="chatroom_content" padding >
+  <!-- <div class="chatwindow">
     <ion-list no-lines>
       <ion-item *ngFor = "let message of messages" text-wrap>
         <ion-avatar item-left *ngIf="message.sender === receiverKey">
@@ -37,18 +39,42 @@
         <div class="bubble you" *ngIf="message.sender === authKey">{{message.message}}</div>
       </ion-item>
     </ion-list>
-  </div>
+  </div> -->
+  <ion-grid *ngFor = "let message of messages">
+    <ion-row>
+          <img class="circle_pic" *ngIf="message.sender === receiverKey" src="{{userPhoto}}">
+      <ion-col col-9>
+        <div> 
+          <div class="chatmate" *ngIf="message.sender === receiverKey">
+            <p>{{message.message}}</p>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col-3></ion-col>
+      <ion-col>
+        <div class="user" *ngIf="message.sender === authKey" >
+          <p>{{message.message}}</p>
+        </div>
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
+
+
+
 </ion-content>
 
 <ion-footer>
-  <ion-row>
-        <ion-col col-9 no-padding>
-             <ion-input type="text" [(ngModel)]="myMessage" (change)="checkMessage()" placeholder="Type something..." id="input_box" style="width: 80%;"></ion-input>
-        </ion-col>
-        <ion-col no-padding>
-            <button no-margin ion-button round full large color="primary" id="send" [disabled]="messageEmpty" (click)="sendMessage()">
-            	<ion-icon name="send" ></ion-icon>
-            </button>
-        </ion-col>
-    </ion-row>
+    <ion-row>
+          <ion-col col-10>
+               <ion-input type="text" [(ngModel)]="myMessage" (change)="checkMessage()" placeholder="Type something..." id="input_box"></ion-input>
+          </ion-col>
+          <ion-col>
+              <button id="send" [disabled]="messageEmpty" (click)="sendMessage()">
+              	<ion-icon name="send" ></ion-icon>
+              </button>
+          </ion-col>
+      </ion-row>
 </ion-footer>

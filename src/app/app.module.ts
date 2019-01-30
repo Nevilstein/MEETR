@@ -40,6 +40,7 @@ import { UserChatroomPage } from '../pages/user/user-chatroom/user-chatroom';
 import { UserChatroomPageModule } from '../pages/user/user-chatroom/user-chatroom.module';
 import { UserMatchPage } from '../pages/user/user-match/user-match';
 import { UserMatchPageModule } from '../pages/user/user-match/user-match.module';
+import { PopoverComponent } from '../components/popover/popover';
 
 //Plugins
 import { AngularFireModule } from 'angularfire2';
@@ -69,7 +70,8 @@ export const firebaseConfig = {
 
 @NgModule({
   declarations: [
-    MyApp
+    MyApp,
+    PopoverComponent
   ],
   imports: [
     BrowserModule,
@@ -114,7 +116,8 @@ export const firebaseConfig = {
     UserCheckPage,
     UserFormPage,
     UserGeoPage,
-    UserMatchPage
+    UserMatchPage,
+    PopoverComponent
   ],
   providers: [
     StatusBar,

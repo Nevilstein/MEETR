@@ -7,6 +7,7 @@ import { AlertController } from 'ionic-angular';
 import { UserReportPage } from '../user-report/user-report';
 import { UserCheckPage } from '../user-check/user-check';
 import { UserMatchPage } from '../user-match/user-match';
+import { UserEditPage } from '../user-edit/user-edit';
 
 //Libraries
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -63,7 +64,7 @@ export class UserHomePage {
 	  },
 	};
 
-	constructor(private sanitizer: DomSanitizer, private alertCtrl: AlertController, private modalCtrl: ModalController, 
+	constructor(private sanitizer: DomSanitizer, public navCtrl: NavController, private alertCtrl: AlertController, private modalCtrl: ModalController, 
 		private fireAuth: AngularFireAuth, private db: AngularFireDatabase, private authProvider: AuthProvider) {
 		
 	}
@@ -430,7 +431,26 @@ export class UserHomePage {
 		else{
 			setTimeout( () => {
 				if(this.findUserCount === 10){
-					alert("No users around. Please update your preference.");
+					let alert = this.alertCtrl.create({
+					    title: 'No users found!',
+					    message: 'Please change your preferences',
+					    buttons: [
+					      {
+					        text: 'Cancel',
+					        role: 'cancel',
+					        handler: () => {
+					          console.log('Cancel clicked');
+					        }
+					      },
+					      {
+					        text: 'Edit now',
+					        handler: () => {
+					          this.navCtrl.push(UserEditPage);
+					        }
+					      }
+					    ]
+					  });
+					  alert.present();
 				}
 				else{
 					this.findUserCount++;

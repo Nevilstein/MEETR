@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, ViewChild} from '@angular/core';
+import { IonicPage, NavController, NavParams, PopoverController, Content} from 'ionic-angular';
 import { UserGeoPage } from '../user-geo/user-geo';
+import { PopoverComponent } from '../../../components/popover/popover';
 
 
 
@@ -54,12 +55,16 @@ export class UserChatroomPage {
   profilePromise: Promise<boolean>;
   activePromise: Promise<boolean>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private db: AngularFireDatabase, 
+  @ViewChild(Content) content: Content;
+
+  constructor(public navCtrl: NavController,public popoverCtrl:PopoverController , public navParams: NavParams, private db: AngularFireDatabase, 
     private authProvider: AuthProvider) {
   }
-
   ionViewDidLoad() {
     console.log('ionViewDidLoad UserChatroomPage');
+    setTimeout(() => {
+        this.content.scrollToBottom();
+     }, 1000);
     this.timeInterval = setInterval(() =>{
       this.activeWhen = this.getActiveStatus();  
     }, 60000)
@@ -180,5 +185,11 @@ export class UserChatroomPage {
 
   gotoGeo(){
     this.navCtrl.push(UserGeoPage);
+  }
+  presentPopover(myEvent) {
+    let popover = this.popoverCtrl.create(PopoverComponent);
+    popover.present({
+      ev: myEvent
+    });
   }
 }
