@@ -40,6 +40,8 @@ import { UserChatroomPage } from '../pages/user/user-chatroom/user-chatroom';
 import { UserChatroomPageModule } from '../pages/user/user-chatroom/user-chatroom.module';
 import { UserMatchPage } from '../pages/user/user-match/user-match';
 import { UserMatchPageModule } from '../pages/user/user-match/user-match.module';
+import { UserInterestPage } from '../pages/user/user-interest/user-interest';
+import { UserInterestPageModule } from '../pages/user/user-interest/user-interest.module';
 import { PopoverComponent } from '../components/popover/popover';
 
 //Plugins
@@ -98,7 +100,8 @@ export const firebaseConfig = {
     UserGeoPageModule,
     UserFormPageModule,
     UserChatroomPageModule,
-    UserMatchPageModule
+    UserMatchPageModule,
+    UserInterestPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

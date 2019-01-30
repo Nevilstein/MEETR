@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, ChangeDetectionStrategy, NgZone } from '@angular/core';
+  import { Component, ChangeDetectorRef, ChangeDetectionStrategy, NgZone } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 //Pages
@@ -81,7 +81,6 @@ export class UserChatPage {
           }).then( chatList => {
             this.chatList = [];
             this.chatList = Object.assign(chatList);
-            console.log(this.chatList);
           });
         });
   }
@@ -100,11 +99,14 @@ export class UserChatPage {
     }
 
   }
-
-	openChat(chatKey, userKey){
+  openChat(chatKey, userKey){
     this.navCtrl.push(UserChatroomPage, {
       chatKey: chatKey, 
       userKey: userKey
     });
-	}	
+  }  
+
+  searchInput(event){
+
+  }
 }

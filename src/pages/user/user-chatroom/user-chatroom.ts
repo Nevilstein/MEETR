@@ -33,7 +33,9 @@ export class UserChatroomPage {
   messages = [];
   myMessage:string;
   messageEmpty: boolean;
-
+  geoStatus = { sender: false, receiver: false}
+  matchDate;
+  unseenCount:number;
 
 
   userPhoto: string;
@@ -46,6 +48,7 @@ export class UserChatroomPage {
 
   //Observer/Subscription
   chatObserver;
+  chatObserver2;
   messageObserver;
   activeObserver;
   profileObserver;
@@ -54,6 +57,7 @@ export class UserChatroomPage {
   //Promises
   profilePromise: Promise<boolean>;
   activePromise: Promise<boolean>;
+
 
   @ViewChild(Content) content: Content;
 
@@ -71,9 +75,11 @@ export class UserChatroomPage {
     this.getChatData();
     this.getUserData();
   }
+  
   ionViewWillUnload(){
     this.activeObserver.unsubscribe();
-    // this.chatObserver.unsubscribe();
+    this.chatObserver.unsubscribe();
+    this.chatObserver2.unsubscribe();
     this.messageObserver.unsubscribe();
     this.profileObserver.unsubscribe();
     clearInterval(this.timeInterval);
@@ -82,22 +88,40 @@ export class UserChatroomPage {
   PROBLEMS:
     Show more messages
     Chatloading
-    Active time
     Add match in chatlist?
   */
   getChatData(){
-    // this.chatObserver = this.db.list('chat', ref=> ref.child(this.authKey).child(this.chatKey))
-    //   .snapshotChanges().subscribe( snapshot => {
-    //     // this.db.list('chat', ref=> ref.child(this.authKey).child(this.chatKey)
-    //     //   .child('messages').orderByChild('isRead').equalTo(true)).query.once('value', messageSnap =>{
-    //     //     console.log(messageSnap.val());
-    //     //   }).then( () =>{
-    //         let data = snapshot[0].payload.val();
-    //         this.messages = data['messages'];
+    this.chatObserver = this.db.list('chat', ref=> ref.child(this.authKey).orderByChild(this.chatKey))  //my chat
+      .snapshotChanges().subscribe( snapshot =>{
+        snapshot.forEach( element =>{
+          let data = element.payload.val();
+          data['id'] = element.key;
 
-    //       // });
-    //   });
-    this.chatObserver = this.db.list('chat', ref=> ref.child(this.authKey))
+          if(!data['matchStatus']){  //check if match is still active
+            this.navCtrl.pop();
+          }
+
+          if(data['unseenCount']>0){  //messages seen
+            this.db.list('chat', ref=> ref.child(this.authKey)).update(this.chatKey,{ unseenCount: 0 });
+            data['unseenCount'] = 0;
+          }
+
+          this.geoStatus = {sender:data['geoStatus'], receiver:this.geoStatus.receiver}
+          this.matchDate = data['createdDate'];
+        })
+      });
+
+    this.chatObserver2 = this.db.list('chat', ref=> ref.child(this.receiverKey).orderByChild(this.chatKey))
+      .snapshotChanges().subscribe( snapshot =>{
+        snapshot.forEach( element =>{
+          let data = element.payload.val();
+          data['id'] = element.key;
+
+          this.geoStatus = {sender:this.geoStatus.sender, receiver:data['geoStatus']};
+          this.unseenCount = data['unseenCount'];
+        });
+      });
+
     this.messageObserver = this.db.list('messages', ref=> ref.child(this.authKey).child(this.chatKey)
       .orderByChild('timestamp')).snapshotChanges().subscribe(snapshot => {
         let messageArr = []
@@ -105,6 +129,10 @@ export class UserChatroomPage {
           snapshot.forEach( element => {
             let data = element.payload.val();
             data['id'] = element.key;
+            if(!data['isRead']){
+              this.db.list('messages', ref=> ref.child(this.authKey).child(this.chatKey))
+                .update(data['id'], { isRead:true });
+            }
             messageArr.push(data);
           });
           resolve(true);
@@ -175,7 +203,8 @@ export class UserChatroomPage {
       timestamp:sentDate
     });
     this.db.list('chat', ref=> ref.child(this.receiverKey)).update(this.chatKey, {
-      timestamp:sentDate
+      timestamp:sentDate,
+      unseenCount: this.unseenCount+1
     });
   }
 

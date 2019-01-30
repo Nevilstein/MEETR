@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 
 //Page
 import { UserProfilePage } from '../user-profile/user-profile';
+import { UserInterestPage } from '../user-interest/user-interest';
 
 //Plugin
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+import { AngularFireDatabase } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireStorage, AngularFireUploadTask } from 'angularfire2/storage';
 // import { storage } from 'firebase';
@@ -39,6 +40,7 @@ export class UserEditPage {
   isFemale: boolean;
   currentImage:string;
   category = [];
+  
 
   //Element variables
   interestInputValue: string = "";
@@ -49,7 +51,8 @@ export class UserEditPage {
   profileObserver;
   constructor(public navCtrl: NavController, public navParams: NavParams, private fireAuth: AngularFireAuth, 
     private db: AngularFireDatabase, private camera: Camera, private storage: AngularFireStorage, 
-    private authProvider: AuthProvider) {
+    private authProvider: AuthProvider, private modalCtrl: ModalController) {
+    
   }
 
   ionViewDidLoad() {
@@ -73,8 +76,19 @@ export class UserEditPage {
         this.isMale = data['gender'].male;
         this.isFemale = data['gender'].female;
         this.profileImages = Object.assign([], data['photos']);
+        // this.interestList = this.interests.concat(this.interestList);  //add interests shown in option
+        // this.interestList = this.removeDuples(this.interestList);
       });
   }
+  // removeDuples(interests){
+  //   let newList = [];
+  //   interests.forEach( element =>{
+  //     if(!(newList.indexOf(element) > -1)){
+  //       newList.push(element);
+  //     }
+  //   });
+  //   return newList;
+  // }
   addInterest(interest){
     // console.log(this.interestInput._value);
     // this.interestInput.clearTextInput();
@@ -180,5 +194,9 @@ export class UserEditPage {
   }
   deleteCategory(index){
     this.category.splice(index, 1);
+  }
+  editInterest(){
+    let modal = this.modalCtrl.create(UserInterestPage);
+    modal.present();
   }
 }
