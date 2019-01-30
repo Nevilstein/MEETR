@@ -1,9 +1,15 @@
 page-user-chatroom {
 	#send{
 		height: 45px;
+		background-color: transparent;
+	}
+	#send ion-icon{
+		color: white;
+		font-size: 30px;
 	}
 	#input_box{
-		border-radius:5px
+		border-radius: 20px;
+		background-color: white;
 	}
 	#user_img{
 		width:40px;
@@ -23,9 +29,57 @@ page-user-chatroom {
 	}
 	.more{
 		color: white;
-	}
+		font-size: 40px;
+	}/*
 	ion-footer{
 		border-radius: 40px;
 		background-color: white;
+	}*/
+	.active{
+		margin-left: 16vw;
+		margin-top: -10px;
+	}
+	#name{
+		margin-top: 5px;
+	}
+	.gps{
+		font-size: 20px;
+		color: white;
+		display: inline-block;
+	}
+	#pic{
+		height: 40px;
+		width: 40px;
+		float: left;
+	}
+	.chatmate{
+		background-color: #e8e8e8;
+		display: inline-block;
+		word-break: break-all;
+		word-wrap: break-word;
+		padding: 0px 2px;
+		border-radius: 10px;
+	}
+	.user{
+		@include linear-gradient(top,$sweet-morning);
+	    -webkit-background-size: cover;
+	    -moz-background-size: cover;
+	    background-size: cover;
+		display: inline-block;
+		float: right;
+		word-break: break-all;
+		word-wrap: break-word;
+		padding: 0px 2px;
+		border-radius: 10px;
+	}
+	.user p{
+		color: white;
+	}
+	.circle_pic{
+		float: left;
+		width:40px;
+	    height:40px;
+	    -webkit-border-radius: 40%;
+	    border-radius: 50%;
 	}
 }

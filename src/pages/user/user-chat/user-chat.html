@@ -16,11 +16,16 @@
 	</ion-searchbar>
 
 	<ion-list>
-		<ion-item-sliding #item >
-			<button ion-item no-lines class="chat_content" (click)="user_Chat()">
-					<img class="circle-pic" src="../assets/imgs/harvey.jpg" item-start>
-				<h2 class="content">Harvey Revillas</h2>
-    			<p class="content">chingchong boi</p>
+		<ion-item-sliding *ngFor="let chat of chatList">
+			<button ion-item no-lines class="chat_content" (click)="openChat(chat.id, chat.receiver)">
+					<img class="circle-pic" src="{{chat.userImage}}" item-start>
+				<h2 class="content">{{chat.firstName}} {{chat.lastName}}</h2>
+    			<p class="content" *ngIf="chat.message">
+    				<b *ngIf="!chat.isRead">{{chat.message}}</b>
+    				<span *ngIf="chat.isRead">{{chat.message}}</span> ~ {{chat.messageDate}}</p>
+				<p class="content" *ngIf="!chat.message">
+    				<b>Say something to your new match!</b>
+    			</p>
 			</button>
 			<ion-item-options side="left">
 			  <button ion-button no-lines ion-button class="chat_buttons" color="secondary" (click)="favorite(item)">
@@ -38,7 +43,7 @@
 			</ion-item-options>
 		</ion-item-sliding>
 
-		<ion-item-sliding #item>
+		<!-- <ion-item-sliding #item>
 			<button ion-item no-lines class="chat_content" (click)="user_Chat()">
 					<img class="circle-pic" src="../assets/imgs/luwelle.jpg" item-start>
 				<h2 class="content">Luwelle Baltazar</h2>
@@ -80,7 +85,7 @@
 			  	<ion-icon class="chat_icons" name="trash"></ion-icon>
 			  </button>
 			</ion-item-options>
-		</ion-item-sliding>
+		</ion-item-sliding> -->
 		
 	</ion-list>
 

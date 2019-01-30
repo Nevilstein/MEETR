@@ -7,41 +7,75 @@
 
 
 <ion-content class="home_content" padding>
-	<div class="card-container" *ngIf="ready">
-		<sc-card  padding *ngFor="let attendant of attendants" 
+	<!-- <div class="card-container" *ngIf="!isReady" style="background-color: whitesmoke">
+		LOADING...
+	</div> -->
+	<ion-grid style="height: 100%" *ngIf="!isReady">
+		<ion-row justify-content-center align-items-center style="height: 100%">
+			<div class="lds-css ng-scope" >
+				<div class="lds-gear" style="100%;height:100%">
+					<div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+						<div></div>
+					</div>
+				</div>
+			</div>
+		</ion-row>
+	</ion-grid>
+	
+
+	<div class="card-container" *ngIf="isReady">
+		<sc-card padding *ngFor="let card of stackedUsers; let i = index"
+						[class.back-cards]="i!==0"
 						[orientation]="cardDirection" 
 						[tinder-card]="cardOverlay" 
-						[callDestroy]="attendant.destroyEvent" 
-						[callLike]="attendant.likeEvent" 
-						(onLike)="onCardInteract($event)">
+						[callDestroy]="card.destroyEvent" 
+						[callLike]="card.likeEvent" 
+						(onLike)="onCardInteract($event, card)">
 
-			<div class="user_img" [style.background-image]="attendant.asBg"></div>
+			<div class="user_img" [style.background-image]="card.asBg"></div>
 			<ion-card class="info" style="padding-top: 5px;">
-				<h2 style="font-weight: bold;" text-center>Luwelle Baltazar, 19</h2>
+				<h2 style="font-weight: bold;" text-center>{{card.firstName}} {{card.lastName}}, {{card.age}}</h2>
 				<ion-item>
 					<ion-icon name="logo-facebook" style="color: #3b5998;" item-start></ion-icon>
-						Friends
-					<ion-badge item-end>5,000</ion-badge>
+					<ion-badge item-start>{{card.friendCount}}</ion-badge>
+					<button id="button" ion-button item-end (click)="check_user()">
+						<ion-icon id="eye" name="eye"></ion-icon>
+					</button>
 				</ion-item>
 			</ion-card>
         </sc-card>
     </div>
-	
-
+	<!-- <div id="show"></div>
+	<div>
+		<ion-grid id="grid">
+			<ion-row>
+				<ion-col><button ion-button (click)="match_overlay()">Show match overlay</button></ion-col>
+			</ion-row>
+			<ion-row>
+				<ion-col col-2></ion-col>
+				<ion-col col-4>
+					<ion-fab style="margin-bottom: 10px;">
+						<button ion-fab color="danger" (click)="report_user()">
+							<ion-icon name="warning" style="zoom:2.0;"></ion-icon>
+						</button>
+					</ion-fab>
+				</ion-col>
+				<ion-col col-4>
+					<ion-fab>
+						<button ion-fab color="default" style="margin-left: 40px;" (click)="check_user()">
+							<ion-icon name="person" style="zoom:2.0;"></ion-icon>
+						</button>
+					</ion-fab>
+				</ion-col>
+				<ion-col col-2></ion-col>
+			</ion-row>
+		</ion-grid>
+	</div> -->
 </ion-content>
-<ion-footer>
-	<ion-grid>
-		<ion-row>
-			<ion-col col-3></ion-col>
-			<ion-col col-6>
-				<button ion-fab color="danger" style="float: left;" (click)="report_user()">
-					<ion-icon name="warning" style="zoom:2.0;"></ion-icon>
-				</button>
-				<button ion-fab color="default" style="float: right; display: inline-block;" (click)="check_user()">
-				<ion-icon name="person" style="zoom:2.0;"></ion-icon>
-				</button>
-			</ion-col>
-			<ion-col col-3><button ion-button (click)="match_overlay()">Popup</button></ion-col>
-		</ion-row>
-	</ion-grid>
-</ion-footer>

@@ -11,7 +11,6 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import firebase from 'firebase';
 
 //Providers
-import { UserProvider } from '../../../providers/user/user';
 /**
  * Generated class for the UserFormPage page.
  *

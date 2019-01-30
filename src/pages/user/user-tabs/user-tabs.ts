@@ -1,20 +1,26 @@
 import { Component, ViewChild, NgZone } from '@angular/core';
-import { IonicPage, NavController, NavParams, App, Tabs } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, App, Tabs, ModalController } from 'ionic-angular';
+// import { SuperTabsController } from 'ionic2-super-tabs';
+import { Platform } from 'ionic-angular';
 
 //Pages
 import { LoginPage } from '../../login/login';
 import { UserProfilePage } from '../user-profile/user-profile';
 import { UserHomePage } from '../user-home/user-home';
 import { UserChatPage } from '../user-chat/user-chat';
+import { UserMatchPage } from '../user-match/user-match';
 
 //Plugins
+import { AngularFireDatabase } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Facebook } from '@ionic-native/facebook';
 import { Geolocation } from '@ionic-native/geolocation';
+import firebase from 'firebase';
+// import geolib from 'geolib';
 
 
 //Providers
-import { UserProvider } from '../../../providers/user/user';
+import { AuthProvider } from '../../../providers/auth/auth';
 /**
  * Generated class for the UserTabsPage page.
  *
@@ -28,8 +34,10 @@ import { UserProvider } from '../../../providers/user/user';
   templateUrl: 'user-tabs.html',
 })
 export class UserTabsPage {
-  constructor(public navCtrl: NavController, public navParams: NavParams, private userProvider: UserProvider, private appCtrl: App,
-    private fireAuth: AngularFireAuth, private fb: Facebook, private zone: NgZone, private geolocation: Geolocation ) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private authProvider: AuthProvider, private appCtrl: App,
+    private fireAuth: AngularFireAuth, private fb: Facebook, private zone: NgZone, private geolocation: Geolocation, 
+    private db: AngularFireDatabase, private modalCtrl: ModalController, private platform: Platform) {
+      
   }
 
   @ViewChild('userTab') tabRef: Tabs;
@@ -37,41 +45,119 @@ export class UserTabsPage {
   user_tab2root = UserHomePage;
   user_tab3root = UserChatPage;
 
+  authUser = this.authProvider.authUser;  //ID of authenticated user
+
+  //Observers/Subscriptions
+  onMatchObserver:any;  //listens for sent likes
+  pauseObserver: any;  //listens to app pause activity
+  resumeObserver: any; //listens to app resume activity
+  trackGeo:any;  //listens to location
+
+  tabIndex: number;
+  isPaused: boolean = false;
+  // count=0;
+
+  // ngOnDestroy(){
+  //   this.onMatchObserver.unsubscribe();
+  //   this.trackGeo.unsubcribe();
+  //   this.pauseObserver.unsubscribe();
+  //   this.resumeObserver.unsubscribe();
+  // }
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad UserTabsPage');
-    
-    //Load all first to start data (for async purposes)
-    // this.tabRef.getAllChildNavs().forEach( nav =>{
-    //   this.tabRef.select(nav.index);
-    // });
+    this.trackLocation();
+    this.listenToPlatform();
+    this.listenToMatches();
 
-    // this.geolocation.getCurrentPosition().then(pos => {
-    //   console.log('lat: ' + pos.coords.latitude + ', lon: ' + pos.coords.longitude);
-    // });
-    // this.geolocation.watchPosition().subscribe(pos => {
-    //   console.log('lat: ' + pos.coords.latitude + ', lon: ' + pos.coords.longitude);
-    // });
-
-    this.fireAuth.authState.subscribe( fireRes =>{    //Checking if no problems in authentication
-      this.fb.getLoginStatus().then(fbRes =>{
-        if(!fireRes && fbRes.status !== 'connected'){
-          this.zone.run(() => {
-              this.appCtrl.getRootNav().setRoot(LoginPage);
-          });
-        }
-      });
+    this.db.list('activity').update(this.authUser, {  //start with active
+      isActive:{
+        status: true,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      }
     });
-    
-    
 
-    // this.tabRef.select(0).then(() =>{
-    //   this.
-    // })
-    
-    // this.tabRef.ionChange.subscribe(res =>{
-    //   console.log(res.index);
-    // });
+    this.tabRef.ionChange.subscribe(res =>{
+      console.log("tab index =",res.index);
+      this.authProvider.currentTab = res.index;
+    });
     
   }
 
+  ionViewWillUnload(){
+    this.trackGeo.unsubscribe();
+    this.onMatchObserver.unsubscribe();
+    this.pauseObserver.unsubscribe();
+    this.resumeObserver.unsubscribe();
+  }
+
+  trackLocation(){  
+    this.trackGeo = this.geolocation.watchPosition();
+    this.trackGeo.subscribe((data) => {
+      this.db.list('location').update(this.authUser, {
+        currentLocation: {
+          latitude: data.coords.latitude,
+          longitude: data.coords.longitude,
+          timestamp: data.timestamp
+        }
+      });
+    });
+  }
+
+  // tabChanged(event){
+  //   let listener = (event.index === 1 ? true:false);
+  //   console.log("hey");
+  //   this.listenMatch(listener);
+  // }
+  listenToMatches(){
+    console.log('matches');
+    let currentUser = this.fireAuth.auth.currentUser.uid;
+    this.onMatchObserver = this.db.list('match', ref => ref.child(currentUser).orderByChild('timestamp').limitToLast(1))
+      .snapshotChanges().subscribe( snapshot => {
+        if(snapshot.length>0){  //starters don't have matches, it might give error
+          let data = snapshot[0].payload.val();
+          data['id'] = snapshot[0].key;
+
+          if(!data['isSeen']){
+            this.db.list('match', ref => ref.child(currentUser)).update(data['id'], {
+              isSeen: true
+            });
+            if(!this.isPaused && this.authProvider.currentTab === 1){
+              const match = this.modalCtrl.create(UserMatchPage, {
+                userMatchKey: data['id']
+              });
+              match.present();
+            }
+            // else{
+            //   //NOTIFY THE USER THEN SEEN
+            // }
+          }
+        }
+        
+      });
+  }
+
+  listenToPlatform(){
+    console.log('platform');
+    this.resumeObserver = this.platform.resume.subscribe(() =>{
+      this.isPaused = false;
+      this.db.list('activity').update(this.authUser, {
+        isActive:{
+          status: true,
+          timestamp: firebase.database.ServerValue.TIMESTAMP
+        }
+      });
+    });
+
+    this.pauseObserver =this.platform.pause.subscribe(() =>{
+      this.isPaused = true;
+      this.db.list('activity').update(this.authUser, {
+        isActive:{
+          status: false,
+          timestamp: firebase.database.ServerValue.TIMESTAMP
+        }
+      });
+    });
+    // this.platform.exitApp()
+  }
 }
