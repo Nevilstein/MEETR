@@ -53,7 +53,7 @@ export class UserSettingPage {
   }
 
   goBack(){
-  	this.navCtrl.pop();
+    this.navCtrl.pop();
   }
   
   loadSetting(){

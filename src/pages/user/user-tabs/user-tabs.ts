@@ -128,9 +128,12 @@ export class UserTabsPage {
               });
               match.present();
             }
-            // else{
-            //   //NOTIFY THE USER THEN SEEN
-            // }
+            else if(this.authProvider.currentTab !== 1){
+              //ADD BADGE AND MESSAGE BUBBLE AT RIGHT
+            }
+            else if(this.isPaused){
+              //NOTIFY USER AND ADD BADGE
+            }
           }
         }
         
