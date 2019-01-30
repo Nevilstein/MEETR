@@ -51,7 +51,7 @@
 			Edit Intro
 		</ion-card-header>
 		<ion-card-content>
-			<ion-textarea style="color: white;" [(ngModel)]="bio" (ionChange)="bioChanged()" placeholder="About you"></ion-textarea>
+			<ion-textarea style="color: white;" [(ngModel)]="bio" (blur)="bioChanged()" placeholder="About you"></ion-textarea>
 		</ion-card-content>
 	</ion-card>
 	<ion-card class="cards">

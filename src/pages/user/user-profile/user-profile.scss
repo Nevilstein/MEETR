@@ -40,8 +40,11 @@ ion-avatar > img{
     -moz-background-size: cover;
     background-size: cover;
 	margin: 2px 5px;
-	padding: 5px;
+	padding: 5px 10px;
 	display: inline-flex;
-	border-radius: 30px; 
+	border-radius: 10px; 
 	color: white;
+	padding: 5px 10px;
+	display: inline-flex;
+	min-width: 50px;
 }

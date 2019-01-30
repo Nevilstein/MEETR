@@ -49,11 +49,12 @@ page-user-edit {
 	}
 	.interests{
 		background-color: dark;
-		border-radius: 30px; 
+		border-radius: 10px; 
 		background-color: #ef8dd7; 
 		margin: 5px 5px;
-		padding: 5px;
+		padding: 5px 10px;
 		display: inline-flex;
+		min-width: 50px;
 	}
 	.interests ion-icon{
 		color: white;
