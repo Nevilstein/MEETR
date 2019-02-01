@@ -9,21 +9,20 @@
 
 <ion-content class="chat_content" padding>
 	<ion-searchbar style="width: 100%;"
-	[(ngModel)]="myInput"
+	[(ngModel)]="chatSearchValue"
 	[showCancelButton]="shouldShowCancel"
-	(ionInput)="searchInput($event)"
-	(ionCancel)="onCancel($event)">
+	(ionInput)="searchMatch()">
 	</ion-searchbar>
 
 	<ion-list>
-		<ion-item-sliding *ngFor="let chat of chatList">
+		<ion-item-sliding *ngFor="let chat of filterChat">
 			<button ion-item no-lines class="chat_content" (click)="openChat(chat.id, chat.receiver)">
 					<img class="circle-pic" src="{{chat.userImage}}" item-start>
-				<h2 class="content">{{chat.firstName}} {{chat.lastName}}</h2>
-    			<p class="content" *ngIf="chat.message">
+				<h2 class="content">{{chat.firstName}}</h2>
+    			<p class="content" *ngIf="chat.message && chat.messageStatus">
     				<b *ngIf="!chat.isRead">{{chat.message}}</b>
     				<span *ngIf="chat.isRead">{{chat.message}}</span> ~ {{chat.messageDate}}</p>
-				<p class="content" *ngIf="!chat.message">
+				<p class="content" *ngIf="!chat.message || !chat.messageStatus">
     				<b>Say something to your new match!</b>
     			</p>
 			</button>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, ToastController } from 'ionic-angular';
 
 
 //Plugin
@@ -28,7 +28,7 @@ export class UserInterestPage {
 	interestdb =[];  //list of interest that must be from interest collection database
 	interestValue: string;
   constructor(public navCtrl: NavController, public navParams: NavParams, private viewCtrl: ViewController,
-  	private db: AngularFireDatabase, private authProvider: AuthProvider) {
+  	private db: AngularFireDatabase, private authProvider: AuthProvider, private toastCtrl: ToastController) {
   	this.interestdb = ['Aesthetic', 'Animals', 'Anime & Manga', 'Art', 'Beauty', 'Books',
       'Esports', 'Fashion', 'Food', 'Health & Fitness', 'Horror', 'Kpop/K-Drama', 'LGBTQ+',
       'Movies', 'Music', 'Science', 'Travel', 'TV & Web-Series', 'Video Games', 'Writing'];
@@ -102,16 +102,26 @@ export class UserInterestPage {
   			this.selectedInterests.push(value);
   		}
   		else{
-  			alert("You have reached the maximum number of interests(10).");
+        let toast = this.toastCtrl.create({
+          message: "You have reached the maximum number of interests(10)",
+          duration: 1000,
+          position: 'bottom'
+        });
+        toast.present();
   		}
   	}
   	else{
-  		if(this.selectedInterests.length >0){
+  		if(this.selectedInterests.length >1){
   			let valueIndex = this.selectedInterests.indexOf(value);
   			this.selectedInterests.splice(valueIndex, 1);
   		}
   		else{
-  			alert("You must have at least one interest.");
+        let toast = this.toastCtrl.create({
+          message: "You must have at least one interest",
+          duration: 1000,
+          position: 'bottom'
+        });
+        toast.present();
   		}
   		
   	}

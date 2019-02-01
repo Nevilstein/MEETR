@@ -26,6 +26,7 @@ export class AuthProvider {
     this.fireAuth.authState.subscribe( fireRes =>{
     	this.fb.getLoginStatus().then(fbRes =>{
 	    	if(!fireRes && fbRes.status !== 'connected'){
+	    		//put alert to notify user that they are not logged in (if not in LoginPage)
 	          zone.run(() => {
 	              appCtrl.getRootNav().setRoot(LoginPage);
 	          });

@@ -41,11 +41,11 @@
 
 			<div class="user_img" [style.background-image]="card.asBg"></div>
 			<ion-card class="info" style="padding-top: 5px;">
-				<h2 style="font-weight: bold;" text-center>{{card.firstName}} {{card.lastName}}, {{card.age}}</h2>
+				<h2 style="font-weight: bold;" text-center>{{card.firstName}}, {{card.age}}</h2>
 				<ion-item>
 					<ion-icon name="logo-facebook" style="color: #3b5998;" item-start></ion-icon>
-					<ion-badge item-start>{{card.friendCount}}</ion-badge>
-					<button id="button" ion-button item-end (click)="check_user()">
+					<ion-badge item-start><ion-icon name="people"></ion-icon> {{card.friendCount}}</ion-badge>
+					<button id="button" ion-button item-end (click)="checkInfo(i)">
 						<ion-icon id="eye" name="eye"></ion-icon>
 					</button>
 				</ion-item>

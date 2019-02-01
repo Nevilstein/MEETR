@@ -54,6 +54,7 @@ import { Facebook } from '@ionic-native/facebook';
 import { Camera } from '@ionic-native/camera';
 import { Geolocation } from '@ionic-native/geolocation';
 import firebase from 'firebase';  
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
 
 //Provider
 import { AuthProvider } from '../providers/auth/auth';
@@ -129,6 +130,7 @@ export const firebaseConfig = {
     Geolocation,
     AngularFireAuth,
     Camera,
+    LocalNotifications,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthProvider,
     ChatProvider,

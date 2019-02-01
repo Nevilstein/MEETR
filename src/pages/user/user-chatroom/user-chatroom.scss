@@ -57,11 +57,11 @@ page-user-chatroom {
 		display: inline-block;
 		word-break: break-all;
 		word-wrap: break-word;
-		padding: 0px 2px;
+		padding: 0px 10px;
 		border-radius: 10px;
 	}
 	.user{
-		@include linear-gradient(top,$sweet-morning);
+		@include linear-gradient(bottom,$sweet-morning);
 	    -webkit-background-size: cover;
 	    -moz-background-size: cover;
 	    background-size: cover;
@@ -69,7 +69,7 @@ page-user-chatroom {
 		float: right;
 		word-break: break-all;
 		word-wrap: break-word;
-		padding: 0px 2px;
+		padding: 0px 10px;
 		border-radius: 10px;
 	}
 	.user p{

@@ -1,5 +1,5 @@
 import { Component, ViewChild, NgZone } from '@angular/core';
-import { IonicPage, NavController, NavParams, App, Tabs, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, App, Tabs, ModalController, ToastController } from 'ionic-angular';
 // import { SuperTabsController } from 'ionic2-super-tabs';
 import { Platform } from 'ionic-angular';
 
@@ -16,6 +16,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { Facebook } from '@ionic-native/facebook';
 import { Geolocation } from '@ionic-native/geolocation';
 import firebase from 'firebase';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 // import geolib from 'geolib';
 
 
@@ -36,7 +37,8 @@ import { AuthProvider } from '../../../providers/auth/auth';
 export class UserTabsPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, private authProvider: AuthProvider, private appCtrl: App,
     private fireAuth: AngularFireAuth, private fb: Facebook, private zone: NgZone, private geolocation: Geolocation, 
-    private db: AngularFireDatabase, private modalCtrl: ModalController, private platform: Platform) {
+    private db: AngularFireDatabase, private modalCtrl: ModalController, private platform: Platform,
+    private toastCtrl:ToastController, private localNotif: LocalNotifications) {
       
   }
 
@@ -92,16 +94,16 @@ export class UserTabsPage {
   }
 
   trackLocation(){  
-    this.trackGeo = this.geolocation.watchPosition();
-    this.trackGeo.subscribe((data) => {
-      this.db.list('location').update(this.authUser, {
-        currentLocation: {
-          latitude: data.coords.latitude,
-          longitude: data.coords.longitude,
-          timestamp: data.timestamp
-        }
-      });
-    });
+    this.trackGeo = this.geolocation.watchPosition()
+      .subscribe( data => {
+        this.db.list('location').update(this.authUser, {
+          currentLocation: {
+            latitude: data.coords.latitude,
+            longitude: data.coords.longitude,
+            timestamp: data.timestamp
+          }
+        });
+      })
   }
 
   // tabChanged(event){
@@ -130,9 +132,22 @@ export class UserTabsPage {
             }
             else if(this.authProvider.currentTab !== 1){
               //ADD BADGE AND MESSAGE BUBBLE AT RIGHT
+              let toast = this.toastCtrl.create({
+                message: "You have a match",
+                duration: 3000,
+                position: 'top'
+              });
+              toast.present();
             }
             else if(this.isPaused){
               //NOTIFY USER AND ADD BADGE
+              this.localNotif.schedule({
+                id:1,
+                title: "A Match!",
+                text: "You have a match!"
+                // sound:
+                // icon:
+              });
             }
           }
         }

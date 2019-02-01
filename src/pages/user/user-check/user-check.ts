@@ -22,16 +22,31 @@ import { AuthProvider } from '../../../providers/auth/auth';
 export class UserCheckPage {
 
   authKey = this.authProvider.authUser;
+
+  userInfo = this.navParams.get('user'); 
+  userKey;
+  userPhotos = [];
+  userInterests = [];
+  userFirstName;
+  userBio;
+  userAge;
   constructor(public navCtrl: NavController, public navParams: NavParams,private view: ViewController, 
     private db: AngularFireDatabase, private fireAuth: AngularFireAuth, private authProvider: AuthProvider) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad UserCheckPage');
+    console.log(this.userInfo);
     this.getProfile();
   }
   getProfile(){
-    // this.db.list('profile', ref=> ref.child())
+    this.userKey = this.userInfo.id;
+    this.userPhotos = this.userInfo.photos;
+    this.userInterests = this.userInfo.interests;
+    this.userFirstName = this.userInfo.firstName;
+    this.userAge = this.userInfo.age;
+    this.userBio = this.userInfo.bio;
+    // this.db.list('profile', ref=> ref.orderByKey().equalTo(this.userKey))
   }
   close_modal(){
     this.view.dismiss();

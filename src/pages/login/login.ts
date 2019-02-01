@@ -18,7 +18,6 @@ import firebase from 'firebase';
 
 //Providers
 import { AuthProvider } from '../../providers/auth/auth';
-
 /**
  * Generated class for the LoginPage page.
  *
@@ -53,71 +52,73 @@ export class LoginPage {
 
   loginRedirect(){
     this.loginSubscription = this.fireAuth.authState.subscribe( fireRes =>{
-      this.fb.getLoginStatus().then(fbRes =>{
-        if(fireRes!=null && fbRes.status === 'connected'){
-          // console.log(fireRes.uid);
-          // alert("Logged in successfully.");
-          console.log(fbRes);
-          this.getFacebookData(fbRes.authResponse.userID, fbRes.authResponse.accessToken).then( fbData => {
-            this.db.database.ref('profile').child(fireRes.uid).once('value', snapshot =>{
-              var maxAge = 50;
-              var ageLower = fbData['age'], ageUpper = fbData['age']+5;
-              if(!snapshot.exists()){    //Snapshot exists checks if this is user's first login by checking their id in "profile" collection
-                
-                if(fbData['age'] >= maxAge-5){  //for Age greater than
-                  ageLower = 45;
-                  ageUpper = 50;
-                }
+      if(fireRes){
+        this.fb.getLoginStatus().then(fbRes =>{
+          if(fbRes.status === 'connected'){
+            this.getFacebookData(fbRes.authResponse.userID, fbRes.authResponse.accessToken).then( fbData => {
+              this.db.database.ref('profile').child(fireRes.uid).once('value', snapshot =>{
+                var maxAge = 50;
+                var ageLower = fbData['age'], ageUpper = fbData['age']+5;
+                if(!snapshot.exists()){    //Snapshot exists checks if this is user's first login by checking their id in "profile" collection
+                  
+                  if(fbData['age'] >= maxAge-5){  //for Age greater than
+                    ageLower = 45;
+                    ageUpper = 50;
+                  }
 
 
-                var profile = {
-                  firstName: fbData['first_name'],
-                  lastName: fbData['last_name'],
-                    // locations: '',  //for adding location feature?
-                  birthday: fbData['birthday'],
-                  maxDistance: 80,
-                  ageRange: {min: ageLower, max: ageUpper},
-                  isVisible: true,
-                  bio: '',
-                  school: '',
-                  work: '',
-                  jobTitle: '',
-                  photos: [fbData['picture'].data.url],
-                  dateCreated: firebase.database.ServerValue.TIMESTAMP,
-                  lastLogin: firebase.database.ServerValue.TIMESTAMP,
-                  status: 'active',
-                  friendCount: fbData['friend_count'],
-                  isLoggedIn: true
-                }
-                this.zone.run(() => {    //if snapshot doesn't exist redirect to wizard form
-                    this.navCtrl.setRoot(UserFormPage, {
-                      profile: profile
-                    });
-                });
-              }
-              else{
-                this.db.list('profile').update(this.fireAuth.auth.currentUser.uid, {
-                  firstName: fbData['first_name'],
-                  lastName: fbData['last_name'],
-                  friendCount: fbData['friend_count'],
-                  lastLogin: firebase.database.ServerValue.TIMESTAMP,
-                  isLoggedIn: true
-                }).then( () =>{
-                  this.zone.run(() => {
-                    this.loading = false;
-                    this.navCtrl.setRoot(UserTabsPage);
+                  var profile = {
+                    firstName: fbData['first_name'],
+                    lastName: fbData['last_name'],
+                      // locations: '',  //for adding location feature?
+                    birthday: fbData['birthday'],
+                    maxDistance: 80,
+                    ageRange: {min: ageLower, max: ageUpper},
+                    isVisible: true,
+                    bio: '',
+                    school: '',
+                    work: '',
+                    jobTitle: '',
+                    photos: [fbData['picture'].data.url],
+                    dateCreated: firebase.database.ServerValue.TIMESTAMP,
+                    lastLogin: firebase.database.ServerValue.TIMESTAMP,
+                    status: 'active',
+                    friendCount: fbData['friend_count'],
+                    isLoggedIn: true
+                  }
+                  this.zone.run(() => {    //if snapshot doesn't exist redirect to wizard form
+                      this.navCtrl.setRoot(UserFormPage, {
+                        profile: profile
+                      });
                   });
-                });
-              }
+                }
+                else{
+                  this.db.list('profile').update(this.fireAuth.auth.currentUser.uid, {
+                    firstName: fbData['first_name'],
+                    lastName: fbData['last_name'],
+                    friendCount: fbData['friend_count'],
+                    lastLogin: firebase.database.ServerValue.TIMESTAMP,
+                    isLoggedIn: true
+                  }).then( () =>{
+                    this.zone.run(() => {
+                      this.loading = false;
+                      this.navCtrl.setRoot(UserTabsPage);
+                    });
+                  });
+                }
+              });
+            }).catch( e =>{
+              console.log("Login Error", e);
             });
-          }).catch( e =>{
-            console.log("Login Error", e);
-          });
-        }
-        else{
-          this.loading = false;
-        }
-      });
+          }
+          else{
+            this.loading = false;
+          }
+        }); 
+      }
+      else{
+        this.loading = false;
+      }
     });
   }
 
@@ -162,9 +163,6 @@ export class LoginPage {
 
   gotoGeo(){
     this.navCtrl.push(UserGeoPage);
-  }
-  gotoAdmin(){
-    this.navCtrl.push(AdminTabsPage);
   }
   gotoUser(){
     this.navCtrl.push(UserTabsPage);

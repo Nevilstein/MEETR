@@ -59,7 +59,7 @@ export class UserProfilePage {
     private db: AngularFireDatabase, private zone: NgZone, private authProvider: AuthProvider, 
     private userProvider: UserProvider) {
   }
-  ionViewDidLoad() {
+  ionViewWillLoad() {
     this.loadProfile();
   }
   ionViewWillUnload(){
