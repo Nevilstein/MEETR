@@ -132,7 +132,9 @@ export class UserChatroomPage {
               this.db.list('messages', ref=> ref.child(this.authKey).child(this.chatKey))
                 .update(data['id'], { isRead:true });
             }
-            messageArr.push(data);
+            if(data['status']){  //if message is not cleared
+              messageArr.push(data);
+            }
           });
           resolve(true);
         });
@@ -204,7 +206,7 @@ export class UserChatroomPage {
       timestamp:sentDate,
       unseenCount: this.unseenCount+1
     });
-    this.content.scrollToBottom();
+    this.content.scrollToBottom(1000);
   }
 
   checkMessage(){
@@ -224,29 +226,4 @@ export class UserChatroomPage {
     });
   }
 
-  unmatch(){
-    this.db.list('chat', ref=> ref.child(this.authKey)).update(this.chatKey, {    //auth user chat collection
-      matchStatus: false
-    });
-    this.db.list('chat', ref=> ref.child(this.receiverKey)).update(this.chatKey, {    //user chat collection
-      matchStatus: false
-    });
-    this.db.list('match', ref => ref.child(this.authKey)).remove(this.receiverKey);
-    this.db.list('match', ref => ref.child(this.receiverKey)).remove(this.authKey);
-     // this.navCtrl.popToRoot();
-  }
-
-  clearChat(){
-    this.db.list('messages', ref=> ref.child(this.authKey).child(this.chatKey))
-      .query.once('value').then( snapshot =>{
-        snapshot.forEach( element =>{
-          this.db.list('messages', ref=> ref.child(this.authKey).child(this.chatKey)).update(element.key, {
-            status: false
-          });
-        })
-        this.db.list('chat', ref=> ref.child(this.authKey)).update(this.chatKey, {
-          timestamp: firebase.database.ServerValue.TIMESTAMP
-        });
-      })
-  }
 }

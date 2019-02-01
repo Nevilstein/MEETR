@@ -27,7 +27,7 @@ import { ChatProvider } from '../../../providers/chat/chat';
 export class UserChatPage {
   //Variables
   authKey = this.authProvider.authUser;
-  chatSearchValue:string;
+  chatSearchValue:string = '';
   chatList = [];
   filterChat = [];
   chatCount = 50;
@@ -70,6 +70,7 @@ export class UserChatPage {
                   data['message'] = (message.length>25 ? message.substring(0, 25)+"..." : message);
                   data['messageDate'] = this.messageDateFormat(messageData['timestamp']);
                   data['messageStatus'] = messageData['status'];
+                  console.log(data['messageStatus']);
                   data['isRead'] = messageData['isRead'];
                 });
               if(data['matchStatus']){  //only chats with active matches
@@ -86,6 +87,7 @@ export class UserChatPage {
           if(!(this.filterChat.length>0)){
             this.filterChat = this.chatList;
           }
+          this.searchMatch();  //update changes even while in searching process
         });
       });
   }

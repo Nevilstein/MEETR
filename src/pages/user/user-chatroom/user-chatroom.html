@@ -59,7 +59,6 @@
         </div>
       </ion-col>
     </ion-row>
-
   </ion-grid>
 
 
@@ -69,7 +68,8 @@
 <ion-footer>
     <ion-row>
           <ion-col col-10>
-               <ion-input type="text" [(ngModel)]="myMessage" (ionChange)="checkMessage()" placeholder="Type something..." id="input_box"></ion-input>
+               <ion-input type="text" [(ngModel)]="myMessage" (ionChange)="checkMessage()" placeholder="Type something..." id="input_box"></ion-input>  
+               <!-- Change to text area? -->
           </ion-col>
           <ion-col>
               <button id="send" [disabled]="messageEmpty" (click)="sendMessage()">
