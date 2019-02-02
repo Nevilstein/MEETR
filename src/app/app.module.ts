@@ -42,6 +42,8 @@ import { UserMatchPage } from '../pages/user/user-match/user-match';
 import { UserMatchPageModule } from '../pages/user/user-match/user-match.module';
 import { UserInterestPage } from '../pages/user/user-interest/user-interest';
 import { UserInterestPageModule } from '../pages/user/user-interest/user-interest.module';
+import { ImageViewPage } from '../pages/image-view/image-view';
+import { ImageViewPageModule } from '../pages/image-view/image-view.module';
 import { PopoverComponent } from '../components/popover/popover';
 
 //Plugins
@@ -53,8 +55,8 @@ import { SwipeCardsModule } from 'ng2-swipe-cards';
 import { Facebook } from '@ionic-native/facebook';
 import { Camera } from '@ionic-native/camera';
 import { Geolocation } from '@ionic-native/geolocation';
-import firebase from 'firebase';  
-import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
+import firebase from 'firebase';
+import { LocalNotifications } from '@ionic-native/local-notifications';
 
 //Provider
 import { AuthProvider } from '../providers/auth/auth';
@@ -102,7 +104,8 @@ export const firebaseConfig = {
     UserFormPageModule,
     UserChatroomPageModule,
     UserMatchPageModule,
-    UserInterestPageModule
+    UserInterestPageModule,
+    ImageViewPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

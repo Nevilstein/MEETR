@@ -1,5 +1,5 @@
-  import { Component, ChangeDetectorRef, ChangeDetectionStrategy, NgZone } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, ChangeDetectorRef, ChangeDetectionStrategy, NgZone } from '@angular/core';
+import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 
 //Pages
 import { UserChatroomPage } from '../user-chatroom/user-chatroom';
@@ -32,17 +32,22 @@ export class UserChatPage {
   filterChat = [];
   chatCount = 50;
   chatTabLoading = true;
+  loader;
 
   //Observer/Subscriptions
   chatObserver;
   chatNewObserver;
   userProfileObserver;
   constructor(public navCtrl: NavController, public navParams: NavParams, private db:AngularFireDatabase, 
-    private authProvider: AuthProvider, private chatProvider: ChatProvider) {
+    private authProvider: AuthProvider, private chatProvider: ChatProvider, private loadingCtrl: LoadingController) {
   }
 
   ionViewWillLoad() {
     console.log('ionViewDidLoad UserChatPage');
+    this.loader = this.loadingCtrl.create({
+      content: 'Please wait..'
+    });
+    this.loader.present();
     this.getChats();
   }
 
@@ -64,22 +69,37 @@ export class UserChatPage {
             });
             this.db.list('messages', ref=> ref.child(this.authKey).child(data['id']).orderByChild('timestamp').limitToLast(1))
               .query.once('value', messageSnap =>{
-                messageSnap.forEach( element =>{  //only returns one, foreach to include checking if got 1
-                  let messageData = element.val();
-                  let message = ((messageData['sender'] === this.authKey)? "You: " : (data['firstName']+": "))+messageData['message'];
-                  data['message'] = (message.length>25 ? message.substring(0, 25)+"..." : message);
-                  data['messageDate'] = this.messageDateFormat(messageData['timestamp']);
-                  data['messageStatus'] = messageData['status'];
-                  console.log(data['messageStatus']);
-                  data['isRead'] = messageData['isRead'];
-                });
-              if(data['matchStatus']){  //only chats with active matches
-                chatArray.push(data);
+                if(messageSnap){
+                  messageSnap.forEach( element =>{  //only returns one, foreach to include checking if got 1
+                    let messageData = element.val();
+                    var message;
+                    if(messageData.type === 'message'){
+                      message = ((messageData['sender'] === this.authKey)? "You: " : (data['firstName']+": "))+messageData['message'];
+                      data['message'] = (message.length>25 ? message.substring(0, 25)+"..." : message);
+                    }
+                    else if(messageData.type === 'image'){
+                      message = ((messageData['sender'] === this.authKey)? "You" : (data['firstName']));
+                      data['message'] = message+" "+"sent a photo.";
+                    }
+                    data['messageDate'] = this.messageDateFormat(messageData['timestamp']);
+                    data['messageStatus'] = messageData['status'];
+                    console.log(data['messageStatus']);
+                    data['isRead'] = messageData['isRead'];
+                  });
+                if(data['matchStatus']){  //only chats with active matches
+                  chatArray.push(data);
+                }
+                if(index+1 === reversedSnap.length){
+                  resolve(chatArray);
+                } 
               }
-              if(index+1 === reversedSnap.length){
-                resolve(chatArray);
-              } 
+              else{
+                if(index+1 === reversedSnap.length){
+                  resolve(chatArray);
+                } 
+              }  
             });
+              
           });
         }).then( chatList => {
           this.chatList = [];
@@ -88,6 +108,7 @@ export class UserChatPage {
             this.filterChat = this.chatList;
           }
           this.searchMatch();  //update changes even while in searching process
+          this.loader.dismiss();
         });
       });
   }
