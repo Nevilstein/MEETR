@@ -42,10 +42,12 @@
     "firebase": "^5.8.1",
     "geolib": "^2.0.24",
     "ionic-angular": "3.9.2",
+    "ionic-native": "^2.9.0",
     "ionicons": "3.0.0",
     "ng2-swipe-cards": "^1.1.1",
     "rxjs": "^6.0.0",
     "rxjs-compat": "^6.4.0",
+    "rxjs-operators": "^1.0.7",
     "sw-toolbox": "3.6.0",
     "zone.js": "0.8.26"
   },

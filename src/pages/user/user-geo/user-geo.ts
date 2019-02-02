@@ -73,7 +73,7 @@ export class UserGeoPage {
 
 		this.positionSubscription = this.geo.watchPosition()
 		.pipe(
-			filter(p => p.coords !== undefined)
+			filter((p) => p.coords !== undefined)
 		)
 		.subscribe(data => {
 			setTimeout(() => {

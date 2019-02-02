@@ -8,6 +8,7 @@ npm install @types/google-maps --save-dev
 npm install --save @ionic-native/camera
 Npm install rxjs@^6.0 rxjs-compat --save
 npm install geolib --save
+npm install --save rxjs-operators
 
 Plugins:
 ionic cordova plugin add cordova-plugin-facebook4 --variable APP_ID="382855475853590" --variable APP_NAME="Meetr"
