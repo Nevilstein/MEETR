@@ -61,7 +61,8 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
 //Provider
 import { AuthProvider } from '../providers/auth/auth';
 import { ChatProvider } from '../providers/chat/chat';
-import { UserProvider } from '../providers/user/user';  
+import { UserProvider } from '../providers/user/user';
+import { MatchProvider } from '../providers/match/match';  
 
 export const firebaseConfig = {
     apiKey: "AIzaSyCjTUixYv189FGdP3hQdztU_HCbtqvjJTU",
@@ -137,7 +138,8 @@ export const firebaseConfig = {
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthProvider,
     ChatProvider,
-    UserProvider
+    UserProvider,
+    MatchProvider
   ]
 })
 export class AppModule {}

@@ -15,6 +15,7 @@ import firebase from 'firebase';
 
 //Providers
 import { AuthProvider } from '../../../providers/auth/auth';
+import { UserProvider } from '../../../providers/user/user';
 /**
  * Generated class for the UserSettingPage page.
  *
@@ -40,7 +41,8 @@ export class UserSettingPage {
   userVisible: boolean;
 
   constructor(public navCtrl: NavController,public toastCtrl: ToastController, public navParams: NavParams, private fireAuth: AngularFireAuth, 
-    private fb: Facebook, private db: AngularFireDatabase, private appCtrl: App, private authProvider: AuthProvider) {
+    private fb: Facebook, private db: AngularFireDatabase, private appCtrl: App, private authProvider: AuthProvider,
+    private userProvider: UserProvider) {
  
   }
 
@@ -70,6 +72,7 @@ export class UserSettingPage {
           female: data['showGender'].female
         };
         this.userVisible = data['isVisible'];
+        this.userProvider.getUserProfile();
       });
   }
 

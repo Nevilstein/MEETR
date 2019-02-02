@@ -22,6 +22,7 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
 
 //Providers
 import { AuthProvider } from '../../../providers/auth/auth';
+import { MatchProvider } from '../../../providers/match/match';
 /**
  * Generated class for the UserTabsPage page.
  *
@@ -35,10 +36,10 @@ import { AuthProvider } from '../../../providers/auth/auth';
   templateUrl: 'user-tabs.html',
 })
 export class UserTabsPage {
-  constructor(public navCtrl: NavController, public navParams: NavParams, private authProvider: AuthProvider, private appCtrl: App,
+  constructor(public navCtrl: NavController, public navParams: NavParams, public authProvider: AuthProvider, private appCtrl: App,
     private fireAuth: AngularFireAuth, private fb: Facebook, private zone: NgZone, private geolocation: Geolocation, 
     private db: AngularFireDatabase, private modalCtrl: ModalController, private platform: Platform,
-    private toastCtrl: ToastController, private localNotif: LocalNotifications) {
+    private toastCtrl: ToastController, private localNotif: LocalNotifications, private matchProvider: MatchProvider) {
       
   }
 
@@ -125,9 +126,8 @@ export class UserTabsPage {
             this.seenAllMatches();
             if(!this.isPaused){
               if(this.authProvider.currentTab === 1){
-                const match = this.modalCtrl.create(UserMatchPage, {
-                userMatchKey: data['id']
-                });
+                this.matchProvider.userKey = data['id'];
+                const match = this.modalCtrl.create(UserMatchPage);
                 match.present();
               }
               else{

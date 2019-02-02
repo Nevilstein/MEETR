@@ -103,6 +103,7 @@ export class UserChatroomPage {
     this.messageObserver.unsubscribe();
     this.profileObserver.unsubscribe();
     clearInterval(this.timeInterval);
+    this.navCtrl.popToRoot();
   }
   /*
   PROBLEMS:

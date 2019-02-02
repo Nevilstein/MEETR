@@ -14,6 +14,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 
 //Providers
 import { AuthProvider } from '../../../providers/auth/auth';
+import { UserProvider } from '../../../providers/user/user';
 
 //Providers
 /**
@@ -53,7 +54,7 @@ export class UserEditPage {
   uploadObserver;
   constructor(public navCtrl: NavController, public navParams: NavParams, private fireAuth: AngularFireAuth, 
     private db: AngularFireDatabase, private camera: Camera, private storage: AngularFireStorage, 
-    private authProvider: AuthProvider, private modalCtrl: ModalController) {
+    private authProvider: AuthProvider, private modalCtrl: ModalController, private userProvider: UserProvider) {
     
   }
 
@@ -78,6 +79,7 @@ export class UserEditPage {
         this.isMale = data['gender'].male;
         this.isFemale = data['gender'].female;
         this.profileImages = Object.assign([], data['photos']);
+        this.userProvider.getUserProfile();
         // this.interestList = this.interests.concat(this.interestList);  //add interests shown in option
         // this.interestList = this.removeDuples(this.interestList);
       });
