@@ -87,7 +87,7 @@ export class UserGeoPage {
 			this.currentMapTrack.setMap(null);
 		}
 
-		if(path.length > 1){
+		if(path.length > 1){ //line drawing on map
 			this.currentMapTrack = new google.maps.Polyline({
 				path:path,
 				geodesic:true,
