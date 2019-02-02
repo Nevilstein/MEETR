@@ -8,10 +8,14 @@ npm install @types/google-maps --save-dev
 npm install --save @ionic-native/camera
 Npm install rxjs@^6.0 rxjs-compat --save
 npm install geolib --save
+npm install @ionic-native/local-notifications
+npm install --save rxjs-operators
+
 
 Plugins:
 ionic cordova plugin add cordova-plugin-facebook4 --variable APP_ID="382855475853590" --variable APP_NAME="Meetr"
 ionic cordova plugin add cordova-plugin-geolocation --variable GEOLOCATION_USAGE_DESCRIPTION="To locate you"
 ionic cordova plugin add cordova-plugin-googlemaps --variable API_KEY_FOR_ANDROID="AIzaSyCuM1MvV4ieX5IkrDXZh1lJ8WY3E1p4HZE" --variable API_KEY_FOR_IOS="AIzaSyBAkFsPQ4RD_JugsDFkAH7zCCHCl-_nipE"
 ionic cordova plugin add cordova-plugin-camera
+ionic cordova plugin add cordova-plugin-local-notification
 
