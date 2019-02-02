@@ -50,6 +50,7 @@ export class UserProfilePage {
   age: number;
   image: string;
   bio: string;
+  gender = {};
   interests = [];
 
   //Element variables
@@ -72,6 +73,7 @@ export class UserProfilePage {
         var data = snapshot[0].payload.val();
         this.firstName = data['firstName'];
         this.age = moment().diff(moment(data['birthday'], "MM/DD/YYYY"), 'years');
+        this.gender = data['gender'];
         this.image = data['photos'][0];
         this.bio = data['bio'];
         this.interests = Object.assign([], data['interests']);

@@ -16,12 +16,13 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { Facebook } from '@ionic-native/facebook';
 import { Geolocation } from '@ionic-native/geolocation';
 import firebase from 'firebase';
-import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { LocalNotifications } from '@ionic-native/local-notifications';
 // import geolib from 'geolib';
 
 
 //Providers
 import { AuthProvider } from '../../../providers/auth/auth';
+import { MatchProvider } from '../../../providers/match/match';
 /**
  * Generated class for the UserTabsPage page.
  *
@@ -35,10 +36,10 @@ import { AuthProvider } from '../../../providers/auth/auth';
   templateUrl: 'user-tabs.html',
 })
 export class UserTabsPage {
-  constructor(public navCtrl: NavController, public navParams: NavParams, private authProvider: AuthProvider, private appCtrl: App,
+  constructor(public navCtrl: NavController, public navParams: NavParams, public authProvider: AuthProvider, private appCtrl: App,
     private fireAuth: AngularFireAuth, private fb: Facebook, private zone: NgZone, private geolocation: Geolocation, 
     private db: AngularFireDatabase, private modalCtrl: ModalController, private platform: Platform,
-    private toastCtrl:ToastController, private localNotif: LocalNotifications) {
+    private toastCtrl: ToastController, private localNotif: LocalNotifications, private matchProvider: MatchProvider) {
       
   }
 
@@ -66,7 +67,7 @@ export class UserTabsPage {
   //   this.resumeObserver.unsubscribe();
   // }
 
-  ionViewDidLoad() {
+  ionViewDidLoad(){
     console.log('ionViewDidLoad UserTabsPage');
     this.trackLocation();
     this.listenToPlatform();
@@ -112,41 +113,38 @@ export class UserTabsPage {
   //   this.listenMatch(listener);
   // }
   listenToMatches(){
-    console.log('matches');
-    let currentUser = this.fireAuth.auth.currentUser.uid;
-    this.onMatchObserver = this.db.list('match', ref => ref.child(currentUser).orderByChild('timestamp').limitToLast(1))
+    this.onMatchObserver = this.db.list('match', ref => ref.child(this.authUser).orderByChild('timestamp').limitToLast(1))
       .snapshotChanges().subscribe( snapshot => {
         if(snapshot.length>0){  //starters don't have matches, it might give error
           let data = snapshot[0].payload.val();
           data['id'] = snapshot[0].key;
 
           if(!data['isSeen']){
-            this.db.list('match', ref => ref.child(currentUser)).update(data['id'], {
+            this.db.list('match', ref => ref.child(this.authUser)).update(data['id'], {  //seen latest match
               isSeen: true
             });
-            if(!this.isPaused && this.authProvider.currentTab === 1){
-              const match = this.modalCtrl.create(UserMatchPage, {
-                userMatchKey: data['id']
-              });
-              match.present();
-            }
-            else if(this.authProvider.currentTab !== 1){
-              //ADD BADGE AND MESSAGE BUBBLE AT RIGHT
-              let toast = this.toastCtrl.create({
-                message: "You have a match",
-                duration: 3000,
-                position: 'top'
-              });
-              toast.present();
+            this.seenAllMatches();
+            if(!this.isPaused){
+              if(this.authProvider.currentTab === 1){
+                this.matchProvider.userKey = data['id'];
+                const match = this.modalCtrl.create(UserMatchPage);
+                match.present();
+              }
+              else{
+                //ADD BADGE AND MESSAGE BUBBLE AT RIGHT
+                let toast = this.toastCtrl.create({
+                  message: "You have a match",
+                  duration: 3000,
+                  position: 'top'
+                });
+                toast.present();
+              }
             }
             else if(this.isPaused){
-              //NOTIFY USER AND ADD BADGE
               this.localNotif.schedule({
                 id:1,
                 title: "A Match!",
                 text: "You have a match!"
-                // sound:
-                // icon:
               });
             }
           }
@@ -177,5 +175,15 @@ export class UserTabsPage {
       });
     });
     // this.platform.exitApp()
+  }
+  seenAllMatches(){
+    this.db.list('match', ref => ref.child(this.authUser).orderByChild('isSeen').equalTo(false))
+      .query.once('value').then(snapshot=>{
+        snapshot.forEach(element =>{
+          this.db.list('match', ref => ref.child(this.authUser)).update(element.key, {
+            isSeen: true
+          });
+        });
+      });
   }
 }

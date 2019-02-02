@@ -14,6 +14,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 
 //Providers
 import { AuthProvider } from '../../../providers/auth/auth';
+import { UserProvider } from '../../../providers/user/user';
 
 //Providers
 /**
@@ -49,9 +50,11 @@ export class UserEditPage {
 
   //Observer/Subscription
   profileObserver;
+  imageObserver;
+  uploadObserver;
   constructor(public navCtrl: NavController, public navParams: NavParams, private fireAuth: AngularFireAuth, 
     private db: AngularFireDatabase, private camera: Camera, private storage: AngularFireStorage, 
-    private authProvider: AuthProvider, private modalCtrl: ModalController) {
+    private authProvider: AuthProvider, private modalCtrl: ModalController, private userProvider: UserProvider) {
     
   }
 
@@ -76,6 +79,7 @@ export class UserEditPage {
         this.isMale = data['gender'].male;
         this.isFemale = data['gender'].female;
         this.profileImages = Object.assign([], data['photos']);
+        this.userProvider.getUserProfile();
         // this.interestList = this.interests.concat(this.interestList);  //add interests shown in option
         // this.interestList = this.removeDuples(this.interestList);
       });
@@ -127,19 +131,20 @@ export class UserEditPage {
 
   uploadPhoto(){
     const options: CameraOptions = {
-      quality: 100,
+      quality: 75,
       destinationType: this.camera.DestinationType.DATA_URL,
       // encodingType: this.camera.EncodingType.JPEG,
       // mediaType: this.camera.MediaType.PICTURE
       sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
       allowEdit: true,
-      targetHeight: 300,
-      targetWidth: 300
+      targetHeight: 640,
+      targetWidth: 640 
     }
 
     this.camera.getPicture(options).then((imageData) => {
       // imageData is either a base64 encoded string or a file URI
       // If it's base64 (DATA_URL):
+      console.log(imageData);
       const filePath = `imageProfile/meetr-image_${ new Date().getTime() }.jpg`;
       const fileRef = this.storage.ref(filePath);
       this.currentImage = 'data:image/jpg;base64,' + imageData;
@@ -151,18 +156,16 @@ export class UserEditPage {
           this.dbUpdateProfile();
         });
       })
-      this.uploadTask.percentageChanges().subscribe(value => {
+      this.uploadObserver = this.uploadTask.percentageChanges().subscribe(value => {
         const maxLoad = 100;
-        // this.isUploading = maxLoad === value ? false: true;
         if(maxLoad === value){
-          // setTimeout(()=>{    //this is a simple hack for displaying issues
             this.isUploading = false;
-          // }, 700);  //0.7 seconds refresh for image
+            this.uploadObserver.unsubscribe();
         }
         else{
           this.isUploading = true;
         }
-      });
+      })
     }, (error) => {
       console.log("Upload Error: ", error);
     });
@@ -191,9 +194,6 @@ export class UserEditPage {
     for(var i=0; i<category.length; i++){
       this.category.push(category[i]);
     }
-  }
-  deleteCategory(index){
-    this.category.splice(index, 1);
   }
   editInterest(){
     let modal = this.modalCtrl.create(UserInterestPage);

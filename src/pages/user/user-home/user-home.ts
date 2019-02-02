@@ -32,10 +32,6 @@ import { AuthProvider } from '../../../providers/auth/auth';
 })
 export class UserHomePage {
 
-	// constructor(public navCtrl: NavController) {
-		
-	// }
-
 	authUser = this.authProvider.authUser;  //ID of authenticated user
 
 	myProfile = [];		//current user profile
@@ -384,11 +380,19 @@ export class UserHomePage {
 							let age = value.age;
 							let ageRange = this.myProfile['ageRange'];	//age range preference of user
 							console.log(age, ageRange.min, ageRange.max);
-							let isInRange = ((age >= ageRange.min && 
+							var isInRange;
+							if(ageRange.max < 50){
+								isInRange = ((age >= ageRange.min && 
 								age<=ageRange.max) ? true : false);	//check if in range of age preference
-							console.log(isInRange);
-							if(isInRange){	//remove users not in range
-								newList.push(value);
+								if(isInRange){	//remove users not in range
+									newList.push(value);
+								}
+							}
+							else{
+								isInRange = ((age >= ageRange.min) ? true : false);	//check if in range of age preference
+								if(isInRange){	//remove users not in range
+									newList.push(value);
+								}
 							}
 						}).then(() =>{
 							if(index+1 === userLength){

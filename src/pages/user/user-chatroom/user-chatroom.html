@@ -8,7 +8,7 @@
 
   <ion-navbar class="head">
     <ion-row *ngIf="((profilePromise | async) && (activePromise | async )) as head ">
-    	<img id="user_img" src="{{userPhoto}}" >
+      <img id="user_img" src="{{userPhoto}}" >
       <ion-title id="name">{{userFirstName}}</ion-title>
         <!-- <button style="background-color: transparent; display: inline-block;" >
           <ion-icon class="gps" name="pin" (click)="gotoGeo()"></ion-icon>
@@ -19,16 +19,16 @@
       </div>
     </ion-row>
       <ion-buttons end>
-  	    <button style="background-color: transparent;">
-  	    	<ion-icon class="more" name="md-more"  (click)="presentPopover($event)" ></ion-icon>
-  	    </button>
-  	  </ion-buttons>
+        <button style="background-color: transparent;">
+          <ion-icon class="more" name="md-more"  (click)="presentPopover($event)" ></ion-icon>
+        </button>
+      </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content #scrollMe class="chatroom_content" padding >
+<ion-content class="chatroom_content" padding >
   <!-- <div class="chatwindow">
     <ion-list no-lines>
       <ion-item *ngFor = "let message of messages" text-wrap>
@@ -40,41 +40,58 @@
       </ion-item>
     </ion-list>
   </div> -->
-  <ion-grid *ngFor = "let message of messages">
-    <ion-row>
-          <img class="circle_pic" *ngIf="message.sender === receiverKey" src="{{userPhoto}}">
-      <ion-col col-9>
-        <div> 
-          <div class="chatmate" *ngIf="message.sender === receiverKey">
+  <ion-list>
+    <ion-grid *ngFor = "let message of messages">
+      <ion-row *ngIf="message.sender === receiverKey">
+        <img class="circle_pic" src="{{userPhoto}}">
+        <ion-col col-9>
+          <div> 
+            <div class="chatmate" *ngIf="message.type == 'message'">
+              <p>{{message.message}}</p>
+            </div>
+            <div class="chatmate" *ngIf="message.type =='image'">
+              <img src="{{message.image}}" alt="No photo available." (click)="displayImage(message.image)">
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="message.sender === authKey">
+        <ion-col col-3></ion-col>
+        <ion-col>
+          <div class="user" *ngIf="message.type =='message'" >
             <p>{{message.message}}</p>
           </div>
-        </div>
-      </ion-col>
-    </ion-row>
-    <ion-row>
+          <div class="user" *ngIf="message.type =='image'">
+            <img src="{{message.image}}" alt="No photo available." (click)="displayImage(message.image)">
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-row *ngFor= "let image of loadingImage">
       <ion-col col-3></ion-col>
       <ion-col>
-        <div class="user" *ngIf="message.sender === authKey" >
-          <p>{{message.message}}</p>
+        <div class="user">
+          <img src="{{image.image}}" alt="No photo available.">
         </div>
       </ion-col>
     </ion-row>
-  </ion-grid>
-
-
-
+  </ion-list>
+  
 </ion-content>
 
 <ion-footer>
     <ion-row>
-          <ion-col col-10>
-               <ion-input type="text" [(ngModel)]="myMessage" (ionChange)="checkMessage()" placeholder="Type something..." id="input_box"></ion-input>  
-               <!-- Change to text area? -->
-          </ion-col>
-          <ion-col>
-              <button id="send" [disabled]="messageEmpty" (click)="sendMessage()">
-              	<ion-icon name="send" ></ion-icon>
-              </button>
-          </ion-col>
-      </ion-row>
+        <ion-col col-10>
+             <ion-input type="text" [(ngModel)]="myMessage" (ionChange)="checkMessage()" placeholder="Type something..." id="input_box"></ion-input>  
+             <!-- Change to text area? -->
+        </ion-col>
+        <ion-col>
+            <button>
+              <ion-icon name="camera" (click)="sendImage()"></ion-icon>
+            </button>
+            <button id="send" [disabled]="messageEmpty" (click)="sendMessage()">
+              <ion-icon name="send" ></ion-icon>
+            </button>
+        </ion-col>
+    </ion-row>
 </ion-footer>

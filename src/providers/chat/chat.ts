@@ -18,33 +18,33 @@ export class ChatProvider {
   chatKey: string;
   receiverKey: string;
 
-  chatList = [];
+  // chatList = [];
 
   //Observer/Subscription
-  chatObserver;
+  // chatObserver;
   constructor(public http: HttpClient, private db: AngularFireDatabase, private fireAuth: AngularFireAuth) {
     console.log('Hello ChatProvider Provider');
-    this.getChat();
+    // this.getChat();
   }
 
-  getChat(){
+  // getChat(){
   	
-  }
+  // }
 
-  messageDateFormat(date){
-    let dateNow = moment().valueOf();
-    let dayUnix = 86400000;
-    let weekUnix = 604800000;
-    if((dateNow-date) < dayUnix){
-      return moment(date).format("LT");
-    }
-    else if((dateNow-date) > dayUnix && (dateNow-date) < weekUnix){
-      return moment(date).format("ddd LT");
-    }
-    else if((dateNow-date) > weekUnix){
-      return moment(date).format("MMM D");
-    }
+  // messageDateFormat(date){
+  //   let dateNow = moment().valueOf();
+  //   let dayUnix = 86400000;
+  //   let weekUnix = 604800000;
+  //   if((dateNow-date) < dayUnix){
+  //     return moment(date).format("LT");
+  //   }
+  //   else if((dateNow-date) > dayUnix && (dateNow-date) < weekUnix){
+  //     return moment(date).format("ddd LT");
+  //   }
+  //   else if((dateNow-date) > weekUnix){
+  //     return moment(date).format("MMM D");
+  //   }
 
-  }
+  // }
   
 }

@@ -10,6 +10,8 @@ import { AngularFireAuth } from 'angularfire2/auth';
 
 //Providers
 import { AuthProvider } from '../../../providers/auth/auth';
+import { ChatProvider } from '../../../providers/chat/chat';
+import { MatchProvider } from '../../../providers/match/match';
 /**
  * Generated class for the UserMatchPage page.
  *
@@ -26,14 +28,14 @@ export class UserMatchPage {
 
   authUser = this.authProvider.authUser;
 
-  userLikedKey = this.navParams.get('userMatchKey');
+  userLikedKey = this.matchProvider.userKey;
   userImage: string;
   userLikedImage: string;
   userLikedName: string;
   chatKey:string = null;
   constructor(public navCtrl: NavController, public navParams: NavParams ,private view: ViewController, 
     private db: AngularFireDatabase, private fireAuth: AngularFireAuth, private authProvider: AuthProvider,
-    private appCtrl: App) {
+    private appCtrl: App, private matchProvider: MatchProvider, private chatProvider: ChatProvider) {
   }
 
   ionViewDidLoad() {
@@ -73,14 +75,12 @@ export class UserMatchPage {
   }
 
   chatStart(){
-    if(this.chatKey){  //hack if data processes slow to avoid error
-      this.view.dismiss();  
-      this.navCtrl.push(UserChatroomPage, {
-        chatKey: this.chatKey, 
-        userKey:this.userLikedKey
-      }).then(() =>{
-        this.appCtrl.getRootNav().getActiveChildNav().select(2)
-      })
+    if(this.chatKey){  //hack if data processes slow to avoid error, for slow internet
+      this.chatProvider.chatKey = this.chatKey;  //send to chat provider to be used in pushed chat
+      this.chatProvider.receiverKey = this.userLikedKey;
+      this.navCtrl.push(UserChatroomPage).then(() =>{
+        this.appCtrl.getRootNav().getActiveChildNav().select(2);
+      });
     }
   }
 
