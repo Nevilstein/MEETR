@@ -11,6 +11,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import firebase from 'firebase';
 
 //Providers
+import { AuthProvider } from '../../../providers/auth/auth';
 /**
  * Generated class for the UserFormPage page.
  *
@@ -25,6 +26,8 @@ import firebase from 'firebase';
 })
 export class UserFormPage {
   profile = this.navParams.get('profile');
+  authKey = this.authProvider.authUser;
+
   next: boolean = true;
   back: boolean = false;
   isMale: boolean = true;
@@ -34,14 +37,8 @@ export class UserFormPage {
 
   @ViewChild(Slides) slides: Slides;
   constructor(public navCtrl: NavController, public navParams: NavParams, public db: AngularFireDatabase, 
-    public fireAuth: AngularFireAuth, private zone: NgZone) {
+    public fireAuth: AngularFireAuth, private zone: NgZone, private authProvider: AuthProvider) {
     console.log(this.profile);
-    // if(this.interest1){
-    //   console.log(1);
-    // }
-    // else{
-    //   console.log(2);
-    // }
   }
 
   ionViewDidLoad() {
@@ -81,10 +78,15 @@ export class UserFormPage {
       }
     }
     this.profile = Object.assign({}, this.profile, formProfile);
-    this.db.list('profile').update(this.fireAuth.auth.currentUser.uid, this.profile).then( () => {
-      this.zone.run(() => {
-          this.navCtrl.setRoot(UserTabsPage);
-      });
+    this.db.list('profile').update(this.authKey, this.profile);
+    this.db.list('tools').update(this.authKey, {
+      likes:{
+        limit:10,
+        timestamp:firebase.database.ServerValue.TIMESTAMP
+      }
+    });
+    this.zone.run(() => {
+        this.navCtrl.setRoot(UserTabsPage);
     });
   }
 

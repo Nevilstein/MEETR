@@ -107,7 +107,7 @@ export class UserSettingPage {
         isVisible: this.userVisible
     }).then( () =>{
         const toast = this.toastCtrl.create({
-        message: 'Your setting were successfully saved',
+        message: 'Your settings were successfully saved',
         showCloseButton: true,
         closeButtonText: 'Ok'
       });
