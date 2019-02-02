@@ -9,7 +9,7 @@
   <ion-navbar class="head">
     <ion-row *ngIf="((profilePromise | async) && (activePromise | async )) as head ">
     	<img id="user_img" src="{{userPhoto}}" >
-      <ion-title id="name">{{userFirstName}} {{userLastName}}</ion-title>
+      <ion-title id="name">{{userFirstName}}</ion-title>
         <!-- <button style="background-color: transparent; display: inline-block;" >
           <ion-icon class="gps" name="pin" (click)="gotoGeo()"></ion-icon>
         </button>  -->
@@ -59,7 +59,6 @@
         </div>
       </ion-col>
     </ion-row>
-
   </ion-grid>
 
 
@@ -69,7 +68,8 @@
 <ion-footer>
     <ion-row>
           <ion-col col-10>
-               <ion-input type="text" [(ngModel)]="myMessage" (change)="checkMessage()" placeholder="Type something..." id="input_box"></ion-input>
+               <ion-input type="text" [(ngModel)]="myMessage" (ionChange)="checkMessage()" placeholder="Type something..." id="input_box"></ion-input>  
+               <!-- Change to text area? -->
           </ion-col>
           <ion-col>
               <button id="send" [disabled]="messageEmpty" (click)="sendMessage()">

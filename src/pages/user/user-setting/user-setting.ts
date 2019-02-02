@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, App } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, App,ToastController  } from 'ionic-angular';
 
 //Pages
 import { UserProfilePage } from '../user-profile/user-profile';
@@ -39,7 +39,7 @@ export class UserSettingPage {
   showGender = {};
   userVisible: boolean;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private fireAuth: AngularFireAuth, 
+  constructor(public navCtrl: NavController,public toastCtrl: ToastController, public navParams: NavParams, private fireAuth: AngularFireAuth, 
     private fb: Facebook, private db: AngularFireDatabase, private appCtrl: App, private authProvider: AuthProvider) {
  
   }
@@ -103,8 +103,17 @@ export class UserSettingPage {
         ageRange: {min:this.ageRange['lower'], max:this.ageRange['upper']},
         isVisible: this.userVisible
     }).then( () =>{
-      alert('Settings saved.');
-      this.goBack();
+        const toast = this.toastCtrl.create({
+        message: 'Your setting were successfully saved',
+        showCloseButton: true,
+        closeButtonText: 'Ok'
+      });
+        toast.onDidDismiss((data, role) => {
+          if (role == 'close') {
+              this.goBack();
+          }
+      });
+      toast.present();
     });
   }
 

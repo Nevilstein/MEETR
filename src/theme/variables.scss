@@ -48,11 +48,15 @@ $colors: (
   				base: #9b3636,
   				contrast: #ffffff
   	) ,
-  tab : #29263E
+  tab : #189dae,
+  outline: #c6c6c6
 );
 $card-md-border-radius: 10px;
 $toolbar-md-title-text-color: map-get($colors, light);
 $tabs-ios-border: none;
+$toolbar-md-height: 4.7rem;
+$tabs-md-tab-min-height: 4.7rem;
+$tabs-md-tab-icon-size: 2.6rem;
 // App iOS Variables
 // --------------------------------------------------
 // iOS only Sass variables can go here

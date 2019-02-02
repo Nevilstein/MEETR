@@ -12,6 +12,7 @@ import firebase from 'firebase';
 
 //Providers
 import { AuthProvider } from '../../../providers/auth/auth';
+import { ChatProvider } from '../../../providers/chat/chat';
 /**
  * Generated class for the UserChatroomPage page.
  *
@@ -27,12 +28,12 @@ import { AuthProvider } from '../../../providers/auth/auth';
 export class UserChatroomPage {
   //Variables
   authKey: string = this.authProvider.authUser;
-  chatKey: string = this.navParams.get('chatKey');
-  receiverKey: string = this.navParams.get('userKey');
+  chatKey: string = this.chatProvider.chatKey;
+  receiverKey: string = this.chatProvider.receiverKey;
   chatLoading: boolean = true;
   messages = [];
-  myMessage:string;
-  messageEmpty: boolean;
+  myMessage:string = '';
+  messageEmpty: boolean = true;
   geoStatus = { sender: false, receiver: false}
   matchDate;
   unseenCount:number;
@@ -40,7 +41,6 @@ export class UserChatroomPage {
 
   userPhoto: string;
   userFirstName: string;
-  userLastName: string;
   userStatus: boolean;
   activeWhen: string;
   statusDate: number;
@@ -62,19 +62,19 @@ export class UserChatroomPage {
   @ViewChild(Content) content: Content;
 
   constructor(public navCtrl: NavController,public popoverCtrl:PopoverController , public navParams: NavParams, private db: AngularFireDatabase, 
-    private authProvider: AuthProvider) {
+    private authProvider: AuthProvider, private chatProvider: ChatProvider) {
   }
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad UserChatroomPage');
-    setTimeout(() => {
-        this.content.scrollToBottom();
-     }, 1000);
+  ionViewWillLoad(){
     this.timeInterval = setInterval(() =>{
       this.activeWhen = this.getActiveStatus();  
     }, 60000)
-    this.getChatData();
     this.getUserData();
+    this.getChatData();
   }
+  // ionViewDidLoad() {
+  //   console.log('ionViewDidLoad UserChatroomPage');
+  //   this.content.scrollToBottom(0)
+  // }
   
   ionViewWillUnload(){
     this.activeObserver.unsubscribe();
@@ -116,7 +116,6 @@ export class UserChatroomPage {
         snapshot.forEach( element =>{
           let data = element.payload.val();
           data['id'] = element.key;
-
           this.geoStatus = {sender:this.geoStatus.sender, receiver:data['geoStatus']};
           this.unseenCount = data['unseenCount'];
         });
@@ -133,7 +132,9 @@ export class UserChatroomPage {
               this.db.list('messages', ref=> ref.child(this.authKey).child(this.chatKey))
                 .update(data['id'], { isRead:true });
             }
-            messageArr.push(data);
+            if(data['status']){  //if message is not cleared
+              messageArr.push(data);
+            }
           });
           resolve(true);
         });
@@ -159,7 +160,6 @@ export class UserChatroomPage {
            let data = element.payload.val();
            this.userPhoto = data['photos'][0];
            this.userFirstName = data['firstName'];
-           this.userLastName = data['lastName'];
          });
          this.profilePromise = Promise.resolve(true);
       });
@@ -180,7 +180,7 @@ export class UserChatroomPage {
   sendMessage(){
     let sentDate = moment().valueOf();
     var sentMessage = this.myMessage;
-    this.myMessage = null;
+    this.myMessage = '';
     this.db.list('messages', ref=> ref.child(this.authKey).child(this.chatKey)).push({
       message: sentMessage,
       sender: this.authKey,
@@ -206,6 +206,7 @@ export class UserChatroomPage {
       timestamp:sentDate,
       unseenCount: this.unseenCount+1
     });
+    this.content.scrollToBottom(1000);
   }
 
   checkMessage(){
@@ -216,9 +217,13 @@ export class UserChatroomPage {
     this.navCtrl.push(UserGeoPage);
   }
   presentPopover(myEvent) {
-    let popover = this.popoverCtrl.create(PopoverComponent);
+    let popover = this.popoverCtrl.create(PopoverComponent, {
+      chatKey: this.chatKey,
+      userKey: this.receiverKey
+    });
     popover.present({
       ev: myEvent
     });
   }
+
 }

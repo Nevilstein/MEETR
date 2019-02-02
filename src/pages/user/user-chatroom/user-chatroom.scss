@@ -4,12 +4,15 @@ page-user-chatroom {
 		background-color: transparent;
 	}
 	#send ion-icon{
-		color: white;
+		color: #3D95A0;
 		font-size: 30px;
 	}
 	#input_box{
 		border-radius: 20px;
 		background-color: white;
+		border-style: solid;
+		border-color: #cfd0d1;
+		border-width: 1px;
 	}
 	#user_img{
 		width:40px;
@@ -17,15 +20,16 @@ page-user-chatroom {
 	    -webkit-border-radius: 40%;
 	    border-radius: 50%;
 	    object-fit: cover;
+	    margin-bottom: -1vh;
 	    border-style: solid;
 	    border-color: white;
   		border-width: 2px;
 	}
 	.chatroom_content{
-		background-color: #29263E;
+		background-color: #FFFFFF;
 	}
 	.toolbar-background {
- 	 	background-color: #29263E;
+ 	 	background-color: #189dae;
 	}
 	.more{
 		color: white;
@@ -37,10 +41,10 @@ page-user-chatroom {
 	}*/
 	.active{
 		margin-left: 16vw;
-		margin-top: -10px;
+		margin-top: -2vh;
 	}
 	#name{
-		margin-top: 5px;
+		margin-top: -1vh;
 	}
 	.gps{
 		font-size: 20px;
@@ -57,19 +61,16 @@ page-user-chatroom {
 		display: inline-block;
 		word-break: break-all;
 		word-wrap: break-word;
-		padding: 0px 2px;
+		padding: 0px 10px;
 		border-radius: 10px;
 	}
 	.user{
-		@include linear-gradient(top,$sweet-morning);
-	    -webkit-background-size: cover;
-	    -moz-background-size: cover;
-	    background-size: cover;
+		background-color: #2F6690;
 		display: inline-block;
 		float: right;
 		word-break: break-all;
 		word-wrap: break-word;
-		padding: 0px 2px;
+		padding: 0px 10px;
 		border-radius: 10px;
 	}
 	.user p{

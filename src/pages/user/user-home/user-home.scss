@@ -11,7 +11,9 @@
 }
 page-user-home {
     .home_content{
-        background-color: #29263E;
+        background-image: url('../../../assets/imgs/finalbg-01.jpg') !important;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
     .card-container {
         height: 90vw;
@@ -51,14 +53,10 @@ page-user-home {
         pointer-events: none;
     }
     #button{
-        @include linear-gradient(top,$pinky);
-        -webkit-background-size: cover;
-        -moz-background-size: cover;
-        background-size: cover;
-        z-index: 999;
+        background-color:#2F6690;
     }
     #eye{
-        font-size: 35px;
+        font-size: 34px;
     }
 }
 

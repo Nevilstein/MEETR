@@ -15,9 +15,7 @@
 				Pakilapit ng kaunti yung text ng checkbox sa checkbox or wag na, arte ko HAHAHA
 				Humahaba nang todo hindi ko alam paano gagawin yung may scroll, reference sa Tantan
 				Ikaw na din bahala sa colors ahh
-				Gawin mong medyo halata na input box yung input box hahaha
 			 -->
-			 <!-- Gawing scrollable tong list tapos scroll up kapag nag-add -->
 			<ion-input (keyup.enter)="addCustomInterest()" [(ngModel)]="interestValue" placeholder="Add custom interest"></ion-input>
 			<ion-item *ngFor="let interest of interestList">
 				<ion-label>{{interest.name}}</ion-label>

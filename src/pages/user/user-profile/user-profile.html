@@ -20,37 +20,66 @@
 <ion-content class="profile_content" padding>
 	<ion-grid>
 		<ion-row>
-			<ion-col text-center >
-				<ion-avatar item-start style="margin: auto;">
+			<ion-col col-5>
+				<ion-avatar>
 	     			<img src="{{image}}">
 	   			</ion-avatar>
 			</ion-col>
-		</ion-row> 
-		<ion-row style="height: 5px;"></ion-row>
-		<ion-row>
-			<ion-col text-center>
-		    	<h4 class="name"> {{firstName}}, {{age}}</h4>
-		  </ion-col>
+			<ion-col col-7>
+		    	<h5 class="name"> {{firstName}}</h5>
+		    	<ion-row class="bottom"> 
+		    		<ion-col col-2>
+		    			<p>{{age}}</p>
+		    		</ion-col>
+		    		<ion-col  col-5 style="display: inline-block;">
+		    			<p>Gender</p>
+		    		</ion-col>
+		    		<ion-col col-5 style="display: inline-block;">
+		    			<p>Address</p>
+		    		</ion-col>
+		    	</ion-row>
+		    	<ion-row class="bottom">
+		    		<ion-col col-9>
+		    			<button ion-button id="edit" color="outline" outline (click)="goToEdit()"><span>Edit Profile</span></button>
+		    		</ion-col>
+		    		<ion-col col-3 style="display: inline-block;">
+		    			<button ion-button id="settings" (click)="goToSetting()">
+		    			<ion-icon name="settings"></ion-icon>
+		    			</button>
+		    		</ion-col>
+		    	</ion-row>
+		  	</ion-col>
 		</ion-row> 
 	</ion-grid>
-	<ion-card class="cards">
-		<ion-card-header class="header">
-			Bio
-		</ion-card-header>
+	<hr>
+	<div class="infos">
+		<ion-card class="cards">
+			<ion-card-header class="header">
+				Bio
+			</ion-card-header>
 
-		<ion-card-content id="bio" text-center>
-			{{bio}}
-		</ion-card-content>
-	</ion-card>
-	<ion-card class="cards">
-		<ion-card-header class="header">
-			Interests
-		</ion-card-header>
-		<ion-card-content>
-			<span class="interests" *ngFor="let interest of interests" >{{interest}}</span>
-		</ion-card-content>
-	</ion-card>
-	<ion-grid>
+			<ion-card-content id="bio" text-center>
+				{{bio}}
+			</ion-card-content>
+		</ion-card>
+		<ion-card class="cards">
+			<ion-card-header class="header">
+				Interests
+			</ion-card-header>
+			<ion-card-content>
+				<span class="interests" *ngFor="let interest of interests" >{{interest}}</span>
+			</ion-card-content>
+		</ion-card>
+		<ion-card>
+			<ion-card-header class="header">
+				Total number of likes
+			</ion-card-header>
+			<ion-card-content text-center>
+				You have been liked # times!
+			</ion-card-content>
+		</ion-card>
+	</div>
+	<!-- <ion-grid>
 		<ion-row>
 			<ion-col col-2></ion-col>
 			<ion-col col-4>
@@ -69,5 +98,5 @@
 			</ion-col>
 			<ion-col col-2></ion-col>
 		</ion-row>
-	</ion-grid>
+	</ion-grid> -->
 </ion-content>

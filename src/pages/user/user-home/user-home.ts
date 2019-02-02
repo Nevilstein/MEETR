@@ -7,6 +7,7 @@ import { AlertController } from 'ionic-angular';
 import { UserReportPage } from '../user-report/user-report';
 import { UserCheckPage } from '../user-check/user-check';
 import { UserMatchPage } from '../user-match/user-match';
+import { UserEditPage } from '../user-edit/user-edit';
 
 //Libraries
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -63,7 +64,7 @@ export class UserHomePage {
 	  },
 	};
 
-	constructor(private sanitizer: DomSanitizer, private alertCtrl: AlertController, private modalCtrl: ModalController, 
+	constructor(private sanitizer: DomSanitizer,public navCtrl:NavController, private alertCtrl: AlertController, private modalCtrl: ModalController, 
 		private fireAuth: AngularFireAuth, private db: AngularFireDatabase, private authProvider: AuthProvider) {
 		
 	}
@@ -136,7 +137,8 @@ export class UserHomePage {
 	  				asBg: this.sanitizer.bypassSecurityTrustStyle('url('+data['photos'][0]+')')
 				}};
 				this.stackedUsers.push(data);
-			}).then(() =>{
+			})
+			.then(() =>{
 				this.cardObserver.forEach( subscription =>{	//unsubscribe all cards
 					subscription.unsubsribe();
 				});
@@ -214,7 +216,7 @@ export class UserHomePage {
 			resolve(true);
 		});
 		stackPromise.then(()=>{
-			this.cardSubscribe();	//added a listener to check for changes in database
+			// this.cardSubscribe();	//added a listener to check for changes in database
 			setTimeout(()=>{    //<<<---    using ()=> syntax
 			    this.isReady = true;
 			}, 3000);
@@ -240,7 +242,7 @@ export class UserHomePage {
 					let index = this.stackedUsers.findIndex(x => x.id === snapshot[0].key);
 					this.stackedUsers[index] = snapshot[0].payload.val();	//apply observer/listener to user data
 					this.stackedUsers[index].id = snapshot[0].key;
-					this.stackedUsers[index].age = moment().diff(moment(this.stackedUsers[index].birthday, "MM/DD/YYYY"), 'years')
+					this.stackedUsers[index].age = moment().diff(moment(this.stackedUsers[index].birthday, "MM/DD/YYYY"), 'years');
 					this.stackedUsers[index] = {...this.stackedUsers[index], ...{
 						likeEvent: new EventEmitter(),
 		  				destroyEvent: new EventEmitter(),
@@ -253,11 +255,13 @@ export class UserHomePage {
 	getLocation(){
 		this.geolocationObserver = this.db.list('location', ref=> ref.orderByKey().equalTo(this.authUser))
 			.snapshotChanges().subscribe( snapshot => {
-				let data = snapshot[0].payload.toJSON();
-				this.myCoordinates = {
-					latitude: data['currentLocation'].latitude,
-					longitude: data['currentLocation'].longitude
-				}
+				snapshot.forEach( element =>{
+					let data = element.payload.toJSON();
+					this.myCoordinates = {
+						latitude: data['currentLocation'].latitude,
+						longitude: data['currentLocation'].longitude
+					}
+				});
 			});
 	}
 
@@ -271,7 +275,9 @@ export class UserHomePage {
 								let data = element.val();
 								data.id = element.key;
 								data.age = moment().diff(moment(data['birthday'], "MM/DD/YYYY"), 'years');
-								this.userList.push(data);
+								if(data.isVisible){		//check visibility
+									this.userList.push(data);
+								}
 							}
 						}); 
 					}).then(() => {
@@ -292,7 +298,9 @@ export class UserHomePage {
 								let data = element.val();
 								data.id = element.key;
 								data.age = moment().diff(moment(data['birthday'], "MM/DD/YYYY"), 'years');
-								this.userList.push(data);
+								if(data.isVisible){		//check visibility
+									this.userList.push(data);
+								}
 							}
 						});
 					}).then(() => {
@@ -304,8 +312,27 @@ export class UserHomePage {
 			}
 		});
 		Promise.all([malePromise, femalePromise]).then( () =>{	//wait to retrieve userbyGender promise to get values
-			this.filterByLocation();
+			this.filterByInterests();
+			// this.filterByLocation();
 		});
+	}
+	filterByInterests(){
+		let newList = [];
+		this.userList.forEach( (value, index) =>{
+			let myInterests = Object.assign([], this.myProfile['interests']);
+			let userInterests = Object.assign([], value['interests']);
+			let sameInterest = myInterests.filter( item =>{
+				return userInterests.indexOf(item) > -1;
+			});
+			console.log(sameInterest);
+			if(sameInterest.length>0){
+				let data = value;
+				data['sameInterest'] = sameInterest;
+				newList.push(data);
+			}
+		});
+		this.userList = newList;
+		this.filterByLocation();
 	}
 	filterByLocation(){
 		let newList = [];
@@ -430,7 +457,26 @@ export class UserHomePage {
 		else{
 			setTimeout( () => {
 				if(this.findUserCount === 10){
-					alert("No users around. Please update your preference.");
+					let alert = this.alertCtrl.create({
+					    title: 'No users found!',
+					    message: 'No users found, please change your preferences',
+					    buttons: [
+					      {
+					        text: 'Cancel',
+					        role: 'cancel',
+					        handler: () => {
+					          console.log('Cancel clicked');
+					        }
+					      },
+					      {
+					        text: 'Edit',
+					        handler: () => {
+					          this.navCtrl.push(UserEditPage);
+					        }
+					      }
+					    ]
+					  });
+					  alert.present();
 				}
 				else{
 					this.findUserCount++;
@@ -446,8 +492,8 @@ export class UserHomePage {
 		const report = this.modalCtrl.create(UserReportPage);
 		report.present();
 	}	
-	check_user(){
-		const check = this.modalCtrl.create(UserCheckPage);
+	checkInfo(cardIndex){
+		const check = this.modalCtrl.create(UserCheckPage, {user:this.stackedUsers[cardIndex]});
 		check.present();
 	}
 
