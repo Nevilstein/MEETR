@@ -50,7 +50,6 @@ export class LoginPage {
   ionViewWillUnload(){
     this.loginSubscription.unsubscribe();
   }
-/*
   loginRedirect(){
     this.loginSubscription = this.fireAuth.authState.subscribe( fireRes =>{
       this.fb.getLoginStatus().then(fbRes =>{
@@ -159,7 +158,7 @@ export class LoginPage {
     });
     return promise;
   }
-*/
+  
   gotoGeo(){
     this.navCtrl.push(UserGeoPage);
   }

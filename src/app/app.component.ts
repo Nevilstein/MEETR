@@ -13,7 +13,7 @@ import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any=LoginPage;
+  rootPage: any;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private fb: Facebook) {
     platform.ready().then(() => {
