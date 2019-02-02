@@ -95,7 +95,6 @@
     <allow-navigation href="http://192.168.1.100:8100" />
     <allow-navigation href="http://192.168.1.102:8100" />
     <allow-navigation href="http://192.168.1.101:8100" />
-    <engine name="android" spec="7.1.4" />
     <plugin name="cordova-plugin-camera" spec="^4.0.3" />
     <plugin name="cordova-plugin-googlemaps" spec="2.5.0">
         <variable name="API_KEY_FOR_ANDROID" value="AIzaSyCuM1MvV4ieX5IkrDXZh1lJ8WY3E1p4HZE" />
@@ -103,4 +102,5 @@
         <variable name="PLAY_SERVICES_VERSION" value="15.0.1" />
         <variable name="ANDROID_SUPPORT_V4_VERSION" value="27.+" />
     </plugin>
+    <engine name="android" spec="~7.1.4" />
 </widget>

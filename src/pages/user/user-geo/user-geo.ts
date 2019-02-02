@@ -79,6 +79,13 @@ export class UserGeoPage {
 			setTimeout(() => {
 				this.trackedRoute.push({lat:data.coords.latitude, lng:data.coords.longitude});
 				this.redrawPath(this.trackedRoute); //line draw function called
+				let Marker = new google.maps.Marker({		//map marker
+					position: {lat:data.coords.latitude, lng:data.coords.longitude},
+					map: this.map,
+					size: new google.maps.Size(10, 16),
+					center:location
+					//icon: image
+				});
 			});
 		})
 	}
