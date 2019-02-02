@@ -337,21 +337,23 @@ export class UserHomePage {
 			this.userList.forEach( (value, index) =>{
 				this.db.list('location', ref => ref.child(value['id']))
 					.query.once('value').then( snapshot => {
-						let data = snapshot.val();
-						data.id = snapshot.key;
-						let otherPoint = {
-							latitude: data['currentLocation'].latitude,
-							longitude: data['currentLocation'].longitude
-						}
-						let myPoint ={
-							latitude: this.myCoordinates['latitude'],
-							longitude: this.myCoordinates['longitude']
-						}
-						let isInRange = geolib.isPointInCircle(
-						    otherPoint,myPoint,
-						    this.myProfile['maxDistance']*1000);	//check if in distance preference
-						if(isInRange){	//remove users not in range
-							newList.push(value);
+						if(snapshot.val()){
+							let data = snapshot.val();
+							data.id = snapshot.key;
+							let otherPoint = {
+								latitude: data['currentLocation'].latitude,
+								longitude: data['currentLocation'].longitude
+							}
+							let myPoint ={
+								latitude: this.myCoordinates['latitude'],
+								longitude: this.myCoordinates['longitude']
+							}
+							let isInRange = geolib.isPointInCircle(
+							    otherPoint,myPoint,
+							    this.myProfile['maxDistance']*1000);	//check if in distance preference
+							if(isInRange){	//remove users not in range
+								newList.push(value);
+							}
 						}
 					}).then(() =>{
 						console.log(index+1, "===", userLength);
