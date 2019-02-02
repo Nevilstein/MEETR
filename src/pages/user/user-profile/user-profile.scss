@@ -4,8 +4,14 @@ page-user {
 ion-avatar,
 ion-avatar > img{
     border-radius:50%;
-    height:12rem;
-    width:12rem;
+    height:11rem;
+    width:11rem;
+}
+img{
+
+    border-style: solid;
+	border-color: #828282;
+	border-width: 1px;
 }
 #back{
 	background: none !important;
@@ -13,32 +19,35 @@ ion-avatar > img{
   	box-shadow: none !important;
 }
 #edit{
-	color: white !important;
+	background-color: transparent; 
+	text-transform: none;
+	outline-color: black;
+}
+#edit span{
+	color: black;
 }
 #settings{
-	color: white !important;
+	background-color: #16425B; 
+}
+#settings ion-icon{
+	font-size: 20px;
 }
 .profile_content{
-	background-color: #29263E;
+	background-image: url('../../../assets/imgs/finalbg-01.jpg') !important;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
-.name{
+/*.name{
 	color: white;
 }
 .cards{
 	background-color: #35324e;
-}
+}*/
 .header{
-	color: white;
 	font-weight: bold;
 }
-#bio{
-	color: white;
-}
 .interests{
-	@include linear-gradient(left,$pinky);
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    background-size: cover;
+	background-color: #2F6690;
 	margin: 2px 5px;
 	padding: 5px 10px;
 	display: inline-flex;
@@ -47,4 +56,11 @@ ion-avatar > img{
 	padding: 5px 10px;
 	display: inline-flex;
 	min-width: 50px;
+}
+.bottom{
+	margin-top: -20px;
+	margin-left: -1vw;
+}
+.infos{
+	margin-top: 5vh;
 }

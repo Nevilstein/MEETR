@@ -16,13 +16,12 @@ page-user-chat {
 		zoom:2.0;
 	}
 	.chat_content{
-		background-color: #29263E;
+		background-image: url('../../../assets/imgs/finalbg-01.jpg') !important;
+	    background-repeat: no-repeat;
+	    background-size: cover;
 	}
 	.chats{
 		background: #1a2128 !important;
-	}
-	.content{
-		color:white;
 	}
 }
 

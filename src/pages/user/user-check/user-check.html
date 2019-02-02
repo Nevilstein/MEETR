@@ -17,26 +17,31 @@
 
 
 <ion-content class="check">
-	<div>
+	<div style="position: relative;">
 		<ion-slides pager>
 			<!-- Maliit yung image hindi ko alam gagawin :'(' -->
 			<ion-slide *ngFor="let image of userPhotos">
 				<img src="{{image}}">
 			</ion-slide>
 		</ion-slides>
+		<ion-fab bottom right edge>
+		 	<button ion-fab (click)="close_modal()"><ion-icon name="arrow-round-down" style="font-size: 35px !important;"></ion-icon></button>
+		</ion-fab>
 	</div>
 	<div padding>
 		<h3 class="name">{{userFirstName}}, {{userAge}}</h3>
 		<h6 class="location"># miles away</h6>
 	</div>
+	<hr>
 	<div  padding>
 		<h4 class="head">Bio</h4>
 		<!-- Pakicenter yung Bio -->
 		<p class="name">{{userBio}}</p>
 	</div>
+	<hr>
 	<div  padding>
 		<h4 class="head">Interests</h4>
-		<p class="name" *ngFor="let interest of userInterests">
+		<p class="interests" *ngFor="let interest of userInterests">
 			{{interest}}
 		</p>
 	</div>

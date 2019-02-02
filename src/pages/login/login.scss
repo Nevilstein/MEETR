@@ -9,7 +9,7 @@ page-login {
 		background-color: #3b5998;
 		text-transform: none;
 		text-align: center;
-		width: 200px;
+		width: 80vw;
 		margin-top: 10vh;
 	}
 	#google{
@@ -31,10 +31,11 @@ page-login {
 		width: 200px;
 	}
 	img{
-	  height: 30vh;
+	  height: 40vh;
 	  width: auto;
 	  margin: auto;
-	  display: block;
+	  outline: none;
+	  border:none;
 	}
 	#welcome{
 		font-size: 27px;

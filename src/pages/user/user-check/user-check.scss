@@ -3,7 +3,7 @@ page-user-check {
  	 	background-color: #29263E;
 	}
 	.check{
-		background-color: #29263E;
+		background-color:#FFFFFF;
 	}
 	ion-slide{
 		height: 40vh !important;
@@ -14,16 +14,18 @@ page-user-check {
 		background: #34bbff;
 		margin: 0 3px;
 	}
-	.name{
-		color: white;
-	}
 	.location{
-		color: white;
 		margin-top: -7px;
 	}
-	.head{
-		@include linear-gradient(left,$pinky);
-		-webkit-background-clip: text; 
-		-webkit-text-fill-color: transparent; 
+	.interests{
+		background-color: #2F6690;
+		margin: 2px 5px;
+		padding: 5px 10px;
+		display: inline-flex;
+		border-radius: 10px; 
+		color: white;
+		padding: 5px 10px;
+		display: inline-flex;
+		min-width: 50px;
 	}
 }

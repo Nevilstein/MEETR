@@ -1,13 +1,15 @@
 page-user-edit {
 	.toolbar-background {
- 	 	background-color: #29263E
+ 	 	background-color: #189dae;
 	}
 	.edit_content{
-		background-color: #29263E;
+		background-image: url('../../../assets/imgs/finalbg-01.jpg') !important;
+	    background-repeat: no-repeat;
+	    background-size: cover;
 	}
 	.default_image img{
-		height: 18vh;
-		width: 30vw; 
+		height: 15vh;
+		width: 25vw; 
 		margin-right: 10px; 
 		margin-bottom: 10px;
 		float: left;
@@ -30,8 +32,8 @@ page-user-edit {
 	#images{
 		background-color: whitesmoke; 
 		text-align: center;
-		height: 18vh; 
-		width: 30vw;
+		height: 15vh; 
+		width: 25vw;
 		margin-bottom:10px;
 		margin-right: 10px; 
 		float: left;
@@ -50,7 +52,7 @@ page-user-edit {
 	.interests{
 		background-color: dark;
 		border-radius: 10px; 
-		background-color: #ef8dd7; 
+		background-color: #2F6690; 
 		margin: 5px 5px;
 		padding: 5px 10px;
 		display: inline-flex;
@@ -75,18 +77,11 @@ page-user-edit {
 	.text-input {
 	  text-align: center;
 	}
-	.cards{
-		background-color: #35324e;
-	}
-	.gender{
-		background-color: #35324e;
-	}
-	.gender ion-label{
-		color: white;
-	}
 	#categories{
 		border-bottom-style: solid;
 		border-color: #35324e;
 	}
-
+	.pics{
+		margin-left: 4.5vw;
+	}
 }
