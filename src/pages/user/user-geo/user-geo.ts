@@ -64,6 +64,7 @@ export class UserGeoPage {
 				//icon: image
 			});
 		}).catch(err => console.log(err));
+		this.startTracking();
 	}
 	
 	startTracking(){
@@ -77,7 +78,7 @@ export class UserGeoPage {
 		.subscribe(data => {
 			setTimeout(() => {
 				this.trackedRoute.push({lat:data.coords.latitude, lng:data.coords.longitude});
-				this.redrawPath(this.trackedRoute);
+				this.redrawPath(this.trackedRoute); //line draw function called
 			});
 		})
 	}

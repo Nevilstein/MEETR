@@ -1,5 +1,5 @@
 <ion-list>
-	<ion-item (click)="gotoGeo()"> See location </ion-item>
+	<ion-item (click)="gotoGeo()" *ngIf="!isTracking"> See location </ion-item>
 	<ion-item> Unmatch </ion-item>
 	<ion-item> Block </ion-item>
 </ion-list>
