@@ -17,6 +17,9 @@ import { Facebook } from '@ionic-native/facebook';
 import { Geolocation } from '@ionic-native/geolocation';
 import firebase from 'firebase';
 import { LocalNotifications } from '@ionic-native/local-notifications';
+import { Diagnostic } from '@ionic-native/diagnostic';
+import { LocationAccuracy } from '@ionic-native/location-accuracy';
+import moment from 'moment';
 // import geolib from 'geolib';
 
 
@@ -39,7 +42,8 @@ export class UserTabsPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public authProvider: AuthProvider, private appCtrl: App,
     private fireAuth: AngularFireAuth, private fb: Facebook, private zone: NgZone, private geolocation: Geolocation, 
     private db: AngularFireDatabase, private modalCtrl: ModalController, private platform: Platform,
-    private toastCtrl: ToastController, private localNotif: LocalNotifications, private matchProvider: MatchProvider) {
+    private toastCtrl: ToastController, private localNotif: LocalNotifications, private matchProvider: MatchProvider,
+    private diagnostic:Diagnostic, private locationAcc: LocationAccuracy) {
       
   }
 
@@ -69,22 +73,12 @@ export class UserTabsPage {
 
   ionViewDidLoad(){
     console.log('ionViewDidLoad UserTabsPage');
-    this.trackLocation();
+    this.checkLocationSetting();
     this.listenToPlatform();
     this.listenToMatches();
-
-    this.db.list('activity').update(this.authUser, {  //start with active
-      isActive:{
-        status: true,
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-      }
-    });
-
-    this.tabRef.ionChange.subscribe(res =>{
-      console.log("tab index =",res.index);
-      this.authProvider.currentTab = res.index;
-    });
-    
+    // this.trackLocation();
+    this.updateActive();
+    this.tabChanges();
   }
 
   ionViewWillUnload(){
@@ -92,6 +86,42 @@ export class UserTabsPage {
     this.onMatchObserver.unsubscribe();
     this.pauseObserver.unsubscribe();
     this.resumeObserver.unsubscribe();
+  }
+
+  updateActive(){
+    this.db.list('activity').update(this.authUser, {  //start with active
+      isActive:{
+        status: true,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      }
+    });
+  }
+
+  tabChanges(){
+    this.tabRef.ionChange.subscribe(res =>{
+      console.log("tab index =",res.index);
+      this.authProvider.currentTab = res.index;
+    });
+  }
+
+  checkLocationSetting(){
+    this.diagnostic.isLocationEnabled().then( isAvailable =>{
+      if(isAvailable){
+        this.trackLocation();
+      }else{
+        this.locationAcc.request(this.locationAcc.REQUEST_PRIORITY_HIGH_ACCURACY).then(
+          () => {
+            this.trackLocation();
+          },
+          error => {
+            if(error.code === 4){
+              this.checkLocationSetting();
+            }
+          });
+      }
+    }).catch( error =>{
+      console.log(error);
+    })
   }
 
   trackLocation(){  
