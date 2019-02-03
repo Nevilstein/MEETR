@@ -64,6 +64,7 @@ export class UserGeoPage {
 				//icon: image
 			});
 		}).catch(err => console.log(err));
+		this.startTracking();
 	}
 	
 	startTracking(){
@@ -72,12 +73,19 @@ export class UserGeoPage {
 
 		this.positionSubscription = this.geo.watchPosition()
 		.pipe(
-			filter(p => p.coords !== undefined)
+			filter((p) => p.coords !== undefined)
 		)
 		.subscribe(data => {
 			setTimeout(() => {
 				this.trackedRoute.push({lat:data.coords.latitude, lng:data.coords.longitude});
-				this.redrawPath(this.trackedRoute);
+				this.redrawPath(this.trackedRoute); //line draw function called
+				let Marker = new google.maps.Marker({		//map marker
+					position: {lat:data.coords.latitude, lng:data.coords.longitude},
+					map: this.map,
+					size: new google.maps.Size(10, 16),
+					center:location
+					//icon: image
+				});
 			});
 		})
 	}
@@ -87,7 +95,7 @@ export class UserGeoPage {
 			this.currentMapTrack.setMap(null);
 		}
 
-		if(path.length > 1){
+		if(path.length > 1){ //line drawing on map
 			this.currentMapTrack = new google.maps.Polyline({
 				path:path,
 				geodesic:true,

@@ -56,54 +56,21 @@ export class LoginPage {
         this.fb.getLoginStatus().then(fbRes =>{
           if(fbRes.status === 'connected'){
             this.getFacebookData(fbRes.authResponse.userID, fbRes.authResponse.accessToken).then( fbData => {
-              this.db.database.ref('profile').child(fireRes.uid).once('value', snapshot =>{
-                let maxAge = 50, minAge = 18;
-                var ageLower = minAge, ageUpper = fbData['age']+5;
-                if(!snapshot.exists()){    //Snapshot exists checks if this is user's first login by checking their id in "profile" collection
-                  
-                  if(fbData['age'] >= maxAge-5){  //for Age greater than
-                    ageUpper = 50;
-                  }
-                  var profile = {
-                    firstName: fbData['first_name'],
-                    lastName: fbData['last_name'],
-                      // locations: '',  //for adding location feature?
-                    birthday: fbData['birthday'],
-                    maxDistance: 80,
-                    ageRange: {min: ageLower, max: ageUpper},
-                    isVisible: true,
-                    bio: '',
-                    school: '',
-                    work: '',
-                    jobTitle: '',
-                    photos: [fbData['picture'].data.url],
-                    dateCreated: firebase.database.ServerValue.TIMESTAMP,
-                    lastLogin: firebase.database.ServerValue.TIMESTAMP,
-                    status: 'active',
-                    friendCount: fbData['friend_count'],
-                    isLoggedIn: true
-                  }
-                  this.zone.run(() => {    //if snapshot doesn't exist redirect to wizard form
-                      this.navCtrl.setRoot(UserFormPage, {
-                        profile: profile
-                      });
-                  });
-                }
-                else{
-                  this.db.list('profile').update(this.fireAuth.auth.currentUser.uid, {
-                    firstName: fbData['first_name'],
-                    lastName: fbData['last_name'],
-                    friendCount: fbData['friend_count'],
-                    lastLogin: firebase.database.ServerValue.TIMESTAMP,
-                    isLoggedIn: true
-                  }).then( () =>{
-                    this.zone.run(() => {
-                      this.loading = false;
-                      this.navCtrl.setRoot(UserTabsPage);
-                    });
-                  });
-                }
-              });
+              if( fbData['age']<18){  //if user underaged
+                let toast = this.toastCtrl.create({
+                  message: "User must be at least 18 years old.",
+                  duration: 1000,
+                  position: 'bottom'
+                });
+                toast.present().then( () =>{
+                  fireRes.delete();  //delete account
+                  this.fb.logout();
+                  this.loading = false;
+                });
+              }
+              else{
+                this.loginToApp(fbData, fireRes);
+              }
             }).catch( e =>{
               let toast = this.toastCtrl.create({
                 message: "Login Error",
@@ -124,25 +91,67 @@ export class LoginPage {
     });
   }
 
+  loginToApp(fbData, fireRes){
+    this.db.database.ref('profile').child(fireRes.uid).once('value', snapshot =>{
+      let maxAge = 50, minAge = 18;
+      var ageLower = minAge, ageUpper = fbData['age']+5;
+      if(!snapshot.exists()){    //Snapshot exists checks if this is user's first login by checking their id in "profile" collection
+        
+        if(fbData['age'] >= maxAge-5){  //for Age greater than
+          ageUpper = 50;
+        }
+        var profile = {
+          firstName: fbData['first_name'],
+          lastName: fbData['last_name'],
+            // locations: '',  //for adding location feature?
+          birthday: fbData['birthday'],
+          maxDistance: 80,
+          ageRange: {min: ageLower, max: ageUpper},
+          isVisible: true,
+          bio: '',
+          school: '',
+          work: '',
+          jobTitle: '',
+          photos: [fbData['picture'].data.url],
+          dateCreated: firebase.database.ServerValue.TIMESTAMP,
+          lastLogin: firebase.database.ServerValue.TIMESTAMP,
+          status: 'active',
+          friendCount: fbData['friend_count'],
+          isLoggedIn: true
+        }
+        this.zone.run(() => {    //if snapshot doesn't exist redirect to wizard form
+            this.navCtrl.setRoot(UserFormPage, {
+              profile: profile
+            });
+        });
+      }
+      else{
+        this.db.list('profile').update(this.fireAuth.auth.currentUser.uid, {
+          firstName: fbData['first_name'],
+          lastName: fbData['last_name'],
+          friendCount: fbData['friend_count'],
+          lastLogin: firebase.database.ServerValue.TIMESTAMP,
+          isLoggedIn: true
+        }).then( () =>{
+          this.zone.run(() => {
+            this.loading = false;
+            this.navCtrl.setRoot(UserTabsPage);
+          });
+        });
+      }
+    });
+  }
+
   facebookLogin(){
     this.fb.login(['public_profile', 'user_photos', 'email', 'user_birthday', 'user_friends'])
       .then( (res: FacebookLoginResponse) => {
         if(res.status === "connected"){
-          this.firebaseLogin(res);  
+            this.firebaseLogin(res);  
         }
         else{
           console.log("Facebook not connected.");
         }
-      }).catch( error => {
-        console.log("Error logging in to facebook.", error);
-        let toast = this.toastCtrl.create({
-          message: "Something went wrong with facebook log in.",
-          duration: 1000,
-          position: 'bottom'
-        });
-        toast.present();
       });
-
   }
   
   firebaseLogin(fbLoginData){

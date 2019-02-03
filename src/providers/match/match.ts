@@ -14,7 +14,4 @@ export class MatchProvider {
     console.log('Hello MatchProvider Provider');
   }
 
-  getProfile(){
-  	
-  }
 }

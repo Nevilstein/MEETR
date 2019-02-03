@@ -19,6 +19,7 @@ import { Observable } from 'rxjs/Observable';
 
 //Providers
 import { AuthProvider } from '../../../providers/auth/auth';
+import { MatchProvider } from '../../../providers/match/match';
 /**
  * Generated class for the UserHomePage page.
  *
@@ -34,9 +35,14 @@ export class UserHomePage {
 
 	authUser = this.authProvider.authUser;  //ID of authenticated user
 
+	//list 
+	userList = [];		//list of all users qualified for current user
+	// userBoostList = [];	//list of users who used boosts
+	userLikerList = []; //prioritize users who liked you
+	userTopPicks = [];	//select your daily top picks
+
 	myProfile = [];		//current user profile
 	myCoordinates= {};	//current user coordinates
-	userList = [];		//list of all users qualified for current user
 	stackedUsers = [];	//stacked users
 	isReady = false;
 	val = 0;
@@ -61,7 +67,8 @@ export class UserHomePage {
 	};
 
 	constructor(private sanitizer: DomSanitizer,public navCtrl:NavController, private alertCtrl: AlertController, private modalCtrl: ModalController, 
-		private fireAuth: AngularFireAuth, private db: AngularFireDatabase, private authProvider: AuthProvider) {
+		private fireAuth: AngularFireAuth, private db: AngularFireDatabase, private authProvider: AuthProvider,
+		private matchProvider: MatchProvider) {
 		
 	}
 
@@ -84,6 +91,7 @@ export class UserHomePage {
 				this.isReady = false; //loading of cards
 				this.myProfile = Object.assign([],snapshot.payload.toJSON());
 				this.myProfile['id'] = snapshot.key;
+				this.findUserCount = 0;	//reset find counter
 				this.stackStart();
 			});
 	}
@@ -179,7 +187,8 @@ export class UserHomePage {
 								timestamp: currentDate
 							});
 						}).then(() => {
-							this.modalCtrl.create(UserMatchPage, {userMatchKey:userID}).present();
+							this.matchProvider.userKey = userID;
+							this.modalCtrl.create(UserMatchPage).present();
 						});
 					}
 				}
@@ -215,13 +224,14 @@ export class UserHomePage {
 			// this.cardSubscribe();	//added a listener to check for changes in database
 			setTimeout(()=>{    //<<<---    using ()=> syntax
 			    this.isReady = true;
-			}, 3000);
+			}, 2000);
 		})
 	}
 
 	stackStart(){
 		this.userList = [];		//refresh user list and cards if current user profile is changed
 		this.stackedUsers = [];
+		this.userLikerList = [];
 		this.cardObserver.forEach( subscription => {
 			subscription.unsubscribe();
 		});
@@ -238,7 +248,8 @@ export class UserHomePage {
 					let index = this.stackedUsers.findIndex(x => x.id === snapshot[0].key);
 					this.stackedUsers[index] = snapshot[0].payload.val();	//apply observer/listener to user data
 					this.stackedUsers[index].id = snapshot[0].key;
-					this.stackedUsers[index].age = moment().diff(moment(this.stackedUsers[index].birthday, "MM/DD/YYYY"), 'years');
+					this.stackedUsers[index].age = moment().diff(moment(this.stackedUsers[index].birthday, 
+						"MM/DD/YYYY"), 'years');
 					this.stackedUsers[index] = {...this.stackedUsers[index], ...{
 						likeEvent: new EventEmitter(),
 		  				destroyEvent: new EventEmitter(),
@@ -334,6 +345,9 @@ export class UserHomePage {
 		let newList = [];
 		let userLength = this.userList.length;
 		var locationPromise = new Promise(resolve => {
+			if(!(userLength > 0)){
+				resolve(true);
+			}
 			this.userList.forEach( (value, index) =>{
 				this.db.list('location', ref => ref.child(value['id']))
 					.query.once('value').then( snapshot => {
@@ -373,39 +387,73 @@ export class UserHomePage {
 		let newList = [];
 		let userLength = this.userList.length;
 		var agePromise = new Promise(resolve => {
-			if(userLength>0){
-				this.userList.forEach( (value, index) =>{
-					this.db.list('profile', ref => ref.child(value['id']))
-						.query.once('value').then( snapshot => {
-							let data = snapshot.val();
-							data.id = snapshot.key;
-							let age = value.age;
-							let ageRange = this.myProfile['ageRange'];	//age range preference of user
-							console.log(age, ageRange.min, ageRange.max);
-							var isInRange;
-							if(ageRange.max < 50){
-								isInRange = ((age >= ageRange.min && 
-								age<=ageRange.max) ? true : false);	//check if in range of age preference
-								if(isInRange){	//remove users not in range
-									newList.push(value);
-								}
-							}
-							else{
-								isInRange = ((age >= ageRange.min) ? true : false);	//check if in range of age preference
-								if(isInRange){	//remove users not in range
-									newList.push(value);
-								}
-							}
-						}).then(() =>{
-							if(index+1 === userLength){
-								resolve(true);
-							}
-						});
-					});
+			if(!(userLength > 0)){
+				resolve(true);
 			}
-			
+			this.userList.forEach( (value, index) =>{
+				this.db.list('profile', ref => ref.child(value['id']))
+					.query.once('value').then( snapshot => {
+						let data = snapshot.val();
+						data.id = snapshot.key;
+						let age = value.age;
+						let ageRange = this.myProfile['ageRange'];	//age range preference of user
+						console.log(age, ageRange.min, ageRange.max);
+						var isInRange;
+						if(ageRange.max < 50){
+							isInRange = ((age >= ageRange.min && 
+							age<=ageRange.max) ? true : false);	//check if in range of age preference
+							if(isInRange){	//remove users not in range
+								newList.push(value);
+							}
+						}
+						else{
+							isInRange = ((age >= ageRange.min) ? true : false);	//check if in range of age preference
+							if(isInRange){	//remove users not in range
+								newList.push(value);
+							}
+						}
+					}).then(() =>{
+						if(index+1 === userLength){
+							resolve(true);
+						}
+					});
+				});
 		});
 		agePromise.then(() => {
+			this.userList = newList;
+			this.filterByActive();
+		});
+	}
+	filterByActive(){
+		let newList = [];
+		let userLength = this.userList.length;
+		let activeTime = 86400000;	//day in milliseconds	//only active 1 day ago
+		let dateNow = moment().valueOf();
+		var activePromise = new Promise(resolve =>{
+			if(!(userLength > 0)){
+				resolve(true);
+			}
+			this.userList.forEach( (value, index) =>{
+				this.db.list('activity', ref => ref.child(value.id))
+					.query.once('value').then( activeSnap => {
+						let data = activeSnap.val();
+						if(data['isActive'].status){
+							newList.push(value);
+						}
+						else{
+							let isDateAgo = ((dateNow-data['isActive'].timestamp) < activeTime)? true: false;
+							if(isDateAgo){
+								newList.push(value);
+							}
+						}
+					}).then(() =>{
+						if(index+1 === userLength){
+							resolve(true);
+						}
+					});
+			});
+		});
+		activePromise.then(()=>{
 			this.userList = newList;
 			this.checkLikeStatus();
 		});
@@ -414,6 +462,9 @@ export class UserHomePage {
 		let newList = [];
 		let userLength = this.userList.length;
 		var likedPromise = new Promise(resolve =>{
+			if(!(userLength > 0)){
+				resolve(true);
+			}
 			this.userList.forEach( (value, index) => {
 				this.db.list('match', ref => ref.child(this.authUser).child(value.id))
 				.query.once('value').then( matchSnap => {
@@ -447,53 +498,115 @@ export class UserHomePage {
 		});
 		likedPromise.then(() =>{
 			this.userList = newList;
-			this.stackUser();
-		})
+			this.listLikers();
+			// this.stackUser();
+		});
 	}
+	listLikers(){
+		let newList = [];
+		let userLength = this.userList.length;
+		var likersPromise = new Promise(resolve =>{
+			if(!(userLength > 0)){
+				resolve(true);
+			}
+			this.userList.forEach( (value, index)=> {
+				this.db.list('likes', ref => ref.child(value.id).child(this.authUser))
+					.query.once('value').then( likeSnap =>{
+						if(likeSnap.val()){
+							let data = likeSnap.val();
+							if(data.like){
+								newList.push(value);
+							}
+							// if(index+1 === userLength){
+							// 	resolve(true);
+							// }
+						}
+					}).then(() =>{
+						if(index+1 === userLength){
+							resolve(true);
+						}
+					});
+			});
+		});
+		likersPromise.then(() =>{
+			console.log('liker');
+			this.userLikerList = newList;
+			this.stackUser();
+		});
+	}
+
 	stackUser(){
+		console.log('stack');
 		let numOfCards = ((this.userList.length<20) ? this.userList.length : 20);	//safety check if low count of users
 		for(let i=0; i<numOfCards; i++){
-			let num = this.getRandomInt(0, this.userList.length);	//temporarily use random? :P
-			this.stackedUsers.push(this.userList[num]);
-			this.userList.splice(num,1);	//remove the user from list
+			let percent = Math.random()*100;
+			console.log(percent);
+			if(percent < 70){
+				this.getFromLikers();
+			}
+			else{
+				this.getFromList();
+			}
 		}
 		if(numOfCards>0){
 			this.setCards();
 		}
 		else{
 			setTimeout( () => {
-				if(this.findUserCount === 10){
-					let alert = this.alertCtrl.create({
-					    title: 'No users found!',
-					    message: 'No users found, please change your preferences',
-					    buttons: [
-					      {
-					        text: 'Cancel',
-					        role: 'cancel',
-					        handler: () => {
-					          console.log('Cancel clicked');
-					        }
-					      },
-					      {
-					        text: 'Edit',
-					        handler: () => {
-					          this.navCtrl.push(UserEditPage);
-					        }
-					      }
-					    ]
-					  });
-					  alert.present();
-				}
-				else{
+				if(this.findUserCount !== 10){
+				// 	let alert = this.alertCtrl.create({
+				// 	    title: 'No users found!',
+				// 	    message: 'No users found, please change your preferences',
+				// 	    buttons: [
+				// 	      {
+				// 	        text: 'Cancel',
+				// 	        role: 'cancel',
+				// 	        handler: () => {
+				// 	          console.log('Cancel clicked');
+				// 	        }
+				// 	      },
+				// 	      {
+				// 	        text: 'Edit',
+				// 	        handler: () => {
+				// 	          this.navCtrl.push(UserEditPage);
+				// 	        }
+				// 	      }
+				// 	    ]
+				// 	  });
+				// 	  alert.present();
+				// }
+				// else{
 					this.findUserCount++;
 					this.stackStart();
 				}
-			}, 3000);
+			}, 2000);
 			//loop to find users again
 			// this.findUserCount++;	//findUserCount to check how many times the app looked for match; it notifies user to update interest
 		}
 	}
-
+	getFromLikers(){	//get in list of users who liked you
+		if(this.userLikerList.length > 0){
+			let num = this.getRandomInt(0, this.userLikerList.length);	//temporarily use random? :P
+			this.stackedUsers.push(this.userLikerList[num]);
+			// this.userList.splice(num,1);	//remove the user from list
+			this.removeFromLists(this.userLikerList[num]['id']);
+		}else{
+			//add another random counter if added another priority
+			this.getFromList();
+		}
+	}
+	getFromList(){	//only get in normal retrieved list
+		let num = this.getRandomInt(0, this.userList.length);	//temporarily use random? :P
+		this.stackedUsers.push(this.userList[num]);
+		// this.userList.splice(num,1);	//remove the user from list
+		this.removeFromLists(this.userList[num]['id']);
+	}
+	removeFromLists(removeID){	//removes a value from all the list retrieved
+		let userListIndex = this.userList.findIndex(item => item['id'] === removeID);
+		let likerListIndex = this.userLikerList.findIndex(item => item['id'] === removeID);
+		this.userList.splice(userListIndex, 1);
+		this.userLikerList.splice(likerListIndex, 1);
+	}
 	report_user(){
 		const report = this.modalCtrl.create(UserReportPage);
 		report.present();
@@ -507,6 +620,10 @@ export class UserHomePage {
 	    min = Math.ceil(min);
 	    max = Math.floor(max);
 	    return Math.floor(Math.random() * (max - min)) + min;
+	}
+
+	updateProfile(){
+		this.navCtrl.push(UserEditPage);
 	}
 
 	match_overlay(){

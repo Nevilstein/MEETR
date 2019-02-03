@@ -27,6 +27,10 @@
 				</div>
 			</div>
 		</ion-row>
+		<div *ngIf="findUserCount === 10">
+			<p>No users found, please change you preference.</p>
+			<button ion-button (click)="updateProfile()">Update Profile</button>
+		</div>
 	</ion-grid>
 	
 
