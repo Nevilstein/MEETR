@@ -55,20 +55,11 @@ export class UserGeoPage {
 			let location = new google.maps.LatLng(pos.coords.latitude , pos.coords.longitude);
 			this.map.setCenter(location);
 			this.map.setZoom(15)
-			/*
-			//var image = 'assets/imgs/avatar.jpg';
-			let Marker = new google.maps.Marker({		//map marker
-				position: {lat:pos.coords.latitude, lng:pos.coords.longitude},
-				map: this.map,
-				size: new google.maps.Size(10, 16),
-				center:location
-				//icon: image
-			});
-			*/
 		}).catch(err => console.log(err));
-		this.startTracking();	//track mainUser
-		this.trackMatch();		//track userMatch
+		this.startTracking();		//track mainUser
+		//this.trackMatch();		//track userMatch
 	}
+	
 	
 	startTracking(){
 		this.isTracking = true;
