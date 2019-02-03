@@ -7,6 +7,12 @@ page-user-chatroom {
 		color: #3D95A0;
 		font-size: 30px;
 	}
+	#send_pic{
+		color: #3D95A0;
+		font-size: 30px;
+		background-color: transparent;
+		height: 45px;
+	}
 	#input_box{
 		border-radius: 20px;
 		background-color: white;
@@ -20,7 +26,8 @@ page-user-chatroom {
 	    -webkit-border-radius: 40%;
 	    border-radius: 50%;
 	    object-fit: cover;
-	    margin-bottom: -1vh;
+	    margin-bottom: -2vh;
+	    margin-top: -1vh;
 	    border-style: solid;
 	    border-color: white;
   		border-width: 2px;
@@ -40,11 +47,11 @@ page-user-chatroom {
 		background-color: white;
 	}*/
 	.active{
-		margin-left: 16vw;
-		margin-top: -2vh;
+		margin-bottom: -4vh;
 	}
 	#name{
 		margin-top: -1vh;
+		margin-left: -4vw;
 	}
 	.gps{
 		font-size: 20px;

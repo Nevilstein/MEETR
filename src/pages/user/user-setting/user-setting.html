@@ -24,9 +24,11 @@
 <ion-content class="setting_content" padding>
 	<ion-list>
 		<ion-card>
-			<ion-card-header class="labels">Distance</ion-card-header>
+			<ion-card-header class="labels">Distance
+
+				<ion-label end>{{maxDistance}}</ion-label>
+			</ion-card-header>
 			<ion-card-content text-center>
-				<ion-label>{{maxDistance}}</ion-label>
 				<ion-range [(ngModel)]="maxDistance" color="danger" max="150" pin="true"></ion-range>
 			</ion-card-content>
 		</ion-card>

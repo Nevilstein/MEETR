@@ -1,9 +1,10 @@
 import { Component, ViewChild, NgZone } from '@angular/core';
-import { IonicPage, NavController, NavParams, Slides } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Slides, ModalController } from 'ionic-angular';
 
 //Pages
 import { UserTabsPage } from '../../user/user-tabs/user-tabs';
 import { LoginPage } from '../../login/login';
+import { UserInterestPage } from '../user-interest/user-interest';
 
 //Plugins
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -37,7 +38,7 @@ export class UserFormPage {
 
   @ViewChild(Slides) slides: Slides;
   constructor(public navCtrl: NavController, public navParams: NavParams, public db: AngularFireDatabase, 
-    public fireAuth: AngularFireAuth, private zone: NgZone, private authProvider: AuthProvider) {
+    public fireAuth: AngularFireAuth,private modalCtrl: ModalController, private zone: NgZone, private authProvider: AuthProvider) {
     console.log(this.profile);
   }
 
@@ -119,4 +120,8 @@ export class UserFormPage {
   //     }
   //   }
   // }
+  editInterest(){
+    let modal = this.modalCtrl.create(UserInterestPage);
+    modal.present();
+  }
 }

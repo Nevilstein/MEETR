@@ -8,15 +8,21 @@
 
   <ion-navbar class="head">
     <ion-row *ngIf="((profilePromise | async) && (activePromise | async )) as head ">
-      <img id="user_img" src="{{userPhoto}}" >
-      <ion-title id="name">{{userFirstName}}</ion-title>
+      <ion-col col-3>
+        <img id="user_img" src="{{userPhoto}}" >
+      </ion-col>
+      <ion-col>
+        <ion-title id="name">{{userFirstName}}</ion-title>
+        <ion-row>
+            <div class="active">
+              <small *ngIf="isActive && activeWhen" style="color:#32CD32">Active {{activeWhen}}</small> 
+              <small *ngIf="!isActive && activeWhen" style="color:whitesmoke">Active {{activeWhen}}</small> 
+            </div>
+        </ion-row>
+      </ion-col>
         <!-- <button style="background-color: transparent; display: inline-block;" >
           <ion-icon class="gps" name="pin" (click)="gotoGeo()"></ion-icon>
         </button>  -->
-      <div class="active">
-        <small *ngIf="isActive && activeWhen" style="color:#32CD32">Active {{activeWhen}}</small> 
-        <small *ngIf="!isActive && activeWhen" style="color:whitesmoke">Active {{activeWhen}}</small> 
-      </div>
     </ion-row>
       <ion-buttons end>
         <button style="background-color: transparent;">
@@ -49,7 +55,7 @@
             <div class="chatmate" *ngIf="message.type == 'message'">
               <p>{{message.message}}</p>
             </div>
-            <div class="chatmate" *ngIf="message.type =='image'">
+            <div *ngIf="message.type =='image'">
               <img src="{{message.image}}" alt="No photo available." (click)="displayImage(message.image)">
             </div>
           </div>
@@ -61,7 +67,7 @@
           <div class="user" *ngIf="message.type =='message'" >
             <p>{{message.message}}</p>
           </div>
-          <div class="user" *ngIf="message.type =='image'">
+          <div *ngIf="message.type =='image'">
             <img src="{{message.image}}" alt="No photo available." (click)="displayImage(message.image)">
           </div>
         </ion-col>
@@ -81,14 +87,16 @@
 
 <ion-footer>
     <ion-row>
-        <ion-col col-10>
+        <ion-col col-8>
              <ion-input type="text" [(ngModel)]="myMessage" (ionChange)="checkMessage()" placeholder="Type something..." id="input_box"></ion-input>  
              <!-- Change to text area? -->
         </ion-col>
         <ion-col>
-            <button>
-              <ion-icon name="camera" (click)="sendImage()"></ion-icon>
+           <button id="send_pic" (click)="sendImage()">
+              <ion-icon name="camera"></ion-icon>
             </button>
+          </ion-col>
+        <ion-col>
             <button id="send" [disabled]="messageEmpty" (click)="sendMessage()">
               <ion-icon name="send" ></ion-icon>
             </button>

@@ -17,14 +17,20 @@
 				Ikaw na din bahala sa colors ahh
 			 -->
 			<ion-input (keyup.enter)="addCustomInterest()" [(ngModel)]="interestValue" placeholder="Add custom interest"></ion-input>
-			<ion-item *ngFor="let interest of interestList">
-				<ion-label>{{interest.name}}</ion-label>
-				<ion-checkbox class="checkbox-square" (ionChange)="selectInterest($event, interest.name)" [checked]="interest.isSelected" value="interest.name">
-				</ion-checkbox>
-			</ion-item>
+			<ion-scroll style="height: 50vh;" scrollY="true">
+				<ion-list scroll="true">
+					<ion-item *ngFor="let interest of interestList">
+						<ion-label>{{interest.name}}</ion-label>
+						<ion-checkbox class="checkbox-square" (ionChange)="selectInterest($event, interest.name)" [checked]="interest.isSelected" value="interest.name">
+						</ion-checkbox>
+					</ion-item>
+				</ion-list>
+			</ion-scroll>
 			<!-- Pakilagay sa right yung buttons, salamat-->
-			<button clear ion-button (click)="cancel()">CANCEL</button>
-			<button clear ion-button (click)="updateInterest()">OK</button>
+			<div text-right>
+				<button clear ion-button (click)="cancel()">CANCEL</button>
+				<button clear ion-button (click)="updateInterest()">OK</button>
+			</div>
 		</ion-card-content>
 	</ion-card>
 </ion-content>
