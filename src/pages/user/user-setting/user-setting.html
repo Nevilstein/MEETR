@@ -24,18 +24,20 @@
 <ion-content class="setting_content" padding>
 	<ion-list>
 		<ion-card>
-			<ion-card-header class="labels">Distance
-
-				<ion-label end>{{maxDistance}}</ion-label>
+			<ion-card-header class="labels">
+				<span style="float: left;">Distance</span>
+				<span style="float: right; display: inline-block; font-weight: bold;">{{maxDistance}}</span>
 			</ion-card-header>
 			<ion-card-content text-center>
 				<ion-range [(ngModel)]="maxDistance" color="danger" max="150" pin="true"></ion-range>
 			</ion-card-content>
 		</ion-card>
 		<ion-card>
-			<ion-card-header class="labels">Age range</ion-card-header>
+			<ion-card-header class="labels">
+			<span style="float: left;">Age range</span>
+			<span style="float: right; display: inline-block; font-weight: bold;">{{ageRange.lower}} - {{ageRange.upper}}</span>
+			</ion-card-header>
 			<ion-card-content text-center>
-				<ion-label>{{ageRange.lower}} - {{ageRange.upper}}</ion-label>
 				<ion-range [(ngModel)]="ageRange" dualKnobs="true" min="18" max="50" color="danger" pin="true">
 					<ion-label range-left>18</ion-label>
 	      			<ion-label range-right>50+</ion-label>
