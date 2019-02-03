@@ -27,11 +27,14 @@
 			<!-- Change to Multi-value input -->
 			<img style="height: 150px !important;" src="../../assets/imgs/cloud.png">
 			<h3 class="form_text">Give us atleast 3 interests to work with</h3>
-			<ion-card>
-				<ion-card-content>
-					<span class="interest" *ngFor="let interest of interests; let i = index" #interestItem>{{interest}} <ion-icon class="icon" (click)="deleteInterest(i)" name="md-close-circle"></ion-icon></span>
+			<ion-card class="cards">
+				<ion-card-header text-center>Click me!></ion-card-header>
+				<ion-card-content (click)="editInterest()">
+					<span class="interests" *ngFor="let interest of interests; let i = index">{{interest}}</span>
+					<!-- <span class="interests" *ngFor="let cat of category; let i = index" #interestItem>{{cat}} </span> -->
 				</ion-card-content>
-				<ion-input type="text" [(ngModel)]="interestInputValue" placeholder="Enter Interest" style="width: 80%;" (keyup.enter)=addInterest(interestInput.value) #interestInput></ion-input>
+				<!-- <ion-input class="input_interest" type="text" [(ngModel)]="interestInputValue" floating placeholder="Add custom Interest" style="width: 80%;" (keyup.enter)=addInterest(interestInput.value) #interestInput></ion-input> -->
+				<!-- <button ion-button (click)="addInterest(interestInput.value)">Add</button> -->
 			</ion-card>
 		</ion-slide>
 		<ion-slide>

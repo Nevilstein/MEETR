@@ -3,7 +3,7 @@
     <name>Meetr</name>
     <description>An awesome Ionic/Cordova dating app.</description>
     <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
-    <content src="index.html" />
+    <content original-src="index.html" src="http://192.168.43.234:8100" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -88,6 +88,11 @@
     <allow-navigation href="http://192.168.1.100:8100" />
     <allow-navigation href="http://192.168.1.102:8100" />
     <allow-navigation href="http://192.168.1.101:8100" />
+    <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.2" />
+    <allow-navigation href="http://192.168.43.234:8100" />
+    <allow-navigation href="http://192.168.43.234:8101" />
+    <allow-navigation href="http://192.168.43.234:8102" />
+    <allow-navigation href="http://192.168.43.234:8103" />
     <plugin name="cordova-plugin-facebook4" spec="^4.1.0">
         <variable name="APP_ID" value="382855475853590" />
         <variable name="APP_NAME" value="Meetr" />
@@ -100,10 +105,7 @@
         <variable name="API_KEY_FOR_IOS" value="AIzaSyBAkFsPQ4RD_JugsDFkAH7zCCHCl-_nipE" />
     </plugin>
     <plugin name="cordova-plugin-camera" spec="^4.0.3" />
-    <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.2" />
-    <allow-navigation href="http://192.168.43.234:8100" />
-    <allow-navigation href="http://192.168.43.234:8101" />
-    <allow-navigation href="http://192.168.43.234:8102" />
-    <allow-navigation href="http://192.168.43.234:8103" />
+    <plugin name="cordova.plugins.diagnostic" spec="^4.0.11" />
+    <plugin name="cordova-plugin-request-location-accuracy" spec="^2.2.3" />
     <engine name="android" spec="7.1.4" />
 </widget>

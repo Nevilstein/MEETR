@@ -23,20 +23,22 @@
 
 <ion-content class="edit_content" padding>
 	<!-- UPLOAD PHOTO HERE -->
-	<div class="pics">
-		<div class="default_image" *ngFor="let image of profileImages; let i = index" >
-					<img src="{{image}}">
-					<ion-icon (click)="deletePhoto(i, image)" name="close-circle" ></ion-icon>
-		</div>
-		<div class="other_image" *ngFor="let image of emptyImageCounter(profileImages.length); let i = index">
-					<div id="images">
-						<!-- Uploading animation here instead of <p>-->
-						<div [hidden]="!(isUploading && i===0)">
-							<ion-spinner name="bubbles"></ion-spinner>
-							<!-- <img src="{{currentImage}}"> -->
+	<div class="pics" text-center>
+		<div id="wrapper">
+			<div class="default_image" *ngFor="let image of profileImages; let i = index" >
+						<img src="{{image}}">
+						<ion-icon id="minus" (click)="deletePhoto(i, image)" name="close-circle" ></ion-icon>
+			</div>
+			<div class="other_image" *ngFor="let image of emptyImageCounter(profileImages.length); let i = index">
+						<div id="images">
+							<!-- Uploading animation here instead of <p>-->
+							<div [hidden]="!(isUploading && i===0)">
+								<ion-spinner name="bubbles"></ion-spinner>
+								<!-- <img src="{{currentImage}}"> -->
+							</div>
+							<span [hidden]="isUploading && i===0" (click)="uploadPhoto()"><ion-icon name="add-circle"></ion-icon></span>
 						</div>
-						<span [hidden]="isUploading && i===0" (click)="uploadPhoto()"><ion-icon name="add-circle"></ion-icon></span>
-					</div>
+			</div>
 		</div>
 	</div>
 	<ion-card class="cards">
@@ -44,7 +46,7 @@
 			Edit Intro
 		</ion-card-header>
 		<ion-card-content>
-			<ion-textarea style="color: white;" [(ngModel)]="bio" (ionBlur)="bioChanged()" placeholder="About you"></ion-textarea>
+			<ion-textarea [(ngModel)]="bio" (ionBlur)="bioChanged()" placeholder="About you"></ion-textarea>
 		</ion-card-content>
 	</ion-card>
 	<ion-card class="cards">

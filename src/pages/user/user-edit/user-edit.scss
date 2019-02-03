@@ -18,16 +18,15 @@ page-user-edit {
 	.default_image ion-icon{
 		font-size: 35px;
 		float: left;
-		margin-left: -40px;
-		margin-top: -2px;
-		color: white;
-		opacity: 0.8;
+		margin-left: -11vw;
+		margin-top: -2vh;
+		color: #189dae;
 	}
 	.other_image ion-icon{
 		position: absolute;
 		font-size: 35px;
-		margin-left: 17px;
-		margin-top: -2px;
+		margin-left: 5vw;
+		margin-top: -2vh;
 	}
 	#images{
 		background-color: whitesmoke; 
@@ -61,7 +60,7 @@ page-user-edit {
 	.interests ion-icon{
 		color: white;
 		font-size: 20px;
-		margin-left: 5px;
+		margin-left: 5vw;
 
 	}
 	.header{
@@ -82,6 +81,6 @@ page-user-edit {
 		border-color: #35324e;
 	}
 	.pics{
-		margin-left: 4.5vw;
+		padding-left: 4.7vw;
 	}
 }

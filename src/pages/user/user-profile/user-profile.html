@@ -28,14 +28,14 @@
 			<ion-col col-7>
 		    	<h5 class="name"> {{firstName}}</h5>
 		    	<ion-row class="bottom"> 
-		    		<ion-col col-4>
+		    		<ion-col col-5>
 		    			<p>Age: {{age}}</p>
 		    		</ion-col>
-		    		<ion-col col-8 *ngIf="gender.female"  style="display: inline-block;">
-		    			<p>Gender: Female</p>
+		    		<ion-col *ngIf="gender.female" class="gen_col"  style="display: inline-block;">
+		    			<p>Sex: Female</p>
 		    		</ion-col>
-		    		<ion-col col-8 *ngIf="gender.male"  style="display: inline-block;">
-		    			<p>Gender: Male</p>
+		    		<ion-col *ngIf="gender.male" class="gen_col"  style="display: inline-block;">
+		    			<p>Sex: Male</p>
 		    		</ion-col>
 		    	</ion-row>
 		    	<ion-row class="bottom">
