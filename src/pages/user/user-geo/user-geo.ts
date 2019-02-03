@@ -7,7 +7,7 @@ import { UserCheckPage } from '../user-check/user-check';
 import { Geolocation } from '@ionic-native/geolocation';
 import { google } from 'google-maps';
 import { Subscription } from 'rxjs/Subscription';
-import { filter } from 'rxjs/operators'
+import { filter, timeout } from 'rxjs/operators'
 
 declare var google:any;
 
@@ -82,6 +82,7 @@ export class UserGeoPage {
 					//icon: image
 				});
 			});
+			this.currentMapTrack.setMap(null);
 		})
 	}
 
