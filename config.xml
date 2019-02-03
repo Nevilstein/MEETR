@@ -102,5 +102,5 @@
         <variable name="PLAY_SERVICES_VERSION" value="15.0.1" />
         <variable name="ANDROID_SUPPORT_V4_VERSION" value="27.+" />
     </plugin>
-    <engine name="android" spec="~7.1.4" />
+    <engine name="android" spec="7.1.4" />
 </widget>

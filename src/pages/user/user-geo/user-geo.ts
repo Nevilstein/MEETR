@@ -55,6 +55,7 @@ export class UserGeoPage {
 			let location = new google.maps.LatLng(pos.coords.latitude , pos.coords.longitude);
 			this.map.setCenter(location);
 			this.map.setZoom(15)
+			/*
 			//var image = 'assets/imgs/avatar.jpg';
 			let Marker = new google.maps.Marker({		//map marker
 				position: {lat:pos.coords.latitude, lng:pos.coords.longitude},
@@ -63,8 +64,10 @@ export class UserGeoPage {
 				center:location
 				//icon: image
 			});
+			*/
 		}).catch(err => console.log(err));
-		this.startTracking();
+		this.startTracking();	//track mainUser
+		this.trackMatch();		//track userMatch
 	}
 	
 	startTracking(){
@@ -79,6 +82,7 @@ export class UserGeoPage {
 			setTimeout(() => {
 				this.trackedRoute.push({lat:data.coords.latitude, lng:data.coords.longitude});
 				this.redrawPath(this.trackedRoute); //line draw function called
+				//var image = 'assets/imgs/avatar.jpg';
 				let Marker = new google.maps.Marker({		//map marker
 					position: {lat:data.coords.latitude, lng:data.coords.longitude},
 					map: this.map,
@@ -103,9 +107,36 @@ export class UserGeoPage {
 				strokeOpacity:1.0,
 				strokeWeight:3
 			});
-
 			this.currentMapTrack.setMap(this.map);
 		}
+	}
+
+	startTrackingMatch(latMat, lngMat){
+		this.isTracking = true;
+		this.trackedRoute = [];
+
+		this.positionSubscription = this.geo.watchPosition()
+		.pipe(
+			filter((p) => p.coords !== undefined)
+		)
+		.subscribe(data => {
+			setTimeout(() => {
+				this.trackedRoute.push({lat:latMat, lng:lngMat});
+				let Marker = new google.maps.Marker({		//map marker
+					position: {lat:latMat, lng:lngMat},
+					map: this.map,
+					size: new google.maps.Size(10, 16),
+				});
+			});
+		})
+	}
+
+	trackMatch(){
+		//if geoStatus with match is true
+			//get latMatch and lngMatch from db
+			//this.startTrackingMatch(latMatch, lngMatch); //track userMatch location
+		//else
+			//do nothing
 	}
 
 	onCardInteract(event){
