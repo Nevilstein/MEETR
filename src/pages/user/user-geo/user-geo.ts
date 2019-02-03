@@ -92,6 +92,7 @@ export class UserGeoPage {
 		}
 
 		if(path.length > 1){ //line drawing on map
+			this.currentMapTrack.setMap(null);
 			this.currentMapTrack = new google.maps.Polyline({
 				path:path,
 				geodesic:true,
