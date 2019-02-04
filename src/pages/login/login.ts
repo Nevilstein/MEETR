@@ -7,6 +7,7 @@ import { AdminTabsPage } from '../admin/admin-tabs/admin-tabs';
 import { UserTabsPage } from '../user/user-tabs/user-tabs';
 import { UserFormPage } from '../user/user-form/user-form';
 import { UserGeoPage } from '../user/user-geo/user-geo';
+import { LoadingPage } from '../loading/loading';
 
 //Plugins
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -134,8 +135,8 @@ export class LoginPage {
           isLoggedIn: true
         }).then( () =>{
           this.zone.run(() => {
-            this.loading = false;
-            this.navCtrl.setRoot(UserTabsPage);
+            // this.navCtrl.push(LoadingPage);
+            this.navCtrl.setRoot(UserTabsPage)
           });
         });
       }
@@ -189,15 +190,15 @@ export class LoginPage {
     this.navCtrl.push(UserTabsPage);
   }
   presentLoadingDefault() {
-  let loading = this.loadingCtrl.create({
-    content: 'Please wait...'
-  });
+    let loading = this.loadingCtrl.create({
+      content: 'Please wait...'
+    });
 
-  loading.present();
+    loading.present();
 
-  setTimeout(() => {
-    loading.dismiss();
-  }, 5000);
+    setTimeout(() => {
+      loading.dismiss();
+    }, 5000);
   }
 }
 

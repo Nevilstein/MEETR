@@ -1,5 +1,6 @@
 import { Component,EventEmitter  } from '@angular/core';
-import { IonicPage, NavController, NavParams ,ModalController} from 'ionic-angular';
+import { IonicPage, NavController, NavParams , ModalController, LoadingController, 
+	ToastController} from 'ionic-angular';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AlertController } from 'ionic-angular';
 
@@ -8,6 +9,7 @@ import { UserReportPage } from '../user-report/user-report';
 import { UserCheckPage } from '../user-check/user-check';
 import { UserMatchPage } from '../user-match/user-match';
 import { UserEditPage } from '../user-edit/user-edit';
+import { UserGeoPage } from '../user-geo/user-geo';
 
 //Libraries
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -39,20 +41,33 @@ export class UserHomePage {
 	userList = [];		//list of all users qualified for current user
 	// userBoostList = [];	//list of users who used boosts
 	userLikerList = []; //prioritize users who liked you
+	userSuperList = []; //prioritize users who liked you
+	userBoostList = []; //prioritize users who liked you
 	userTopPicks = [];	//select your daily top picks
 
 	myProfile = [];		//current user profile
 	myCoordinates= {};	//current user coordinates
 	stackedUsers = [];	//stacked users
-	isReady = false;
-	val = 0;
-	findUserCount = 0;
-	//Observers/Subscriptions
-	cardObserver = [];
-	profileChangedObserver;
-	geolocationObserver
 
-	//OLD VERSION STARTS HERE
+	isReady = false;
+	maxLikes = 10;	//max number of likes of user
+	boostEffect = 86400000;	//day in milliseconds //activeness of boost
+	refreshTime = 86400000;	//day in milliseconds //refresh of likes or more?
+	isBoost = false;
+	buttonsEnabled = true;
+
+	findUserCount = 0;	//number of times user finding occurred
+	tools;
+
+
+//Observers/Subscriptions
+	// cardObserver = [];
+	profileChangedObserver;
+	geolocationObserver;
+	toolsObserver;
+	timeChecker;
+
+//OLD VERSION STARTS HERE
 
 	// ready = true;
 	attendants = [];
@@ -66,23 +81,32 @@ export class UserHomePage {
 	  },
 	};
 
-	constructor(private sanitizer: DomSanitizer,public navCtrl:NavController, private alertCtrl: AlertController, private modalCtrl: ModalController, 
-		private fireAuth: AngularFireAuth, private db: AngularFireDatabase, private authProvider: AuthProvider,
-		private matchProvider: MatchProvider) {
+	constructor(private sanitizer: DomSanitizer,public navCtrl:NavController, private alertCtrl: AlertController, 
+		private modalCtrl: ModalController, private fireAuth: AngularFireAuth, private db: AngularFireDatabase, 
+		private authProvider: AuthProvider,	private matchProvider: MatchProvider, private loadingCtrl: LoadingController,
+		private toastCtrl: ToastController) {
 		
 	}
 
 	ionViewDidLoad(){
 		this.changedProfile();	//stacking starts inside this function
 	    this.getLocation();
+	    this.getTools();
+	    this.timeChecker = setInterval(() =>{
+	    	if(this.tools){
+				let dateNow = moment().valueOf();
+				this.isBoost = (dateNow-this.tools['boost']) < this.boostEffect ? true : false;
+	    	}
+	    }, 2000);
 	}
 
 	ionViewWillUnload(){
-		this.cardObserver.forEach( value => {
-			value.unsubscribe();
-		})
+		// this.cardObserver.forEach( value => {
+		// 	value.unsubscribe();
+		// })
 		this.profileChangedObserver.unsubscribe();
 		this.geolocationObserver.unsubscribe();
+		this.toolsObserver.unsubscribe();
 	}
 
 	changedProfile(){	//if user changed profile the stack restarts
@@ -95,70 +119,150 @@ export class UserHomePage {
 				this.stackStart();
 			});
 	}
+
+	getLocation(){
+		this.geolocationObserver = this.db.list('location', ref=> ref.orderByKey().equalTo(this.authUser))
+			.snapshotChanges().subscribe( snapshot => {
+				snapshot.forEach( element =>{
+					let data = element.payload.toJSON();
+					this.myCoordinates = {
+						latitude: data['currentLocation'].latitude,
+						longitude: data['currentLocation'].longitude
+					}
+				});
+			});
+	}
+	getTools(){
+		this.toolsObserver = this.db.list('tools', ref=> ref.orderByKey().equalTo(this.authUser))
+			.snapshotChanges().subscribe( snapshot => {
+				snapshot.forEach( element =>{
+					let data = element.payload.toJSON();
+					let dateNow = moment().valueOf();
+					let willRefresh = (dateNow-data['likes'].timestamp) >= this.refreshTime ? true: false;
+					if(data['likes'].limit < this.maxLikes && willRefresh){	//refresh time of likes
+						this.db.list('tools').update(this.authUser+"/likes", {
+							limit: 10
+						});
+					}
+					this.isBoost = (dateNow-data['boost']) <= this.boostEffect ? true : false;
+					this.tools = data;
+				});
+			});
+	}
+
 	onCardInteract(event, swipedUser){	//add swiped user id for the match database
-   		// console.log(event);
+   		//if liked and coins insufficient display add coins shop
+   		//also add a function to get the latest liked user and return to top stack like rewind
 
    		// setTimeout(() =>{
    		// 	this.stackedUsers.splice(0, 1);	//remove 1st stack after adding to db
    		// 	console.log('time');
    		// },500);
-
-		this.userLike(swipedUser.id, event);	//add interacted user to db
-   		var deletePromise = new Promise( resolve => {	//wait for user/card to be destroyed fully
-   			setTimeout(() => {
-   				// let swipedIndex = this.stackedUsers.indexOf(swipedUser);
-   				this.stackedUsers.splice(0, 1);	//remove 1st stack after adding to db
-   				resolve(true);
-   			},200);
-   		});
-   		deletePromise.then( () => {
-   			if(this.userList.length>0){
-		   		var i = this.getRandomInt(0, this.userList.length);
-		   		this.userList.splice(i, 1);
-		   		this.getNewCard();
-		   	}
-		   	else{
-		   		if(!(this.stackedUsers.length>0)){
-		   			setTimeout(() =>{
-		   				this.stackStart();
-		   			},500);	//0.5  seconds refresh
-		   		}
-		   	}
-		});
-	}
-
-	getNewCard(){
-		let num = this.getRandomInt(0,this.userList.length);
-		let newUserCard = this.userList[num];
-		this.userList.splice(num,1);	//remove from userList
-		this.db.list('profile', ref => ref.orderByKey().equalTo(newUserCard['id']))
-			.query.once('value').then( snapshot =>{
-				let data = snapshot[0].val();	//apply observer/listener to user data
-				data["id"] = snapshot[0].key;
-				data = {...data, ...{
-					likeEvent: new EventEmitter(),
-	  				destroyEvent: new EventEmitter(),
-	  				asBg: this.sanitizer.bypassSecurityTrustStyle('url('+data['photos'][0]+')')
-				}};
-				this.stackedUsers.push(data);
-			})
-			.then(() =>{
-				this.cardObserver.forEach( subscription =>{	//unsubscribe all cards
-					subscription.unsubsribe();
-				});
-				this.cardSubscribe();	//resubscribe all cards
+   		let isLike = event.like;
+   		if((isLike && !(this.tools['likes'].limit > 0))){
+   			this.stackedUsers.splice(0, 1);
+   			this.returnCard(swipedUser.id);
+   			alert('Like limit is reached.');
+   		}
+   		else{
+   			this.buttonsEnabled = false;
+			this.userLike(swipedUser.id, isLike);	//add interacted user to db
+	   		var deletePromise = new Promise( resolve => {	//wait for user/card to be destroyed fully
+	   			setTimeout(() => {
+	   				// let swipedIndex = this.stackedUsers.indexOf(swipedUser);
+	   				this.stackedUsers.splice(0, 1);	//remove 1st stack after adding to db
+	   				this.buttonsEnabled = true;
+	   				resolve(true);
+	   			},200);
+	   		});
+	   		deletePromise.then( () => {
+	   			if(this.userList.length>0){
+			   		var i = this.getRandomInt(0, this.userList.length);
+			   		this.userList.splice(i, 1);
+			   		this.getCard();	//get new card with percentage
+			   	}
+			   	else{
+			   		if(!(this.stackedUsers.length>0)){
+			   			setTimeout(() =>{
+			   				this.stackStart();
+			   			},500);	//0.5  seconds refresh
+			   		}
+			   	}
 			});
+   		}
 	}
 
-	userLike(userID, event){
+	onLikeButton(swipedUser, isLiked, superlike: boolean = false){
+		//if liked and coins insufficient display add coins shop
+		console.log(swipedUser);
+
+		if(superlike){
+			//Change this to small animation
+			let toast = this.toastCtrl.create({
+              message: "You superliked someone",
+              duration: 2000,
+              position: 'top'
+            });
+            toast.present();
+		}
+		if(this.stackedUsers.length > 0){
+			if(isLiked && !(this.tools['likes'].limit > 0) && !superlike){
+				//add warning below that user will use coins afterwards
+				alert('Like limit is reached.');
+			}
+			else{
+				this.buttonsEnabled = false;
+				this.userLike(swipedUser.id, isLiked, superlike);
+		   		var deletePromise = new Promise( resolve => {	//wait for user/card to be destroyed fully
+		   			setTimeout(() => {
+		   				// let swipedIndex = this.stackedUsers.indexOf(swipedUser);
+		   				this.stackedUsers.splice(0, 1);	//remove 1st stack after adding to db
+		   				this.buttonsEnabled = true;	
+		   				resolve(true);
+		   			},200);
+		   		});
+		   		deletePromise.then( () => {
+		   			
+		   			if(this.userList.length>0){
+				   		var i = this.getRandomInt(0, this.userList.length);
+				   		this.userList.splice(i, 1);
+				   		this.getCard();	//get new card with percentage
+				   	}
+				   	else{
+				   		if(!(this.stackedUsers.length>0)){
+				   			setTimeout(() =>{
+				   				this.stackStart();
+				   			},500);	//0.5  seconds refresh
+				   		}
+				   	}
+				});
+			}
+		}
+	}
+
+	userLike(userID, isLiked, superlike: boolean = false){
+
+		if(this.tools['likes'].limit === this.maxLikes && !superlike){	//updating tools
+			this.db.list('tools').update(this.authUser+"/likes", {
+				timestamp: firebase.database.ServerValue.TIMESTAMP
+			});
+   		}
+
+   		if(isLiked && !superlike){
+   			this.db.list('tools').update(this.authUser+"/likes", {
+				limit: this.tools['likes'].limit - 1
+			});
+   		}
+
 		this.db.list('likes', ref => ref.child(this.authUser)).set(userID, {
-			like: event.like,
+			like: isLiked,
+			superlike: superlike,
 			timestamp: firebase.database.ServerValue.TIMESTAMP,
 		});
 		this.db.list('likes', ref => ref.child(userID).child(this.authUser))
 			.query.once('value').then( snapshot => {
 				if(snapshot.val()){		//if like is found
-					if(snapshot.val().like && event.like){
+					if(snapshot.val().like && isLiked){
 						let currentDate = moment().valueOf();
 						this.db.list('chat', ref => ref.child(this.authUser)).push({
 							sender:	this.authUser,
@@ -195,82 +299,113 @@ export class UserHomePage {
 			})
 	}
 
-	setCards(){
-		var stackPromise = new Promise( resolve => {
-			var index;
-			this.stackedUsers.forEach( value => {
-				this.db.list('profile', ref => ref.child(value.id))
-					.query.once('value').then( snapshot =>{
-					// snapshot.forEach(element =>{
-					// 		// data = element.val();
-					// 		// data.id = element.key;
-					// 		console.log(element);
-					// 	});
-					//add a method that gets the index of a certain key if error
-					let index = this.stackedUsers.findIndex(x => x.id === snapshot.key);
-					this.stackedUsers[index] = snapshot.val();	//apply observer/listener to user data
-					this.stackedUsers[index].id = snapshot.key;
-					this.stackedUsers[index].age = moment().diff(moment(this.stackedUsers[index].birthday, "MM/DD/YYYY"), 'years');
-					this.stackedUsers[index] = {...this.stackedUsers[index], ...{
-						likeEvent: new EventEmitter(),
-		  				destroyEvent: new EventEmitter(),
-		  				asBg: this.sanitizer.bypassSecurityTrustStyle('url('+this.stackedUsers[index].photos[0]+')')
-					}}
+	onRewind(){
+		//if coins insufficient display add coins shop
+		this.db.list('likes', ref=> ref.child(this.authUser).orderByChild('like').equalTo(false))
+			.query.once('value').then(snapshot => {
+				let dislikedUsers = [];
+				// snapshot.forEach( element =>{
+				// 	let data = element.val();
+				// 	data['id'] = element.key;
+				// 	if(!data['like']){
+				// 		dislikedUsers.push(data);
+				// 	}
+				// });
+				// let latestUser = dislikedUsers.
+				snapshot.forEach(element => {
+					let data = element.val();
+					data['id'] = element.key;
+					dislikedUsers.push(data);
 				});
+				let dateNow = moment().valueOf();
+				let dayUnix = 86400000;
+				dislikedUsers.filter(item => {	//filter by users past a day
+					return (item.timestamp-dateNow) <= dayUnix;
+				});
+				dislikedUsers.sort((a,b) => (a.timestamp < b.timestamp)? 1: -1);	//sort by timestamp
+				if(dislikedUsers.length>0){
+					let lastUser = dislikedUsers[0].id;	//last disliked user id
+					this.db.list('likes', ref => ref.child(this.authUser)).remove(lastUser);
+					this.returnCard(lastUser);	//get latest disliked user's data
+				}
+				else{
+					alert("No more users liked/disliked recently.");
+				}
+				
 			});
-			resolve(true);
-		});
-		stackPromise.then(()=>{
-			// this.cardSubscribe();	//added a listener to check for changes in database
-			setTimeout(()=>{    //<<<---    using ()=> syntax
-			    this.isReady = true;
-			}, 2000);
+	}
+
+	onBoost(){
+		//if coins insufficient display add coins shop
+		this.db.list('tools').update(this.authUser, {
+			boost: firebase.database.ServerValue.TIMESTAMP
+		}).then(() =>{
+			let toast = this.toastCtrl.create({
+              message: "User boost is up.",
+              duration: 2000,
+              position: 'top'
+            });
+            toast.present();
+			this.isBoost = true;
 		})
+	}
+
+	returnCard(userID){
+		var userCard;
+		this.db.list('profile', ref => ref.child(userID)).query.once('value').then( snapshot =>{
+			let data = snapshot.val()
+			data['id'] = snapshot.key;
+			data['age'] = moment().diff(moment(data['birthday'], "MM/DD/YYYY"), 'years');
+			data = {...data, ...{
+				likeEvent: new EventEmitter(),
+  				destroyEvent: new EventEmitter(),
+  				asBg: this.sanitizer.bypassSecurityTrustStyle('url('+data['photos'][0]+')')
+			}};
+			userCard = data;
+		}).then(() =>{
+			this.db.list('likes', ref => ref.child(userID).child(this.authUser))
+				.query.once('value').then( snapshot =>{
+					let data = snapshot.val();
+					if(data){
+						userCard['superlike'] = data['superlike'];
+					}
+				})
+		}).then(() =>{
+			this.stackedUsers.unshift(userCard);
+		});
 	}
 
 	stackStart(){
 		this.userList = [];		//refresh user list and cards if current user profile is changed
 		this.stackedUsers = [];
 		this.userLikerList = [];
-		this.cardObserver.forEach( subscription => {
-			subscription.unsubscribe();
-		});
+		// this.cardObserver.forEach( subscription => {
+		// 	subscription.unsubscribe();
+		// });
 		this.isReady = false; //loading of cards
 		this.getUsers();
 	}
 
-	cardSubscribe(){
-		this.stackedUsers.forEach( (value, i) => {
-			//IF SUBSCRIPTIONS RUINS IT CHANGE THIS TO ONCE VALUE
-			this.cardObserver[i] = this.db.list('profile', ref => ref.orderByKey().equalTo(value.id))
-					.snapshotChanges().subscribe( snapshot =>{
-					//add a method that gets the index of a certain key if error
-					let index = this.stackedUsers.findIndex(x => x.id === snapshot[0].key);
-					this.stackedUsers[index] = snapshot[0].payload.val();	//apply observer/listener to user data
-					this.stackedUsers[index].id = snapshot[0].key;
-					this.stackedUsers[index].age = moment().diff(moment(this.stackedUsers[index].birthday, 
-						"MM/DD/YYYY"), 'years');
-					this.stackedUsers[index] = {...this.stackedUsers[index], ...{
-						likeEvent: new EventEmitter(),
-		  				destroyEvent: new EventEmitter(),
-		  				asBg: this.sanitizer.bypassSecurityTrustStyle('url('+this.stackedUsers[index].photos[0]+')')
-					}}
-				});
-		});		
-	}
-
-	getLocation(){
-		this.geolocationObserver = this.db.list('location', ref=> ref.orderByKey().equalTo(this.authUser))
-			.snapshotChanges().subscribe( snapshot => {
-				snapshot.forEach( element =>{
-					let data = element.payload.toJSON();
-					this.myCoordinates = {
-						latitude: data['currentLocation'].latitude,
-						longitude: data['currentLocation'].longitude
-					}
-				});
-			});
-	}
+	// cardSubscribe(){
+	// 	this.cardObserver = [];
+	// 	this.stackedUsers.forEach( (value, i) => {
+	// 		//IF SUBSCRIPTIONS RUINS IT CHANGE THIS TO ONCE VALUE
+	// 		this.cardObserver[i] = this.db.list('profile', ref => ref.orderByKey().equalTo(value.id))
+	// 				.snapshotChanges().subscribe( snapshot =>{
+	// 				//add a method that gets the index of a certain key if error
+	// 				let index = this.stackedUsers.findIndex(x => x.id === snapshot[0].key);
+	// 				this.stackedUsers[index] = snapshot[0].payload.val();	//apply observer/listener to user data
+	// 				this.stackedUsers[index].id = snapshot[0].key;
+	// 				this.stackedUsers[index].age = moment().diff(moment(this.stackedUsers[index].birthday, 
+	// 					"MM/DD/YYYY"), 'years');
+	// 				this.stackedUsers[index] = {...this.stackedUsers[index], ...{
+	// 					likeEvent: new EventEmitter(),
+	// 	  				destroyEvent: new EventEmitter(),
+	// 	  				asBg: this.sanitizer.bypassSecurityTrustStyle('url('+this.stackedUsers[index].photos[0]+')')
+	// 				}}
+	// 			});
+	// 	});		
+	// }
 
 	getUsers(){
 		var malePromise = new Promise(resolve => {
@@ -498,12 +633,14 @@ export class UserHomePage {
 		});
 		likedPromise.then(() =>{
 			this.userList = newList;
-			this.listLikers();
-			// this.stackUser();
+			this.listUsers();
 		});
 	}
-	listLikers(){
-		let newList = [];
+
+	listUsers(){	//listing users with higher chances
+		let likerList = [];	//list of users who liked you
+		let superList = [];	//list of users who superliked
+		let boostList = [];	//list of users who superliked
 		let userLength = this.userList.length;
 		var likersPromise = new Promise(resolve =>{
 			if(!(userLength > 0)){
@@ -515,12 +652,25 @@ export class UserHomePage {
 						if(likeSnap.val()){
 							let data = likeSnap.val();
 							if(data.like){
-								newList.push(value);
+								likerList.push(value);
+								if(data.superlike){
+									superList.push(value);
+								}
 							}
 							// if(index+1 === userLength){
 							// 	resolve(true);
 							// }
 						}
+					}).then(() =>{
+						this.db.list('tools', ref => ref.child(value.id))
+							.query.once('value').then(toolSnap =>{
+								let data = toolSnap.val();
+								let dateNow = moment().valueOf();
+								let userBoost = (dateNow-data['boost']) < this.boostEffect ? true : false;
+								if(userBoost){
+									boostList.push(value);
+								}
+							});
 					}).then(() =>{
 						if(index+1 === userLength){
 							resolve(true);
@@ -529,8 +679,9 @@ export class UserHomePage {
 			});
 		});
 		likersPromise.then(() =>{
-			console.log('liker');
-			this.userLikerList = newList;
+			this.userLikerList = likerList;
+			this.userSuperList = superList;
+			this.userBoostList = boostList;
 			this.stackUser();
 		});
 	}
@@ -539,43 +690,17 @@ export class UserHomePage {
 		console.log('stack');
 		let numOfCards = ((this.userList.length<20) ? this.userList.length : 20);	//safety check if low count of users
 		for(let i=0; i<numOfCards; i++){
-			let percent = Math.random()*100;
-			console.log(percent);
-			if(percent < 70){
-				this.getFromLikers();
-			}
-			else{
-				this.getFromList();
-			}
+			console.log("User", i)
+			this.getCard();
 		}
 		if(numOfCards>0){
-			this.setCards();
+			setTimeout(()=>{    //<<<---    using ()=> syntax
+			    this.isReady = true;
+			}, 2000);
 		}
 		else{
 			setTimeout( () => {
 				if(this.findUserCount !== 10){
-				// 	let alert = this.alertCtrl.create({
-				// 	    title: 'No users found!',
-				// 	    message: 'No users found, please change your preferences',
-				// 	    buttons: [
-				// 	      {
-				// 	        text: 'Cancel',
-				// 	        role: 'cancel',
-				// 	        handler: () => {
-				// 	          console.log('Cancel clicked');
-				// 	        }
-				// 	      },
-				// 	      {
-				// 	        text: 'Edit',
-				// 	        handler: () => {
-				// 	          this.navCtrl.push(UserEditPage);
-				// 	        }
-				// 	      }
-				// 	    ]
-				// 	  });
-				// 	  alert.present();
-				// }
-				// else{
 					this.findUserCount++;
 					this.stackStart();
 				}
@@ -584,28 +709,102 @@ export class UserHomePage {
 			// this.findUserCount++;	//findUserCount to check how many times the app looked for match; it notifies user to update interest
 		}
 	}
+	setCard(userID){
+		var newUserCard;
+		var stackPromise = new Promise( resolve => {
+			this.db.list('profile', ref => ref.child(userID)).query.once('value').then( snapshot =>{
+				newUserCard = snapshot.val();
+				newUserCard['id'] = snapshot.key;
+				newUserCard['age'] = moment().diff(moment(newUserCard['birthday'], "MM/DD/YYYY"), 'years');
+				newUserCard = {...newUserCard, ...{
+					likeEvent: new EventEmitter(),
+	  				destroyEvent: new EventEmitter(),
+	  				asBg: this.sanitizer.bypassSecurityTrustStyle('url('+newUserCard.photos[0]+')')
+				}};
+			}).then(() =>{
+				this.db.list('likes', ref => ref.child(userID).child(this.authUser))
+					.query.once('value').then( snapshot =>{
+						let data = snapshot.val();
+						if(data){
+							newUserCard.superlike = data['superlike'];
+						}
+					})
+			}).then(() =>{
+				resolve(true);
+			});
+		});
+		stackPromise.then(()=>{
+			this.stackedUsers.push(newUserCard);
+		})
+	}
+	getCard(){
+		if(this.stackedUsers.length < 20){
+			let data = true;
+			while(data){
+				let percent = this.getRandomInt(0, 100);
+				if(percent < 20){
+					data = this.getFromLikers();
+					console.log(percent, data);
+				}
+				else if(percent < 60){
+					data = this.getFromBoosters();
+					console.log(percent, data);
+				}
+				else if(percent < 80){
+					data = this.getFromSupers();
+					console.log(percent, data);
+				}
+				else{
+					data = this.getFromList();
+					console.log(percent, data);
+				}
+			}
+		}
+	}
 	getFromLikers(){	//get in list of users who liked you
 		if(this.userLikerList.length > 0){
-			let num = this.getRandomInt(0, this.userLikerList.length);	//temporarily use random? :P
-			this.stackedUsers.push(this.userLikerList[num]);
-			// this.userList.splice(num,1);	//remove the user from list
+			let num = this.getRandomInt(0, this.userLikerList.length);	
+			this.setCard(this.userLikerList[num]['id']);
 			this.removeFromLists(this.userLikerList[num]['id']);
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+	getFromBoosters(){	//only get in normal retrieved list
+		if(this.userBoostList.length>0){
+			let num = this.getRandomInt(0, this.userBoostList.length);
+			this.setCard(this.userBoostList[num]['id']);
+			this.removeFromLists(this.userBoostList[num]['id']);
+			return false;
 		}else{
-			//add another random counter if added another priority
-			this.getFromList();
+			return true
+		}
+	}
+	getFromSupers(){	//only get in normal retrieved list
+		if(this.userSuperList.length > 0){
+			let num = this.getRandomInt(0, this.userSuperList.length);
+			this.setCard(this.userSuperList[num]['id']);
+			this.removeFromLists(this.userSuperList[num]['id']);
+			return false;
+		}else{
+			return true;
 		}
 	}
 	getFromList(){	//only get in normal retrieved list
-		let num = this.getRandomInt(0, this.userList.length);	//temporarily use random? :P
-		this.stackedUsers.push(this.userList[num]);
-		// this.userList.splice(num,1);	//remove the user from list
+		let num = this.getRandomInt(0, this.userList.length);
+		this.setCard(this.userList[num]['id']);
 		this.removeFromLists(this.userList[num]['id']);
+		return false;
 	}
 	removeFromLists(removeID){	//removes a value from all the list retrieved
 		let userListIndex = this.userList.findIndex(item => item['id'] === removeID);
 		let likerListIndex = this.userLikerList.findIndex(item => item['id'] === removeID);
+		let superListIndex = this.userSuperList.findIndex(item => item['id'] === removeID);
 		this.userList.splice(userListIndex, 1);
 		this.userLikerList.splice(likerListIndex, 1);
+		this.userSuperList.splice(likerListIndex, 1);
 	}
 	report_user(){
 		const report = this.modalCtrl.create(UserReportPage);
@@ -621,13 +820,7 @@ export class UserHomePage {
 	    max = Math.floor(max);
 	    return Math.floor(Math.random() * (max - min)) + min;
 	}
-
 	updateProfile(){
 		this.navCtrl.push(UserEditPage);
-	}
-
-	match_overlay(){
-		const match = this.modalCtrl.create(UserMatchPage);
-		match.present();
 	}
 }

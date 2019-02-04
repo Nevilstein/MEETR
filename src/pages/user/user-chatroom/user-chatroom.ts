@@ -36,7 +36,8 @@ export class UserChatroomPage {
   receiverKey: string = this.chatProvider.receiverKey;
   chatLoading: boolean = true;
   myMessage:string = '';
-  messages =[];
+  messages = [];
+  questions = [];
   imageMessage = [];
   loadingImage = [];
   messageEmpty: boolean = true;
@@ -59,6 +60,7 @@ export class UserChatroomPage {
   messageObserver;
   activeObserver;
   profileObserver;
+  questionObserver;
   uploadObserver;
   timeInterval;  //gets the active time interval of user while in chat
 
@@ -307,6 +309,8 @@ export class UserChatroomPage {
   displayImage(imageUrl){
     this.modalCtrl.create(ImageViewPage, {image: imageUrl}).present();
   }
+
+  sendQuestion(){  }
 
   gotoGeo(){
     this.navCtrl.push(UserGeoPage);

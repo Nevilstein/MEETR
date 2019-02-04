@@ -84,7 +84,8 @@ export class UserFormPage {
       likes:{
         limit:10,
         timestamp:firebase.database.ServerValue.TIMESTAMP
-      }
+      },
+      boost: 0  //starting timestamp for boost
     });
     this.zone.run(() => {
         this.navCtrl.setRoot(UserTabsPage);

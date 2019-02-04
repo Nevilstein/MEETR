@@ -23,7 +23,7 @@ export class UserInterestPage {
 	authUser = this.authProvider.authUser;
 
 	allInterests = [];	//all interests including selected
-	selectedInterests = [];	//selected interests including from profile db
+	selectedInterests = [];	//selected interests from profile db
 	interestList =[];  //list of interest that must be in database
 	interestdb =[];  //list of interest that must be from interest collection database
 	interestValue: string;
@@ -61,6 +61,7 @@ export class UserInterestPage {
     });
     return newList;
   }
+
   filterInterest(){
   	this.interestList = [];
   	this.allInterests.forEach( interest =>{
@@ -77,20 +78,31 @@ export class UserInterestPage {
   			});
   		}
   	});
-  	console.log(this.interestList);
   }
 
   addCustomInterest(){
+    let selectIndex = this.selectedInterests.indexOf(this.interestValue);  //index in selected interests
+    let allIndex = this.allInterests.indexOf(this.interestValue);  //if found in all interest
+    console.log(allIndex);
   	if(this.interestValue.trim() == ''){
   		return
   	}
   	if(this.selectedInterests.length <=10){
-	  	this.allInterests.unshift(this.interestValue);
-	  	this.selectedInterests.push(this.interestValue);
-	}
-	else{
-		alert("You have reached the maximum number of interests(10).");
-	}
+      if(selectIndex < 0){
+        if(allIndex < 0){
+          this.allInterests.unshift(this.interestValue);
+        }
+        this.selectedInterests.push(this.interestValue);
+      }
+  	}
+  	else{
+  		let toast = this.toastCtrl.create({
+          message: "You have reached the maximum number of interests(10)",
+          duration: 1000,
+          position: 'bottom'
+        });
+        toast.present();
+  	}
   	this.filterInterest();
   	this.interestValue = '';
   }
