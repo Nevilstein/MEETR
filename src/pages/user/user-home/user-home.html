@@ -6,7 +6,7 @@
 -->
 
 
-<ion-content class="home_content"  padding>
+<ion-content class="home_content"padding>
 	<!-- <div class="card-container" *ngIf="!isReady" style="background-color: whitesmoke">
 		LOADING...
 	</div> -->
@@ -50,6 +50,8 @@
 				<ion-item>
 					<ion-icon name="logo-facebook" style="color: #3b5998;" item-start></ion-icon>
 					<ion-badge item-start><ion-icon name="people"></ion-icon> {{card.friendCount}}</ion-badge>
+					<!-- Gawan mo icon yung super like, siguro pin na lang -->
+					<ion-badge item-start *ngIf="!card.superlike"><ion-icon name="star"></ion-icon> (Sample) Super Liked You</ion-badge>
 					<button id="button" ion-button item-end (click)="checkInfo(i)">
 						<ion-icon id="eye" name="eye"></ion-icon>
 					</button>
