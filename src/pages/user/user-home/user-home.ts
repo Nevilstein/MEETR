@@ -57,7 +57,11 @@ export class UserHomePage {
 	buttonsEnabled = true;
 
 	findUserCount = 0;	//number of times user finding occurred
-	tools;
+	tools = {
+		likes: {
+			limit: 10 //default
+		}
+	};
 
 
 //Observers/Subscriptions
