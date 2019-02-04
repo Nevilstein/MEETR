@@ -29,7 +29,7 @@
 		</ion-row>
 		<div *ngIf="findUserCount === 10">
 			<div class="no_user">
-				<p>No users found, update your <a (click)="updateProfile()">profile.</a></p>
+				<p>No users around, update your <a (click)="updateProfile()">profile.</a></p>
 			</div>
 		</div>
 	</ion-grid>
@@ -56,6 +56,17 @@
 				</ion-item>
 			</ion-card>
         </sc-card>
+    </div>
+
+    <div class="card-container" *ngIf="isReady" style="margin-top:80px">
+    	<div>
+    		<p>Likes: {{tools['likes'].limit}}X</p>
+    	</div>
+    	<button ion-button [disabled]="!buttonsEnabled" (click)="onRewind()">Rewind</button>
+    	<button ion-button [disabled]="!buttonsEnabled" (click)="onLikeButton(stackedUsers[0], true)">Like</button>
+    	<button ion-button [disabled]="!buttonsEnabled" (click)="onLikeButton(stackedUsers[0], true, true)">Superlike</button>
+    	<button ion-button [disabled]="!buttonsEnabled" (click)="onLikeButton(stackedUsers[0], false)">Dislike</button>
+    	<button ion-button [disabled]="isBoost" (click)="onBoost()">Boost</button>
     </div>
 	<!-- <div id="show"></div>
 	<div>
