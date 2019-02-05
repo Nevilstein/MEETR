@@ -53,6 +53,7 @@ export class UserChatroomPage {
   activeWhen: string;
   statusDate: number;
   isActive: boolean;
+  userProfile;
 
   //Observer/Subscription
   chatObserver;
@@ -181,6 +182,8 @@ export class UserChatroomPage {
       .snapshotChanges().subscribe( snapshot => {
          snapshot.forEach( element => {
            let data = element.payload.val();
+           data['id'] = element.payload.key;
+           this.userProfile = data;
            this.userPhoto = data['photos'][0];
            this.userFirstName = data['firstName'];
          });
@@ -310,7 +313,9 @@ export class UserChatroomPage {
     this.modalCtrl.create(ImageViewPage, {image: imageUrl}).present();
   }
 
-  sendQuestion(){  }
+  sendQuestion(){ 
+
+  }
 
   gotoGeo(){
     this.navCtrl.push(UserGeoPage);

@@ -9,6 +9,7 @@ import { UserProfilePage } from '../user-profile/user-profile';
 import { UserHomePage } from '../user-home/user-home';
 import { UserChatPage } from '../user-chat/user-chat';
 import { UserMatchPage } from '../user-match/user-match';
+import { UserRewardPage } from '../user-reward/user-reward';
 
 //Plugins
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -55,9 +56,10 @@ export class UserTabsPage {
   authUser = this.authProvider.authUser;  //ID of authenticated user
 
   //Observers/Subscriptions
-  onMatchObserver:any;  //listens for sent likes
+  onMatchObserver: any;  //listens for sent likes
   pauseObserver: any;  //listens to app pause activity
   resumeObserver: any; //listens to app resume activity
+  toolsObserver: any; //listens changes in tools
   trackGeo:any;  //listens to location
 
   tabIndex: number;
@@ -73,6 +75,7 @@ export class UserTabsPage {
 
   ionViewDidLoad(){
     console.log('ionViewDidLoad UserTabsPage');
+    // this.checkTools();
     this.checkLocationSetting();
     this.listenToPlatform();
     this.listenToMatches();

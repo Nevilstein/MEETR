@@ -16,9 +16,11 @@ import moment from 'moment';
 @Injectable()
 export class UserProvider {
 	authProfile;
+  authLocation;
   constructor(public http: HttpClient, private db: AngularFireDatabase, private fireAuth: AngularFireAuth) {
     console.log('Hello UserProvider Provider');
     this.getUserProfile();
+    this.getUserLocation();
   }
 
   getUserProfile(){
@@ -29,5 +31,12 @@ export class UserProvider {
   			data.age = moment().diff(moment(data['birthday'], "MM/DD/YYYY"), 'years');
   			this.authProfile = data;
   		});
+  }
+  getUserLocation(){
+    this.db.list('location', ref => ref.child(this.fireAuth.auth.currentUser.uid))
+      .query.once('value', snapshot =>{
+        let data = snapshot.val();
+        this.authLocation = data;
+      });
   }
 }

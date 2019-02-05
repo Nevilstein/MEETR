@@ -10,6 +10,7 @@ import { UserCheckPage } from '../user-check/user-check';
 import { UserMatchPage } from '../user-match/user-match';
 import { UserEditPage } from '../user-edit/user-edit';
 import { UserGeoPage } from '../user-geo/user-geo';
+import { UserRewardPage } from '../user-reward/user-reward';
 
 //Libraries
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -52,16 +53,25 @@ export class UserHomePage {
 	isReady = false;
 	maxLikes = 10;	//max number of likes of user
 	boostEffect = 86400000;	//day in milliseconds //activeness of boost
+	rewardTime = 86400000;	//day in milliseconds //refresh of reward
 	refreshTime = 86400000;	//day in milliseconds //refresh of likes or more?
 	isBoost = false;
+	isReward;
+	myCoins = 0;
 	buttonsEnabled = true;
 
 	findUserCount = 0;	//number of times user finding occurred
-	tools = {
+	tools: any = {
 		likes: {
 			limit: 10 //default
 		}
 	};
+
+	// Tool Prices
+	extralikeValue = 5;
+	superlikeValue = 20;
+	rewindValue = 20;
+	boostValue = 50;
 
 
 //Observers/Subscriptions
@@ -69,6 +79,7 @@ export class UserHomePage {
 	profileChangedObserver;
 	geolocationObserver;
 	toolsObserver;
+	rewardChecker;	//timeInterval while data loads
 	timeChecker;
 
 //OLD VERSION STARTS HERE
@@ -96,12 +107,12 @@ export class UserHomePage {
 		this.changedProfile();	//stacking starts inside this function
 	    this.getLocation();
 	    this.getTools();
-	    this.timeChecker = setInterval(() =>{
-	    	if(this.tools){
-				let dateNow = moment().valueOf();
-				this.isBoost = (dateNow-this.tools['boost']) < this.boostEffect ? true : false;
-	    	}
-	    }, 2000);
+	    this.rewardChecker = setInterval(() =>{
+	    	if(this.isReward != undefined && this.isReward){
+	    		clearInterval(this.rewardChecker);
+		    	this.navCtrl.push(UserRewardPage);
+		    }
+	    }, 1000);
 	}
 
 	ionViewWillUnload(){
@@ -111,6 +122,7 @@ export class UserHomePage {
 		this.profileChangedObserver.unsubscribe();
 		this.geolocationObserver.unsubscribe();
 		this.toolsObserver.unsubscribe();
+		clearInterval(this.timeChecker);
 	}
 
 	changedProfile(){	//if user changed profile the stack restarts
@@ -143,15 +155,37 @@ export class UserHomePage {
 					let data = element.payload.toJSON();
 					let dateNow = moment().valueOf();
 					let willRefresh = (dateNow-data['likes'].timestamp) >= this.refreshTime ? true: false;
+					// this.toolsProvider.isBoost = (dateNow-this.tools['boost']) < this.boostEffect ? true : false;
+					// this.isBoost = this.toolsProvider.isBoost;
+					// this.toolsProvider.isReward = (dateNow-this.tools['dailyReward']) >= this.rewardTime ? true : false;
+					// this.isReward = this.toolsProvider.isReward;
+					this.myCoins = data['coins'];
+					this.isBoost = (dateNow-data['boost']) < this.boostEffect ? true : false;
+					this.isReward = (dateNow-data['dailyReward']) >= this.rewardTime ? true : false;
 					if(data['likes'].limit < this.maxLikes && willRefresh){	//refresh time of likes
 						this.db.list('tools').update(this.authUser+"/likes", {
 							limit: 10
 						});
 					}
-					this.isBoost = (dateNow-data['boost']) <= this.boostEffect ? true : false;
 					this.tools = data;
 				});
-			});
+			});		
+		this.timeChecker = setInterval(() =>{
+			let dateNow = moment().valueOf();
+			let willRefresh = (dateNow-this.tools['likes'].timestamp) >= this.refreshTime ? true: false;
+			this.isBoost = (dateNow-this.tools['boost']) < this.boostEffect ? true : false;
+			this.isReward = (dateNow-this.tools['dailyReward']) >= this.rewardTime ? true : false;
+			// this.toolsProvider.isBoost = (dateNow-this.tools['boost']) < this.boostEffect ? true : false;
+			// this.isBoost = this.toolsProvider.isBoost;
+			// this.toolsProvider.isReward = (dateNow-this.tools['dailyReward']) >= this.rewardTime ? true : false;
+			// this.isReward = this.toolsProvider.isReward;
+			if(this.tools['likes'].limit < this.maxLikes && willRefresh){	//refresh time of likes
+				this.db.list('tools').update(this.authUser+"/likes", {
+					limit: 10
+				});
+			}
+	    }, 2000);
+
 	}
 
 	onCardInteract(event, swipedUser){	//add swiped user id for the match database
@@ -162,15 +196,16 @@ export class UserHomePage {
    		// 	this.stackedUsers.splice(0, 1);	//remove 1st stack after adding to db
    		// 	console.log('time');
    		// },500);
-   		let isLike = event.like;
-   		if((isLike && !(this.tools['likes'].limit > 0))){
+
+   		let isLiked = event.like;
+   		if((isLiked && !(this.tools['likes'].limit > 0))){
    			this.stackedUsers.splice(0, 1);
    			this.returnCard(swipedUser.id);
-   			alert('Like limit is reached.');
+   			alert('Like limit is reached. Use the like button and coins to proceed.');
    		}
    		else{
    			this.buttonsEnabled = false;
-			this.userLike(swipedUser.id, isLike);	//add interacted user to db
+			this.userLike(swipedUser.id, isLiked);	//add interacted user to db
 	   		var deletePromise = new Promise( resolve => {	//wait for user/card to be destroyed fully
 	   			setTimeout(() => {
 	   				// let swipedIndex = this.stackedUsers.indexOf(swipedUser);
@@ -196,27 +231,23 @@ export class UserHomePage {
    		}
 	}
 
-	onLikeButton(swipedUser, isLiked, superlike: boolean = false){
+	onLikeButton(swipedUser, isLiked){
 		//if liked and coins insufficient display add coins shop
-		console.log(swipedUser);
 
-		if(superlike){
-			//Change this to small animation
-			let toast = this.toastCtrl.create({
-              message: "You superliked someone",
-              duration: 2000,
-              position: 'top'
-            });
-            toast.present();
-		}
 		if(this.stackedUsers.length > 0){
-			if(isLiked && !(this.tools['likes'].limit > 0) && !superlike){
-				//add warning below that user will use coins afterwards
-				alert('Like limit is reached.');
+					//Change this to small animation
+			let usedLike = (isLiked && this.tools['likes'].limit>0);
+			let usedExtraLike = (isLiked && !(this.tools['likes'].limit>0) && this.myCoins>=this.extralikeValue);
+			let notEnoughMoney = (isLiked && !(this.tools['likes'].limit>0) && !(this.myCoins>=this.extralikeValue));
+			if(usedExtraLike){
+				this.tools['likes'].limit++;	//add value and subtract later in next function
+				this.toolPurchase(this.extralikeValue);	 //
+			}else if(notEnoughMoney){
+				alert("Not enough coins to use extra like.");
 			}
-			else{
+			if(!isLiked || usedLike || usedExtraLike){
 				this.buttonsEnabled = false;
-				this.userLike(swipedUser.id, isLiked, superlike);
+				this.userLike(swipedUser.id, isLiked);
 		   		var deletePromise = new Promise( resolve => {	//wait for user/card to be destroyed fully
 		   			setTimeout(() => {
 		   				// let swipedIndex = this.stackedUsers.indexOf(swipedUser);
@@ -244,6 +275,45 @@ export class UserHomePage {
 		}
 	}
 
+	onSuperLike(swipedUser, isLiked, superlike){
+		if(this.myCoins>=superlike){
+			let toast = this.toastCtrl.create({
+	          message: "You superliked someone",
+	          duration: 2000,
+	          position: 'top'
+	        });
+	        toast.present();
+	        this.buttonsEnabled = false;
+	        this.toolPurchase(this.superlikeValue);
+			this.userLike(swipedUser.id, isLiked, superlike);
+	   		var deletePromise = new Promise( resolve => {	//wait for user/card to be destroyed fully
+	   			setTimeout(() => {
+	   				// let swipedIndex = this.stackedUsers.indexOf(swipedUser);
+	   				this.stackedUsers.splice(0, 1);	//remove 1st stack after adding to db
+	   				this.buttonsEnabled = true;	
+	   				resolve(true);
+	   			},200);
+	   		});
+	   		deletePromise.then( () => {
+	   			if(this.userList.length>0){
+			   		var i = this.getRandomInt(0, this.userList.length);
+			   		this.userList.splice(i, 1);
+			   		this.getCard();	//get new card with percentage
+			   	}
+			   	else{
+			   		if(!(this.stackedUsers.length>0)){
+			   			setTimeout(() =>{
+			   				this.stackStart();
+			   			},500);	//0.5  seconds refresh
+			   		}
+			   	}
+			});
+		}
+		else{
+			alert("Not enough coins to use super like.");
+		}
+	}
+
 	userLike(userID, isLiked, superlike: boolean = false){
 
 		if(this.tools['likes'].limit === this.maxLikes && !superlike){	//updating tools
@@ -257,7 +327,7 @@ export class UserHomePage {
 				limit: this.tools['likes'].limit - 1
 			});
    		}
-
+   		
 		this.db.list('likes', ref => ref.child(this.authUser)).set(userID, {
 			like: isLiked,
 			superlike: superlike,
@@ -305,53 +375,78 @@ export class UserHomePage {
 
 	onRewind(){
 		//if coins insufficient display add coins shop
-		this.db.list('likes', ref=> ref.child(this.authUser).orderByChild('like').equalTo(false))
-			.query.once('value').then(snapshot => {
-				let dislikedUsers = [];
-				// snapshot.forEach( element =>{
-				// 	let data = element.val();
-				// 	data['id'] = element.key;
-				// 	if(!data['like']){
-				// 		dislikedUsers.push(data);
-				// 	}
-				// });
-				// let latestUser = dislikedUsers.
-				snapshot.forEach(element => {
-					let data = element.val();
-					data['id'] = element.key;
-					dislikedUsers.push(data);
+		if(this.myCoins >= this.rewindValue){
+			this.buttonsEnabled = false;
+			this.toolPurchase(this.rewindValue);
+			this.db.list('likes', ref=> ref.child(this.authUser).orderByChild('like').equalTo(false))
+				.query.once('value').then(snapshot => {
+					let dislikedUsers = [];
+					// snapshot.forEach( element =>{
+					// 	let data = element.val();
+					// 	data['id'] = element.key;
+					// 	if(!data['like']){
+					// 		dislikedUsers.push(data);
+					// 	}
+					// });
+					// let latestUser = dislikedUsers.
+					snapshot.forEach(element => {
+						let data = element.val();
+						data['id'] = element.key;
+						dislikedUsers.push(data);
+					});
+					let dateNow = moment().valueOf();
+					let dayUnix = 86400000;
+					dislikedUsers.filter(item => {	//filter by users past a day
+						return (item.timestamp-dateNow) <= dayUnix;
+					});
+					dislikedUsers.sort((a,b) => (a.timestamp < b.timestamp)? 1: -1);	//sort by timestamp
+					if(dislikedUsers.length>0){
+						let lastUser = dislikedUsers[0].id;	//last disliked user id
+						this.db.list('likes', ref => ref.child(this.authUser)).remove(lastUser);
+						this.returnCard(lastUser);	//get latest disliked user's data
+					}
+					else{
+						alert("No more users disliked recently.");
+					}
+				this.buttonsEnabled = true;
 				});
-				let dateNow = moment().valueOf();
-				let dayUnix = 86400000;
-				dislikedUsers.filter(item => {	//filter by users past a day
-					return (item.timestamp-dateNow) <= dayUnix;
-				});
-				dislikedUsers.sort((a,b) => (a.timestamp < b.timestamp)? 1: -1);	//sort by timestamp
-				if(dislikedUsers.length>0){
-					let lastUser = dislikedUsers[0].id;	//last disliked user id
-					this.db.list('likes', ref => ref.child(this.authUser)).remove(lastUser);
-					this.returnCard(lastUser);	//get latest disliked user's data
-				}
-				else{
-					alert("No more users liked/disliked recently.");
-				}
-				
-			});
+		}else{
+			alert("Not enough coins to use rewind.");
+		}
 	}
 
 	onBoost(){
-		//if coins insufficient display add coins shop
-		this.db.list('tools').update(this.authUser, {
-			boost: firebase.database.ServerValue.TIMESTAMP
-		}).then(() =>{
-			let toast = this.toastCtrl.create({
-              message: "User boost is up.",
-              duration: 2000,
-              position: 'top'
-            });
-            toast.present();
-			this.isBoost = true;
-		})
+		if(this.myCoins >= this.boostValue){
+			this.toolPurchase(this.boostValue);
+			this.db.list('tools').update(this.authUser, {
+				boost: firebase.database.ServerValue.TIMESTAMP
+			}).then(() =>{
+				let toast = this.toastCtrl.create({
+	              message: "User boost is up.",
+	              duration: 2000,
+	              position: 'top'
+	            });
+	            toast.present();
+				this.isBoost = true;
+			})
+		}else{
+			alert("Not enough coins to use boost.");
+		}
+	}
+
+	toolPurchase(price){
+		this.db.list('tools', ref=> ref.child(this.authUser))
+  			.query.once('value').then(toolSnap =>{
+  				let data = toolSnap.val();
+  				let coinCount = data['coins'];
+  				this.db.list('tools').update(this.authUser, {
+  					coins: coinCount-price
+  				});
+  			});
+	}
+
+	getReward(){
+		this.navCtrl.push(UserRewardPage);
 	}
 
 	returnCard(userID){

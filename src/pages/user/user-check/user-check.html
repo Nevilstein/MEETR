@@ -21,7 +21,7 @@
 		<ion-slides pager>
 			<!-- Maliit yung image hindi ko alam gagawin :'(' -->
 			<ion-slide *ngFor="let image of userPhotos">
-				<img src="{{image}}">
+				<img src="{{image}}" alt="No image">
 			</ion-slide>
 		</ion-slides>
 		<ion-fab bottom right edge>
@@ -30,20 +30,45 @@
 	</div>
 	<div padding>
 		<h3 class="name">{{userFirstName}}, {{userAge}}</h3>
-		<h6 class="location"># miles away</h6>
+		<div>
+			<h6 class="location">{{distanceAway}}</h6>
+			<h6 class="location">{{activeWhen}}</h6>
+		</div>
 	</div>
-	<hr>
-	<div  padding>
+	<hr *ngIf="sameInterests.length > 0">
+	<div padding *ngIf="sameInterests.length > 0">
+		<h4 class="head">Mutual Interests</h4>
+		<p class="interests" *ngFor="let interest of sameInterests">
+			{{interest}}
+		</p>
+	</div>
+	<hr *ngIf="!isEmptyBio">
+	<div padding *ngIf="!isEmptyBio">
 		<h4 class="head">Bio</h4>
 		<!-- Pakicenter yung Bio -->
 		<p class="name">{{userBio}}</p>
 	</div>
 	<hr>
-	<div  padding>
+	<div padding>
 		<h4 class="head">Interests</h4>
 		<p class="interests" *ngFor="let interest of userInterests">
 			{{interest}}
 		</p>
 	</div>
+	<hr *ngIf="questions.length > 0">
+	<div padding *ngIf="questions.length > 0">
+		<h4 class="head">Questions</h4>
+		<div padding *ngFor="let question of questions">
+			<div>{{question.question}}</div>
+			<div>{{question.answer}}</div>
+		</div>
+		<!-- <p class="interests" *ngFor="let interest of userInterests">
+			{{interest}}
+		</p> -->
+	</div>
+	<hr>
+	<div padding>
+	</div>
+
 
 </ion-content>

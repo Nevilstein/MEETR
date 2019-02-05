@@ -63,12 +63,14 @@
     <div class="card-container" *ngIf="isReady" style="margin-top:80px">
     	<div>
     		<p>Likes: {{tools['likes'].limit}}X</p>
+    		<p>Coins: {{myCoins}}</p>
     	</div>
     	<button ion-button [disabled]="!buttonsEnabled" (click)="onRewind()">Rewind</button>
     	<button ion-button [disabled]="!buttonsEnabled" (click)="onLikeButton(stackedUsers[0], true)">Like</button>
-    	<button ion-button [disabled]="!buttonsEnabled" (click)="onLikeButton(stackedUsers[0], true, true)">Superlike</button>
+    	<button ion-button [disabled]="!buttonsEnabled" (click)="onSuperLike(stackedUsers[0], true, true)">Superlike</button>
     	<button ion-button [disabled]="!buttonsEnabled" (click)="onLikeButton(stackedUsers[0], false)">Dislike</button>
     	<button ion-button [disabled]="isBoost" (click)="onBoost()">Boost</button>
+    	<button ion-button (click)="getReward()">Open Daily Reward</button>
     </div>
 	<!-- <div id="show"></div>
 	<div>

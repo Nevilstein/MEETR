@@ -26,66 +26,21 @@
     				<b>Say something to your new match!</b>
     			</p>
 			</button>
-			<ion-item-options side="left">
+			<!-- <ion-item-options side="left">
 			  <button ion-button no-lines ion-button class="chat_buttons" color="secondary" (click)="favorite(item)">
 			  	<ion-icon class="chat_icons" name="star"></ion-icon>
 			  </button>
 			  <button ion-button class="chat_buttons" (click)="unread(item)">
 			  	<ion-icon class="chat_icons" name="disc"></ion-icon>
 			  </button>
-			</ion-item-options>
+			</ion-item-options> -->
 
 			<ion-item-options side="right">
-			  <button ion-button no-lines class="chat_buttons" color="danger" (click)="share(item)">
+			  <button ion-button no-lines class="chat_buttons" color="danger" (click)="unmatch(chat)">
 			  	<ion-icon class="chat_icons" name="trash"></ion-icon>
 			  </button>
 			</ion-item-options>
 		</ion-item-sliding>
-
-		<!-- <ion-item-sliding #item>
-			<button ion-item no-lines class="chat_content" (click)="user_Chat()">
-					<img class="circle-pic" src="../assets/imgs/luwelle.jpg" item-start>
-				<h2 class="content">Luwelle Baltazar</h2>
-    			<p class="content">uwuwuwuwuwuuwuw</p>
-			</button>
-			<ion-item-options side="left">
-			  <button ion-button class="chat_buttons" ion-button color="secondary" (click)="favorite(item)">
-			  	<ion-icon class="chat_icons" name="star"></ion-icon>
-			  </button>
-			  <button ion-button class="chat_buttons" (click)="unread(item)">
-			  	<ion-icon class="chat_icons" name="disc"></ion-icon>
-			  </button>
-			</ion-item-options>
-
-			<ion-item-options side="right">
-			  <button ion-button class="chat_buttons" color="danger" (click)="share(item)">
-			  	<ion-icon class="chat_icons" name="trash"></ion-icon>
-			  </button>
-			</ion-item-options>
-		</ion-item-sliding>
-
-		<ion-item-sliding #item>
-			<button ion-item no-lines class="chat_content" (click)="user_Chat()">
-					<img class="circle-pic" src="../assets/imgs/seth.jpg" item-start>
-				<h2 class="content">Seth Siono</h2>
-    			<p class="content">qwqqwqwwqqwqwqwwweeeee</p>
-			</button>
-			<ion-item-options side="left">
-			  <button ion-button class="chat_buttons" ion-button color="secondary" (click)="favorite(item)">
-			  	<ion-icon class="chat_icons" name="star"></ion-icon>
-			  </button>
-			  <button ion-button class="chat_buttons" (click)="unread(item)">
-			  	<ion-icon class="chat_icons" name="disc"></ion-icon>
-			  </button>
-			</ion-item-options>
-
-			<ion-item-options side="right">
-			  <button ion-button class="chat_buttons" color="danger" (click)="share(item)">
-			  	<ion-icon class="chat_icons" name="trash"></ion-icon>
-			  </button>
-			</ion-item-options>
-		</ion-item-sliding> -->
-		
 	</ion-list>
 
 </ion-content>
