@@ -77,6 +77,7 @@ export class UserProfilePage {
         this.image = data['photos'][0];
         this.bio = data['bio'];
         this.interests = Object.assign([], data['interests']);
+        this.userProvider.getUserProfile();
       });
   }
   

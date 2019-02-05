@@ -83,7 +83,7 @@ export class UserSettingPage {
       }).then(() => {
         this.db.list('activity').update(this.authUser, {  //start with active
           isActive:{
-            status: true,
+            status: false,
             timestamp: firebase.database.ServerValue.TIMESTAMP
           }
         }).then(() =>{
@@ -106,17 +106,13 @@ export class UserSettingPage {
         ageRange: {min:this.ageRange['lower'], max:this.ageRange['upper']},
         isVisible: this.userVisible
     }).then( () =>{
-        const toast = this.toastCtrl.create({
+      const toast = this.toastCtrl.create({
         message: 'Your settings were successfully saved',
-        showCloseButton: true,
-        closeButtonText: 'Ok'
-      });
-        toast.onDidDismiss((data, role) => {
-          if (role == 'close') {
-              this.goBack();
-          }
+        duration: 1000,
+        position: 'top'
       });
       toast.present();
+      this.goBack();
     });
   }
 

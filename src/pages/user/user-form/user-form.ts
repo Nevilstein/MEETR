@@ -85,7 +85,12 @@ export class UserFormPage {
         limit:10,
         timestamp:firebase.database.ServerValue.TIMESTAMP
       },
-      boost: 0  //starting timestamp for boost
+      question:{
+        timestamp:0
+      },
+      boost: 0,  //starting timestamp for boost
+      dailyReward: 0, //starting timestamp for daily reward
+      coins: 0
     });
     this.zone.run(() => {
         this.navCtrl.setRoot(UserTabsPage);

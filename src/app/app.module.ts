@@ -40,6 +40,12 @@ import { UserChatroomPage } from '../pages/user/user-chatroom/user-chatroom';
 import { UserChatroomPageModule } from '../pages/user/user-chatroom/user-chatroom.module';
 import { UserMatchPage } from '../pages/user/user-match/user-match';
 import { UserMatchPageModule } from '../pages/user/user-match/user-match.module';
+import { UserAskPage } from '../pages/user/user-ask/user-ask';
+import { UserAskPageModule } from '../pages/user/user-ask/user-ask.module';
+import { UserDrawPage } from '../pages/user/user-draw/user-draw';
+import { UserDrawPageModule } from '../pages/user/user-draw/user-draw.module';
+import { UserRewardPage } from '../pages/user/user-reward/user-reward';
+import { UserRewardPageModule } from '../pages/user/user-reward/user-reward.module';
 import { UserInterestPage } from '../pages/user/user-interest/user-interest';
 import { UserInterestPageModule } from '../pages/user/user-interest/user-interest.module';
 import { ImageViewPage } from '../pages/image-view/image-view';
@@ -64,7 +70,8 @@ import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { AuthProvider } from '../providers/auth/auth';
 import { ChatProvider } from '../providers/chat/chat';
 import { UserProvider } from '../providers/user/user';
-import { MatchProvider } from '../providers/match/match';  
+import { MatchProvider } from '../providers/match/match';
+import { ToolsProvider } from '../providers/tools/tools';  
 
 export const firebaseConfig = {
     apiKey: "AIzaSyCjTUixYv189FGdP3hQdztU_HCbtqvjJTU",
@@ -108,6 +115,9 @@ export const firebaseConfig = {
     UserChatroomPageModule,
     UserMatchPageModule,
     UserInterestPageModule,
+    UserAskPageModule,
+    UserDrawPageModule,
+    UserRewardPageModule,
     ImageViewPageModule
   ],
   bootstrap: [IonicApp],
@@ -143,7 +153,8 @@ export const firebaseConfig = {
     AuthProvider,
     ChatProvider,
     UserProvider,
-    MatchProvider
+    MatchProvider,
+    ToolsProvider
   ]
 })
 export class AppModule {}

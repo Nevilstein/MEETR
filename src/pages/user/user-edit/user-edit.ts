@@ -11,6 +11,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireStorage, AngularFireUploadTask } from 'angularfire2/storage';
 // import { storage } from 'firebase';
 import { Camera, CameraOptions } from '@ionic-native/camera';
+import moment from 'moment';
 
 //Providers
 import { AuthProvider } from '../../../providers/auth/auth';
@@ -41,6 +42,9 @@ export class UserEditPage {
   isFemale: boolean;
   currentImage:string;
   category = [];
+  questions = [];
+
+  quizDuration = 7*86400000; //7 days in milliseconds is the duration of all questions
   
 
   //Element variables
@@ -50,6 +54,7 @@ export class UserEditPage {
 
   //Observer/Subscription
   profileObserver;
+  answerObserver;
   imageObserver;
   uploadObserver;
   constructor(public navCtrl: NavController, public navParams: NavParams, private fireAuth: AngularFireAuth, 
@@ -60,10 +65,12 @@ export class UserEditPage {
 
   ionViewDidLoad() {
     this.loadProfile();
+    this.loadAnswers();
     console.log('ionViewDidLoad UserEditPage');
   }
   ionViewWillUnload(){
     this.profileObserver.unsubscribe();
+    this.answerObserver.unsubscribe();
   }
 
   goBack(){
@@ -82,6 +89,22 @@ export class UserEditPage {
         this.userProvider.getUserProfile();
         // this.interestList = this.interests.concat(this.interestList);  //add interests shown in option
         // this.interestList = this.removeDuples(this.interestList);
+      });
+  }
+  loadAnswers(){
+    this.answerObserver = this.db.list('answers', ref=> ref.child(this.authUser).orderByChild('timestamp')
+      .limitToLast(10)).snapshotChanges().subscribe(snapshot =>{
+        let dateNow = moment().valueOf();
+        let quizList = [];
+        snapshot.forEach(element => {
+          let data = element.payload.val();
+          data['answerKey'] = element.key;
+          if((dateNow-data['timestamp'])<this.quizDuration){
+            quizList.push(data);
+          }
+        });
+        this.questions = quizList;
+        this.backQuestions = quizList;
       });
   }
   // removeDuples(interests){

@@ -30,14 +30,14 @@
 						<ion-icon id="minus" (click)="deletePhoto(i, image)" name="close-circle" ></ion-icon>
 			</div>
 			<div class="other_image" *ngFor="let image of emptyImageCounter(profileImages.length); let i = index">
-						<div id="images">
-							<!-- Uploading animation here instead of <p>-->
-							<div [hidden]="!(isUploading && i===0)">
-								<ion-spinner name="bubbles"></ion-spinner>
-								<!-- <img src="{{currentImage}}"> -->
-							</div>
-							<span [hidden]="isUploading && i===0" (click)="uploadPhoto()"><ion-icon name="add-circle"></ion-icon></span>
+					<div id="images">
+						<!-- Uploading animation here instead of <p>-->
+						<div [hidden]="!(isUploading && i===0)">
+							<ion-spinner name="bubbles"></ion-spinner>
+							<!-- <img src="{{currentImage}}"> -->
 						</div>
+						<span [hidden]="isUploading && i===0" (click)="uploadPhoto()"><ion-icon name="add-circle"></ion-icon></span>
+					</div>
 			</div>
 		</div>
 	</div>
@@ -46,7 +46,7 @@
 			Edit Intro
 		</ion-card-header>
 		<ion-card-content>
-			<ion-textarea [(ngModel)]="bio" (ionBlur)="bioChanged()" placeholder="About you"></ion-textarea>
+			<ion-input [(ngModel)]="bio" (ionBlur)="bioChanged()" placeholder="About you"></ion-input>
 		</ion-card-content>
 	</ion-card>
 	<ion-card class="cards">
@@ -60,7 +60,7 @@
 		<!-- <ion-input class="input_interest" type="text" [(ngModel)]="interestInputValue" floating placeholder="Add custom Interest" style="width: 80%;" (keyup.enter)=addInterest(interestInput.value) #interestInput></ion-input> -->
 		<!-- <button ion-button (click)="addInterest(interestInput.value)">Add</button> -->
 	</ion-card>
-	<ion-card class="cards">
+	<!-- <ion-card class="cards">
 		<ion-card-header class="header" text-center>
 			Gender
 		</ion-card-header>
@@ -80,7 +80,7 @@
 			  	</ion-item>
 			</ion-list>
 		</ion-card-content>
-	</ion-card>
+	</ion-card> -->
 
 	<!-- Save needed? or Realtime changes -->
 	<!-- <button ion-button (click)="saveProfile()">Save</button>	 -->
