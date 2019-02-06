@@ -83,7 +83,7 @@ export class UserGeoPage {
 			this.map.setZoom(15)
 		}).catch(err => console.log(err));
 		this.startTracking();		//track mainUser
-		this.trackMatch();		//track userMatch
+		//this.trackMatch();		//track userMatch
 	}
 	
 	
@@ -99,7 +99,7 @@ export class UserGeoPage {
 			setTimeout(() => {
 				this.trackedRoute.push({lat:data.coords.latitude, lng:data.coords.longitude});
 				//this.redrawPath(this.trackedRoute); //line draw function called
-				//var image = 'assets/imgs/avatar.jpg';
+				//var image = 'assets/imgs/marker1.jpg';
 				let Marker1 = new google.maps.Marker({		//map marker
 					position: {lat:data.coords.latitude, lng:data.coords.longitude},
 					map: this.map,
@@ -153,20 +153,6 @@ export class UserGeoPage {
 			});
 	}
 
-	/*
-	startTrackingMatch(coordinates){
-		this.isTracking = true;
-		this.trackedRoute = [];
-		this.trackedRoute.push({lat:coordinates.latitude, lng:coordinates.longitude});
-		this.matchMarker = new google.maps.Marker({		//map marker for match
-			position: {lat:coordinates.latitude, lng:coordinates.longitude},
-			map: this.map,
-			size: new google.maps.Size(10, 16),
-		});
-		this.matchMarker.setMap(this.map);
-	}
-	*/
-
 	startTrackingMatch(coordinates){
 		this.isTracking = true;
 		this.trackedRoute = [];
@@ -186,54 +172,6 @@ export class UserGeoPage {
 			});
 		})
 	}
-
-	
-	/*
-	trackMatch(){
-		//if geoStatus with match is true
-			//get latMatch and lngMatch from db
-			//this.startTrackingMatch(latMatch, lngMatch); //track userMatch location
-		//else
-			//do nothing
-		this.chatObserver = this.db.list('chat', ref=> ref.child(this.receiverKey).orderByKey().equalTo(this.chatKey))
-			.snapshotChanges().subscribe( snapshot => {
-				snapshot.forEach( element =>{
-					let data = element.payload.val();
-					this.geoStatus = data['geoStatus'];
-				})
-			});
-		this.locationObserver = this.db.list('location', ref => ref.orderByKey().equalTo(this.receiverKey))
-			.snapshotChanges().subscribe( snapshot =>{
-				snapshot.forEach( element => {
-					let data = element.payload.val();
-					data['id'] = element.key;
-					let matchCoordinates = {
-						latitude: data['currentLocation'].latitude,
-						longitude: data['currentLocation'].longitude
-					}
-					console.log("match", matchCoordinates);
-					this.startTrackingMatch(matchCoordinates)
-				});
-			});
-	}
-
-	startTrackingMatch(coordinates){
-		this.isTracking = true;
-		this.trackedRoute = [];
-		this.trackedRoute.push({lat:coordinates.latitude, lng:coordinates.longitude});
-		// if(this.matchMarker){
-		// 	this.matchMarker.setMap(null);
-		// }
-		this.matchMarker = new google.maps.Marker({		//map marker
-			position: {lat:coordinates.latitude, lng:coordinates.longitude},
-			map: this.map,
-			size: new google.maps.Size(10, 16),
-		});
-		this.matchMarker.setMap(this.map);
-	}
-
-	*/
-
 	// onCardInteract(event){
  //   		console.log(event);
 	// }
