@@ -84,19 +84,20 @@ export class UserGeoPage {
 			this.map.setZoom(15)
 		}).catch(err => console.log(err));
 		this.startTracking();		//track mainUser
-		//this.trackMatch();		//track userMatch
+		this.trackMatch();		//track userMatch
 	}
 	
 	
 	startTracking(){
 		this.isTracking = true;
 		this.trackedRoute = [];
+		var image = '../../../assets/imgs/markerfinal1.png';
 		let myMarker = new google.maps.Marker({		//map marker
 			//position: {lat:data.coords.latitude, lng:data.coords.longitude},
 			map: this.map,
 			size: new google.maps.Size(10, 16),
-			center:location
-			//icon: image
+			center:location,
+			icon: image
 		});
 		
 		this.positionSubscription = this.geolocation.watchPosition()
@@ -108,7 +109,6 @@ export class UserGeoPage {
 				var latlngUser = new google.maps.LatLng(data.coords.latitude, data.coords.longitude);
 				this.trackedRoute.push({lat:data.coords.latitude, lng:data.coords.longitude});
 				//this.redrawPath(this.trackedRoute); //line draw function called
-				//var image = 'assets/imgs/marker1.jpg';
 				myMarker.setPosition(latlngUser);
 			});
 			this.currentMapTrack.setMap(null);
