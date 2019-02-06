@@ -152,7 +152,7 @@ export class UserGeoPage {
 				});
 			});
 	}
-
+/*
 	startTrackingMatch(coordinates){
 		this.isTracking = true;
 		this.trackedRoute = [];
@@ -172,6 +172,22 @@ export class UserGeoPage {
 			});
 		})
 	}
+*/
+	startTrackingMatch(coordinates){
+		this.isTracking = true;
+		this.trackedRoute = [];
+		this.trackedRoute.push({lat:coordinates.latitude, lng:coordinates.longitude});
+		// if(this.matchMarker){
+		// 	this.matchMarker.setMap(null);
+		// }
+		this.matchMarker = new google.maps.Marker({		//map marker
+			position: {lat:coordinates.latitude, lng:coordinates.longitude},
+			map: this.map,
+			size: new google.maps.Size(10, 16),
+		});
+		this.matchMarker.setMap(this.map);
+	}
+
 	// onCardInteract(event){
  //   		console.log(event);
 	// }
