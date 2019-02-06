@@ -425,6 +425,13 @@ export class UserHomePage {
 						let lastUser = dislikedUsers[0].id;	//last disliked user id
 						this.db.list('likes', ref => ref.child(this.authUser)).remove(lastUser);
 						this.returnCard(lastUser);	//get latest disliked user's data
+						let toast = this.toastCtrl.create({
+							message: "Rewound!",
+							duration: 1000,
+							position: 'top',
+							cssClass: "rewind_toast",
+							});
+						toast.present();
 					}
 					else{
 						alert("No more users disliked recently.");

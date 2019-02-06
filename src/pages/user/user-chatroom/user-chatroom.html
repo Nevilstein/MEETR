@@ -24,9 +24,9 @@
           <ion-icon class="gps" name="pin" (click)="gotoGeo()"></ion-icon>
         </button>  -->
     </ion-row>
-      <ion-buttons end>
+      <ion-buttons class="more_button" end (click)="presentPopover($event)">
         <button style="background-color: transparent;">
-          <ion-icon class="more" name="md-more"  (click)="presentPopover($event)" ></ion-icon>
+          <ion-icon class="more" name="md-more" ></ion-icon>
         </button>
       </ion-buttons>
   </ion-navbar>

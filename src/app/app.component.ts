@@ -6,6 +6,7 @@ import { LoginPage } from '../pages/login/login';
 //import { AdminTabsPage } from '../pages/admin/admin-tabs/admin-tabs';
 // import {UserHomePage} from '../pages/user/user-home/user-home';
 import { UserProfilePage } from '../pages/user/user-profile/user-profile';
+import { timer } from 'rxjs/observable/timer';
 
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 
@@ -13,8 +14,8 @@ import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any;
-
+  rootPage: any=LoginPage;
+  showSplash = true;
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private fb: Facebook) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
@@ -22,10 +23,8 @@ export class MyApp {
       // statusBar.styleDefault();
       // splashScreen.hide();
       statusBar.styleLightContent();
-      setTimeout(() => {
-        splashScreen.hide();
-        this.rootPage = LoginPage;
-      }, 100);
+      splashScreen.hide();
+      timer(4000).subscribe(() => this.showSplash = false)
     });
   }
 }

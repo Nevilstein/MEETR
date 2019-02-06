@@ -14,12 +14,12 @@
 			<ion-card-content no-padding>
 				<ion-grid>
 					<ion-row>
-						<ion-col>
+						<ion-col text-center>
 							<ion-card class ="draw" (click)="rewardCards()">
 								<img src="../../../assets/imgs/cardfinal.png">
 							</ion-card>
 						</ion-col>
-						<ion-col>
+						<ion-col text-center>
 							<ion-card class="question" (click)="rewardAsk()">
 								<img src="../../../assets/imgs/qa.png">
 							</ion-card>
@@ -36,22 +36,29 @@
 					</ion-row>
 					<ion-row>
 						<ion-col text-center>
-							<small><a (click)="rewardHelp()">Help</a></small>
+							<small style="text-decoration: underline;"><a (click)="rewardHelp()">Help</a></small>
 						</ion-col>
 					</ion-row>
 				</ion-grid>
 			</ion-card-content>
+			<ion-row class="cardfooter">
+				<ion-col text-center>
+					<ion-icon class="card_icon" name="close-circle" (click)="close()"></ion-icon>
+				</ion-col>
+			</ion-row>
 		</ion-card>
 	</div>
 	<div class="secondary_div" *ngIf="!isReward">
 		<ion-card class="secondary_card" padding>
-			<ion-card-header text-right>
-				<ion-icon name="close" (click)="close()"></ion-icon>
-			</ion-card-header>
-			<ion-card-content>
+			<ion-card-content text-center>
 				<p>YOU ALREADY CLAIMED YOUR DAILY REWARD!
 					PLEASE CHECK IN TOMORROW!</p>
 			</ion-card-content>
+			<ion-row class="cardfooter">
+				<ion-col text-center>
+					<ion-icon class="card_icon" name="close-circle" (click)="close()"></ion-icon>
+				</ion-col>
+			</ion-row>
 		</ion-card>
 	</div>
 </ion-content>

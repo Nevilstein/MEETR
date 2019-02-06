@@ -73,4 +73,7 @@ export class UserDrawPage {
     continue(){
       this.view.dismiss();
     }
+    close(){
+      this.view.dismiss();
+    }
 }

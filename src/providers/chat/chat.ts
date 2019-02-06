@@ -17,7 +17,7 @@ export class ChatProvider {
 	authKey = this.fireAuth.auth.currentUser.uid;
   chatKey: string;
   receiverKey: string;
-
+  userProfile:any;
   // chatList = [];
 
   //Observer/Subscription

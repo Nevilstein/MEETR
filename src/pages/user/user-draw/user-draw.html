@@ -13,19 +13,19 @@
 			</ion-card-header>
 			<ion-card-content>
 				<ion-grid no-padding>
-					<ion-row>
-						<ion-col col-1 no-padding></ion-col>
-						<ion-col no-padding>
-							<div class="main_card_div" *ngFor="let card of coinCards; let i = index"  (click)="pickCard(card, i)">
-								<ion-card class="main_card" *ngIf="!hasChosen">
-									<img src="../../../assets/icon/logo_2.png">
-								</ion-card>
-								<ion-card class="main_card" *ngIf="hasChosen && cardNumber === i">
-									<h1 id="num" style="color: white">{{card}}</h1>
-								</ion-card>
+					<ion-row id="card_row" text-center>
+						<ion-col id="card_col" *ngFor="let card of coinCards; let i = index" no-padding text-center>
+							<div class="main_card_div"  (click)="pickCard(card, i)">
+								<div class="fixed">
+									<ion-card class="main_card" *ngIf="!hasChosen">
+										<img src="../../../assets/icon/logo_2.png">
+									</ion-card>
+									<ion-card class="main_card" *ngIf="hasChosen && cardNumber === i" text-center>
+										<h1 id="num" style="color: white">{{card}}</h1>
+									</ion-card>
+								</div>
 							</div>
 						</ion-col>
-						<ion-col col-1 no-padding></ion-col>
 					</ion-row>
 					<ion-row padding>
 						<ion-col>
@@ -41,6 +41,11 @@
 					</ion-row>
 				</ion-grid>
 			</ion-card-content>
+			<ion-row class="cardfooter">
+				<ion-col text-center>
+					<ion-icon class="card_icon" name="close-circle" (click)="close()"></ion-icon>
+				</ion-col>
+			</ion-row>
 		</ion-card>
 	</div>
 

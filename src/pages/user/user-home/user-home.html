@@ -16,22 +16,22 @@
 			<div style="display: flex;">
 				<ion-grid>
 					<ion-row>
-						<ion-col col-4>
+						<ion-col col-4 text-center>
 							<ion-item class="items">
 							  <ion-icon name="thumbs-up" item-start></ion-icon>
 							  <ion-badge item-start>{{tools['likes'].limit}}x</ion-badge>
 							</ion-item>
 	    				</ion-col>
-	    				<ion-col col-4>
+	    				<ion-col col-4 text-center>
 	    					<ion-item class="items">
 	    						<ion-icon name="cash" item-start></ion-icon>
 	    						<ion-badge item-start>{{myCoins}}</ion-badge>
 	    					</ion-item>
 	    				</ion-col>
-	    				<ion-col col-4>
+	    				<ion-col col-4 text-center>
 	    					<ion-item class="items" (click)="getReward()">
-	    						<ion-icon name="cash" item-start></ion-icon>
-	    						<button ion-button item-start><small>Open</small></button>
+	    						<ion-icon name="game-controller-b" item-start></ion-icon>
+	    						<ion-badge ion-button item-start style="box-shadow: none;">Open</ion-badge>
 	    					</ion-item>
 	    				</ion-col>
 	    			</ion-row>

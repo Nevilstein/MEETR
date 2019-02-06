@@ -9,9 +9,9 @@
   <ion-navbar>
   	<!--<button clear id="back" (click)="goBack()">
   		<ion-icon name="arrow-back" id="back" style="zoom:2.0;"></ion-icon>
-  	</bu
+  	</bu-->
     <ion-title style="display:inline-block">Edit</ion-title>
-   	<ion-buttons end>
+   	<!--<ion-buttons end>
 	    <button clear id="back" (click)="goBack()">
 	  		<ion-icon name="md-checkbox-outline" id="back" style="zoom:2.0; display: inline-block; color:white;"></ion-icon>
 	  	</button>
@@ -23,36 +23,35 @@
 
 <ion-content class="edit_content" padding>
 	<!-- UPLOAD PHOTO HERE -->
-	<div class="pics" text-center>
-		<div id="wrapper">
-			<div class="default_image" *ngFor="let image of profileImages; let i = index" >
-						<img src="{{image}}">
-						<ion-icon id="minus" (click)="deletePhoto(i, image)" name="close-circle" ></ion-icon>
-			</div>
-			<div class="other_image" *ngFor="let image of emptyImageCounter(profileImages.length); let i = index">
-					<div id="images">
-						<!-- Uploading animation here instead of <p>-->
-						<div [hidden]="!(isUploading && i===0)">
-							<ion-spinner name="bubbles"></ion-spinner>
-							<!-- <img src="{{currentImage}}"> -->
+	<ion-card class="main_card">
+		<div class="pics" text-center>
+			<div id="wrapper">
+				<div class="default_image" *ngFor="let image of profileImages; let i = index" >
+							<img src="{{image}}">
+							<ion-icon id="minus" (click)="deletePhoto(i, image)" name="close-circle" ></ion-icon>
+				</div>
+				<div class="other_image" *ngFor="let image of emptyImageCounter(profileImages.length); let i = index">
+						<div id="images">
+							<!-- Uploading animation here instead of <p>-->
+							<div class="loading" [hidden]="!(isUploading && i===0)">
+								<ion-spinner name="bubbles"></ion-spinner>
+								<!-- <img src="{{currentImage}}"> -->
+							</div>
+							<span [hidden]="isUploading && i===0" (click)="uploadPhoto()"><ion-icon name="add-circle"></ion-icon></span>
 						</div>
-						<span [hidden]="isUploading && i===0" (click)="uploadPhoto()"><ion-icon name="add-circle"></ion-icon></span>
-					</div>
+				</div>
 			</div>
 		</div>
-	</div>
+	</ion-card>
 	<ion-card class="cards">
 		<ion-card-header class="header" text-center>
 			Edit Intro
 		</ion-card-header>
 		<hr>
 		<ion-card-content>
-
-			<!-- <ion-item lines="none"> -->
-				<ion-textarea [(ngModel)]="bio" (ionBlur)="bioChanged()" placeholder="About you"></ion-textarea>
-				<!-- <textarea #myInput id="myInput" rows="1" maxLength="500" (keyup)="resize()" placeholder="About you" (ionBlur)="bioChanged()" [(ngModel)]="bio"></textarea> -->
-			<!-- </ion-item> -->
-			
+			<ion-item no-lines>
+				<ion-textarea id="text" [(ngModel)]="bio" (ionBlur)="bioChanged()" placeholder="About you"></ion-textarea>
+			</ion-item>
 		</ion-card-content>
 	</ion-card>
 	<ion-card class="cards">
@@ -61,7 +60,7 @@
 		</ion-card-header>
 		<hr>
 		<ion-card-content (click)="editInterest()">
-			<span class="interests" *ngFor="let interest of interests; let i = index">{{interest}}</span>
+			<span class="interests" *ngFor="let interest of interests; let i = index" text-center>{{interest}}</span>
 			<!-- <span class="interests" *ngFor="let cat of category; let i = index" #interestItem>{{cat}} </span> -->
 		</ion-card-content>
 		<!-- <ion-input class="input_interest" type="text" [(ngModel)]="interestInputValue" floating placeholder="Add custom Interest" style="width: 80%;" (keyup.enter)=addInterest(interestInput.value) #interestInput></ion-input> -->
