@@ -111,7 +111,8 @@ export class UserHomePage {
 	    this.rewardChecker = setInterval(() =>{
 	    	if(this.isReward != undefined && this.isReward){
 	    		clearInterval(this.rewardChecker);
-		    	this.navCtrl.push(UserRewardPage);
+		    	let modal = this.modalCtrl.create(UserRewardPage);
+		    	modal.present();
 		    }
 	    }, 1000);
 	}
@@ -467,7 +468,8 @@ export class UserHomePage {
 	}
 
 	getReward(){
-		this.navCtrl.push(UserRewardPage);
+		let modal = this.modalCtrl.create(UserRewardPage);
+		modal.present();
 	}
 
 	returnCard(userID){

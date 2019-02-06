@@ -115,12 +115,13 @@ export class UserChatroomPage {
     Add match in chatlist?
   */
   getChatData(){
-    this.chatObserver = this.db.list('chat', ref=> ref.child(this.authKey).orderByChild(this.chatKey))  //my chat
+    console.log(this.chatKey);
+    this.chatObserver = this.db.list('chat', ref=> ref.child(this.authKey).orderByKey().equalTo(this.chatKey))  //my chat
       .snapshotChanges().subscribe( snapshot =>{
         snapshot.forEach( element =>{
           let data = element.payload.val();
           data['id'] = element.key;
-
+          console.log(data);
           if(!data['matchStatus']){  //check if match is still active
             this.navCtrl.pop();
           }
@@ -135,7 +136,7 @@ export class UserChatroomPage {
         })
       });
 
-    this.chatObserver2 = this.db.list('chat', ref=> ref.child(this.receiverKey).orderByChild(this.chatKey))
+    this.chatObserver2 = this.db.list('chat', ref=> ref.child(this.receiverKey).orderByKey().equalTo(this.chatKey))
       .snapshotChanges().subscribe( snapshot =>{
         snapshot.forEach( element =>{
           let data = element.payload.val();
@@ -183,6 +184,8 @@ export class UserChatroomPage {
          snapshot.forEach( element => {
            let data = element.payload.val();
            data['id'] = element.payload.key;
+           data['age'] = moment().diff(moment(data['birthday'], "MM/DD/YYYY"), 'years');
+           this.chatProvider.userProfile = data;
            this.userProfile = data;
            this.userPhoto = data['photos'][0];
            this.userFirstName = data['firstName'];

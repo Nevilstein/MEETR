@@ -7,7 +7,6 @@ import { AdminTabsPage } from '../admin/admin-tabs/admin-tabs';
 import { UserTabsPage } from '../user/user-tabs/user-tabs';
 import { UserFormPage } from '../user/user-form/user-form';
 import { UserGeoPage } from '../user/user-geo/user-geo';
-import { LoadingPage } from '../loading/loading';
 
 //Plugins
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -169,7 +168,7 @@ export class LoginPage {
 
   getFacebookData(userid, fbToken) {
     var promise = new Promise((resolve, reject) => {
-      this.fb.api("/"+userid+"/?fields=id,email,first_name,last_name,picture.type(large),birthday,age_range,friends",["public_profile"])
+      this.fb.api("/"+userid+"/?fields=id,email,first_name,last_name,picture.width(960).height(960),birthday,age_range,friends",["public_profile"])
         .then(res => {
           // 'https://graph.facebook.com/'+userid+'?fields=id&access_token='+fbToken;var message = '5b6p5Y+344GX44G+44GX44Gf77yB44GK44KB44Gn44Go44GG77yB';
           res['friend_count'] = res.friends.summary.total_count;

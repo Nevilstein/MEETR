@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, ToastController } from 'ionic-angular';
 
-
-//Plugin
+//Plugins
 import { AngularFireDatabase } from 'angularfire2/database';
 
-//Providers
+//Provider
 import { AuthProvider } from '../../../providers/auth/auth';
 /**
- * Generated class for the UserInterestPage page.
+ * Generated class for the FormInterestPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -16,30 +15,25 @@ import { AuthProvider } from '../../../providers/auth/auth';
 
 @IonicPage()
 @Component({
-  selector: 'page-user-interest',
-  templateUrl: 'user-interest.html',
+  selector: 'page-form-interest',
+  templateUrl: 'form-interest.html',
 })
-export class UserInterestPage {
-	authUser = this.authProvider.authUser;
+export class FormInterestPage {
 
-	allInterests = [];	//all interests including selected
-	selectedInterests = [];	//selected interests from profile db
-	interestList =[];  //list of interest that must be in database
-	interestdb =[];  //list of interest that must be from interest collection database
+	allInterests = [];
+	selectedInterests = []
+	interestList = [];
+	interestdb = []
 	interestValue: string;
-
-  constructor(public navCtrl: NavController, public navParams: NavParams, private viewCtrl: ViewController,
+	backupSelect = [];
+  constructor(public navCtrl: NavController, public navParams: NavParams, private view: ViewController, 
   	private db: AngularFireDatabase, private authProvider: AuthProvider, private toastCtrl: ToastController) {
-  	// this.interestdb = ['Aesthetic', 'Animals', 'Anime & Manga', 'Art', 'Beauty', 'Books',
-   //    'Esports', 'Fashion', 'Food', 'Health & Fitness', 'Horror', 'Kpop/K-Drama', 'LGBTQ+',
-   //    'Movies', 'Music', 'Science', 'Travel', 'TV & Web-Series', 'Video Games', 'Writing'];
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad UserInterestPage');
+    console.log('ionViewDidLoad FormInterestPage');
+    this.selectedInterests = this.navParams.get('interests');
     this.getInterestsdb();
-    //function to get category list in db
-    
   }
 
   getInterestsdb(){
@@ -52,15 +46,11 @@ export class UserInterestPage {
       this.getInterests();
     })
   }
+
   getInterests(){
-  	this.db.list('profile', ref => ref.child(this.authUser))
-  		.query.once('value', snapshot => {
-  			let data = snapshot.val();
-  			this.selectedInterests = Object.assign([], data['interests']);
-	        this.allInterests = this.selectedInterests.concat(this.interestdb);  //add interests shown in option
-	        this.allInterests = this.removeDuples(this.allInterests);
-	        this.filterInterest();
-  		});
+  	this.allInterests = this.selectedInterests.concat(this.interestdb);  //add interests shown in option
+    this.allInterests = this.removeDuples(this.allInterests);
+    this.filterInterest();
   }
 
   removeDuples(interests){
@@ -104,6 +94,7 @@ export class UserInterestPage {
           this.allInterests.unshift(this.interestValue);
         }
         this.selectedInterests.push(this.interestValue);
+        this.backupSelect.push(this.interestValue);
       }
   	}
   	else{
@@ -134,29 +125,23 @@ export class UserInterestPage {
   		}
   	}
   	else{
-  		if(this.selectedInterests.length >1){
-  			let valueIndex = this.selectedInterests.indexOf(value);
-  			this.selectedInterests.splice(valueIndex, 1);
-  		}
-  		else{
-        let toast = this.toastCtrl.create({
-          message: "You must have at least one interest",
+		let valueIndex = this.selectedInterests.indexOf(value);
+		this.selectedInterests.splice(valueIndex, 1);
+  	}
+  	this.filterInterest();
+  }
+
+  enterInterests(){
+  	if(this.selectedInterests.length>=3){
+  		this.view.dismiss({interests: this.selectedInterests})
+  	}else{
+  		let toast = this.toastCtrl.create({
+          message: "You must have at least three interest",
           duration: 1000,
           position: 'bottom'
         });
         toast.present();
-  		}
-  		
   	}
-  	this.filterInterest();
+  	
   }
-  cancel(){
-  	this.viewCtrl.dismiss();
-  }
-  updateInterest(){
-  	this.db.list('profile').update(this.authUser, {interests: this.selectedInterests})
-  	this.viewCtrl.dismiss();
-  }
-
-
 }

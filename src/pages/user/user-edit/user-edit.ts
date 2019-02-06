@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 
 //Page
@@ -52,6 +52,7 @@ export class UserEditPage {
   interestInputValue: string = "";
   isUploading: boolean = false;
   uploadTask: AngularFireUploadTask;
+   @ViewChild('myInput') myInput: ElementRef;
 
   //Observer/Subscription
   profileObserver;
@@ -161,8 +162,8 @@ export class UserEditPage {
       // mediaType: this.camera.MediaType.PICTURE
       sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
       allowEdit: true,
-      targetHeight: 640,
-      targetWidth: 640 
+      targetHeight: 960,
+      targetWidth: 960 
     }
 
     this.camera.getPicture(options).then((imageData) => {

@@ -10,6 +10,7 @@ import { UserHomePage } from '../user-home/user-home';
 import { UserChatPage } from '../user-chat/user-chat';
 import { UserMatchPage } from '../user-match/user-match';
 import { UserRewardPage } from '../user-reward/user-reward';
+import { LocRequirePage } from '../../loc-require/loc-require';
 
 //Plugins
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -64,6 +65,9 @@ export class UserTabsPage {
 
   tabIndex: number;
   isPaused: boolean = false;
+
+  isStart: boolean = true;
+  locCheckOpen: boolean = false;
   // count=0;
 
   // ngOnDestroy(){
@@ -82,6 +86,9 @@ export class UserTabsPage {
     // this.trackLocation();
     this.updateActive();
     this.tabChanges();
+    this.diagnostic.registerLocationStateChangeHandler( () =>{  //check if location setting changed
+      this.checkLocationSetting();
+    })
   }
 
   ionViewWillUnload(){
@@ -108,19 +115,22 @@ export class UserTabsPage {
   }
 
   checkLocationSetting(){
+
     this.diagnostic.isLocationEnabled().then( isAvailable =>{
       if(isAvailable){
-        this.trackLocation();
+        if(this.isStart){    //Enable subscription only at start of app
+          this.isStart = false;
+          this.trackLocation();
+        }
       }else{
-        this.locationAcc.request(this.locationAcc.REQUEST_PRIORITY_HIGH_ACCURACY).then(
-          () => {
-            this.trackLocation();
-          },
-          error => {
-            if(error.code === 4){
-              this.checkLocationSetting();
-            }
+        if(!this.locCheckOpen){
+          this.locCheckOpen = true;
+          let modal = this.modalCtrl.create(LocRequirePage);
+          modal.present();
+          modal.onDidDismiss(()=>{
+            this.locCheckOpen = false;
           });
+        }
       }
     }).catch( error =>{
       console.log(error);
