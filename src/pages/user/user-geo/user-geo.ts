@@ -16,6 +16,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 
 //Providers
 import { ChatProvider } from '../../../providers/chat/chat';
+import { markDirty } from '@angular/core/src/render3';
 
 declare var google:any;
 
@@ -90,23 +91,25 @@ export class UserGeoPage {
 	startTracking(){
 		this.isTracking = true;
 		this.trackedRoute = [];
-
+		let myMarker = new google.maps.Marker({		//map marker
+			//position: {lat:data.coords.latitude, lng:data.coords.longitude},
+			map: this.map,
+			size: new google.maps.Size(10, 16),
+			center:location
+			//icon: image
+		});
+		
 		this.positionSubscription = this.geolocation.watchPosition()
 		.pipe(
 			filter((p) => p.coords !== undefined)
 		)
 		.subscribe(data => {
 			setTimeout(() => {
+				var latlngUser = new google.maps.LatLng(data.coords.latitude, data.coords.longitude);
 				this.trackedRoute.push({lat:data.coords.latitude, lng:data.coords.longitude});
 				//this.redrawPath(this.trackedRoute); //line draw function called
 				//var image = 'assets/imgs/marker1.jpg';
-				let Marker1 = new google.maps.Marker({		//map marker
-					position: {lat:data.coords.latitude, lng:data.coords.longitude},
-					map: this.map,
-					size: new google.maps.Size(10, 16),
-					center:location
-					//icon: image
-				});
+				myMarker.setPosition(latlngUser);
 			});
 			this.currentMapTrack.setMap(null);
 		})
@@ -177,15 +180,17 @@ export class UserGeoPage {
 		this.isTracking = true;
 		this.trackedRoute = [];
 		this.trackedRoute.push({lat:coordinates.latitude, lng:coordinates.longitude});
+		var latlngMatch = new google.maps.LatLng(coordinates.latitude, coordinates.longitude);
 		// if(this.matchMarker){
 		// 	this.matchMarker.setMap(null);
 		// }
 		this.matchMarker = new google.maps.Marker({		//map marker
-			position: {lat:coordinates.latitude, lng:coordinates.longitude},
+			//position: {lat:coordinates.latitude, lng:coordinates.longitude},
 			map: this.map,
 			size: new google.maps.Size(10, 16),
 		});
 		this.matchMarker.setMap(this.map);
+		this.matchMarker.setPosition(latlngMatch);
 	}
 
 	// onCardInteract(event){
