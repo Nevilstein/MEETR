@@ -48,6 +48,8 @@ import { UserRewardPage } from '../pages/user/user-reward/user-reward';
 import { UserRewardPageModule } from '../pages/user/user-reward/user-reward.module';
 import { UserInterestPage } from '../pages/user/user-interest/user-interest';
 import { UserInterestPageModule } from '../pages/user/user-interest/user-interest.module';
+import { FormInterestPage } from '../pages/user/form-interest/form-interest';
+import { FormInterestPageModule } from '../pages/user/form-interest/form-interest.module';
 import { ImageViewPage } from '../pages/image-view/image-view';
 import { ImageViewPageModule } from '../pages/image-view/image-view.module';
 import { PopoverComponent } from '../components/popover/popover';
@@ -118,6 +120,7 @@ export const firebaseConfig = {
     UserAskPageModule,
     UserDrawPageModule,
     UserRewardPageModule,
+    FormInterestPageModule,
     ImageViewPageModule
   ],
   bootstrap: [IonicApp],

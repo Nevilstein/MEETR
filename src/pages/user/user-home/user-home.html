@@ -13,7 +13,7 @@
 		<button ion-button *ngIf="show" (tap)="show_div()">Show</button>
 		<ion-toolbar class="toolbar" (swipe)="swiped()" *ngIf="hideMe">
 			<!-- <button ion-button (click)="getReward()">Open Daily Reward</button> -->
-			<div style="display: flex;" *ngIf="isReady">
+			<div style="display: flex;">
 				<ion-grid>
 					<ion-row>
 						<ion-col col-4>
@@ -80,7 +80,7 @@
 					<ion-icon name="logo-facebook" style="color: #3b5998;" item-start></ion-icon>
 					<ion-badge item-start><ion-icon name="people"></ion-icon> {{card.friendCount}}</ion-badge>
 					<!-- Gawan mo icon yung super like, siguro pin na lang -->
-					<ion-badge item-start *ngIf="!card.superlike"><ion-icon name="star"></ion-icon></ion-badge>
+					<ion-badge item-start *ngIf="card.superlike"><ion-icon name="star"></ion-icon></ion-badge>
 					<button id="button" ion-button item-end (click)="checkInfo(i)">
 						<ion-icon id="eye" name="eye"></ion-icon>
 					</button>

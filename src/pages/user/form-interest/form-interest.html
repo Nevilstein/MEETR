@@ -1,0 +1,37 @@
+<!--
+  Generated template for the UserInterestPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+
+<ion-content class="interest-content" padding>
+	<ion-card class="cards">
+		<ion-card-header class="header">
+			Interests
+		</ion-card-header>
+		<ion-card-content>
+			<!-- Pakipantay yung size ng input sa checkbox
+				Pakilapit ng kaunti yung text ng checkbox sa checkbox or wag na, arte ko HAHAHA
+				Humahaba nang todo hindi ko alam paano gagawin yung may scroll, reference sa Tantan
+				Ikaw na din bahala sa colors ahh
+			 -->
+			<ion-input (keyup.enter)="addCustomInterest()" [(ngModel)]="interestValue" placeholder="Add custom interest"></ion-input>
+			<hr>
+			<ion-scroll style="height: 50vh;" scrollY="true">
+				<ion-list scroll="true">
+					<ion-item *ngFor="let interest of interestList">
+						<ion-label>{{interest.name}}</ion-label>
+						<ion-checkbox class="checkbox-square" (ionChange)="selectInterest($event, interest.name)" [checked]="interest.isSelected" value="interest.name">
+						</ion-checkbox>
+					</ion-item>
+				</ion-list>
+			</ion-scroll>
+			<hr>
+			<!-- Pakilagay sa right yung buttons, salamat-->
+			<div text-right>
+				<button clear ion-button (click)="enterInterests()">OK</button>
+			</div>
+		</ion-card-content>
+	</ion-card>
+</ion-content>

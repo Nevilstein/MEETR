@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, ViewController } from 'ionic-angular';
 
 
 //Plugins
@@ -33,7 +33,7 @@ export class UserAskPage {
 
   quizDuration = 7*86400000; //7 days in milliseconds is the duration of all questions
   constructor(public navCtrl: NavController, public navParams: NavParams, private db: AngularFireDatabase, 
-  	private authProvider: AuthProvider, private toastCtrl: ToastController) {
+  	private authProvider: AuthProvider, private toastCtrl: ToastController, private view: ViewController) {
   }
 
   ionViewDidLoad() {
@@ -104,7 +104,7 @@ export class UserAskPage {
 	}
 
 	cancel(){
-		this.navCtrl.popToRoot();
+		this.view.dismiss();
 	}
 	answer(question){
 		let questionKey = question['id'];
@@ -129,7 +129,7 @@ export class UserAskPage {
 	  				});
 	  			});
 			}).then(()=>{
-				this.navCtrl.popToRoot().then(() =>{
+				this.view.dismiss().then(() =>{
 					let toast = this.toastCtrl.create({
                 message: "You earned 5 coins",
                 duration: 2000,

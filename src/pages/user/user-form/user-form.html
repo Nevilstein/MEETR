@@ -28,8 +28,8 @@
 			<img style="height: 150px !important;" src="../../assets/imgs/cloud.png">
 			<h3 class="form_text">Give us atleast 3 interests to work with</h3>
 			<ion-card class="cards">
-				<ion-card-header text-center>Click me!></ion-card-header>
-				<ion-card-content (click)="editInterest()">
+				<ion-card-header *ngIf="!(interests.length>0)" (click)="seeInterests()" text-center>Click me!</ion-card-header>
+				<ion-card-content (click)="seeInterests()">
 					<span class="interests" *ngFor="let interest of interests; let i = index">{{interest}}</span>
 					<!-- <span class="interests" *ngFor="let cat of category; let i = index" #interestItem>{{cat}} </span> -->
 				</ion-card-content>
@@ -42,17 +42,17 @@
 			<h3 class="form_text">Allow Meetr to access your location?</h3>
 			<ion-item>
 				<ion-label>Allow</ion-label>
-				<ion-checkbox checked="false"></ion-checkbox>
+				<ion-checkbox disabled [checked]="isLocation"></ion-checkbox>
 			</ion-item>
 		</ion-slide>
 	</ion-slides>
 	<ion-fab right bottom [hidden]="slides.isEnd()">
-    	<button ion-fab color="secondary" [disabled]="!next" (click)="gotoNext()"><ion-icon name="arrow-dropright"></ion-icon></button>
+    	<button ion-fab color="secondary" [disabled]="(slideIndex===1 && interests.length<3)" (click)="gotoNext()"><ion-icon name="arrow-dropright"></ion-icon></button>
   	</ion-fab>
   	<ion-fab left bottom [hidden]="slides.isBeginning()">
     	<button ion-fab color="danger" [disabled]="!back" (click)="goPrev()"><ion-icon name="arrow-dropleft"></ion-icon></button>
   	</ion-fab>
   	<ion-fab right bottom [hidden]="!slides.isEnd()">
-    	<button ion-fab color="secondary" [disabled]="!next" (click)="formFinished()">Finish</button>
+    	<button ion-fab color="secondary" [disabled]="slideIndex===2 && !isInterest && !isLocation" (click)="formFinished()">Finish</button>
   	</ion-fab>
 </ion-content>
