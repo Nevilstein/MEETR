@@ -17,6 +17,7 @@
 				Ikaw na din bahala sa colors ahh
 			 -->
 			<ion-input (keyup.enter)="addCustomInterest()" [(ngModel)]="interestValue" placeholder="Add custom interest"></ion-input>
+			<hr>
 			<ion-scroll style="height: 50vh;" scrollY="true">
 				<ion-list scroll="true">
 					<ion-item *ngFor="let interest of interestList">
@@ -26,6 +27,7 @@
 					</ion-item>
 				</ion-list>
 			</ion-scroll>
+			<hr>
 			<!-- Pakilagay sa right yung buttons, salamat-->
 			<div text-right>
 				<button clear ion-button (click)="cancel()">CANCEL</button>

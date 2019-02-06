@@ -1,3 +1,37 @@
 page-user-ask {
-
+	.ask_content{
+		background: rgba(0,0,0,0.7);
+	}
+	.main_div{
+		display: flex;
+		height: 100%;
+	}
+	.main_card{
+		background-image: url('../../../assets/imgs/back_final.jpg'); 
+		background-position: bottom;
+		background-repeat: no-repeat;
+  		background-attachment: fixed;
+		margin:auto;
+	}
+	.qheader{
+		color: white;
+		text-align:center;
+	}
+	.qans{
+		color: white;
+	}
+	ion-input {
+	    ::placeholder{
+	        color:white !important;
+	    }
+	}
+	ion-input{
+		border-radius: 20px;
+		border:solid;
+		border-width: 1px;
+		border-color: #b5b5b7;
+	}
+	.scroll-content {
+    	padding-bottom: 0 !important;
+	}
 }

@@ -5,26 +5,43 @@
   Ionic pages and navigation.
 -->
 
-<ion-content padding>
-	<ion-card>
-		<ion-card-header>Lucky Draw</ion-card-header>
-		<ion-card-content>
-			<div *ngFor="let card of coinCards; let i = index"  (click)="pickCard(card, i)">
-				<ion-card *ngIf="!hasChosen" style="min-height: 100px">
-					Flip cards
-				</ion-card>
-				<ion-card *ngIf="hasChosen && cardNumber === i"style="min-height: 100px">
-					{{card}}
-				</ion-card>
-			</div>
-			<div *ngIf="!hasChosen">
-				Pick a card (Tap to open it)
-			</div>
-			<div *ngIf="hasChosen">
-				You earned {{coinEarned}} coins!
-				<button clear ion-button (click)="continue()">Continue</button>
-			</div>
-		</ion-card-content>
-	</ion-card>
+<ion-content class="draw" padding>
+	<div class="maindiv">
+		<ion-card class="parent_card">
+			<ion-card-header text-center>
+				<h2 style="color: white;">Lucky Draw</h2>
+			</ion-card-header>
+			<ion-card-content>
+				<ion-grid no-padding>
+					<ion-row>
+						<ion-col col-1 no-padding></ion-col>
+						<ion-col no-padding>
+							<div class="main_card_div" *ngFor="let card of coinCards; let i = index"  (click)="pickCard(card, i)">
+								<ion-card class="main_card" *ngIf="!hasChosen">
+									<img src="../../../assets/icon/logo_2.png">
+								</ion-card>
+								<ion-card class="main_card" *ngIf="hasChosen && cardNumber === i">
+									<h1 id="num" style="color: white">{{card}}</h1>
+								</ion-card>
+							</div>
+						</ion-col>
+						<ion-col col-1 no-padding></ion-col>
+					</ion-row>
+					<ion-row padding>
+						<ion-col>
+							<div class="bottom" *ngIf="!hasChosen">
+								<h5 class="bottom_text">Pick a card</h5>
+								<small class="bottom_text">Tap to continue</small>
+							</div>
+							<div class="bottom" *ngIf="hasChosen">
+								<p style="color: white;">You earned {{coinEarned}} coins!</p>
+								<button clear ion-button (click)="continue()">Continue</button>
+							</div>
+						</ion-col>
+					</ion-row>
+				</ion-grid>
+			</ion-card-content>
+		</ion-card>
+	</div>
 
 </ion-content>

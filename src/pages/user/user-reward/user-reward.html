@@ -5,23 +5,53 @@
   Ionic pages and navigation.
 -->
 
-<ion-content padding>
-	<div *ngIf="isReward">
-		<ion-card padding>
-			DAILY REWARD IS UP!! PLEASE CHOOSE YOUR METHOD OF ACQUIRING YOUR REWARD.
-		</ion-card>
-		<ion-icon name="help" (click)="rewardHelp()"></ion-icon>
-		<ion-card style="min-height: 200px" (click)="rewardCards()">
-			<p>DRAW CARDS</p>
-		</ion-card>
-		<ion-card style="min-height: 200px" (click)="rewardAsk()">
-			<p>QUESTION AND ANSWER</p>
+<ion-content class="reward_screen" padding>
+	<div class="main_card" *ngIf="isReward">
+		<ion-card class="pick_card" padding>
+			<ion-card-header text-center>
+				<h2 style="color: white;">Daily rewards is here!</h2>
+			</ion-card-header>
+			<ion-card-content no-padding>
+				<ion-grid>
+					<ion-row>
+						<ion-col>
+							<ion-card class ="draw" (click)="rewardCards()">
+								<img src="../../../assets/imgs/cardfinal.png">
+							</ion-card>
+						</ion-col>
+						<ion-col>
+							<ion-card class="question" (click)="rewardAsk()">
+								<img src="../../../assets/imgs/qa.png">
+							</ion-card>
+						</ion-col>
+					</ion-row>
+					<ion-row padding></ion-row>
+					<ion-row>
+						<ion-col>
+							<div class="bottom" text-center padding>
+								<h5 class="bottom_text">Pick a card</h5>
+								<small class="bottom_text">Tap to continue</small>
+							</div>
+						</ion-col>
+					</ion-row>
+					<ion-row>
+						<ion-col text-center>
+							<small><a (click)="rewardHelp()">Help</a></small>
+						</ion-col>
+					</ion-row>
+				</ion-grid>
+			</ion-card-content>
 		</ion-card>
 	</div>
-	<div *ngIf="!isReward">
-		<ion-card padding>
-			YOU ALREADY CLAIMED YOUR DAILY REWARD!
-			PLEASE CHECK OUT TOMORROW!
+	<div class="secondary_div" *ngIf="!isReward">
+		<ion-card class="secondary_card" padding>
+			<ion-card-header text-right>
+				<ion-icon name="close" (click)="close()"></ion-icon>
+			</ion-card-header>
+			<ion-card-content>
+				<p>YOU ALREADY CLAIMED YOUR DAILY REWARD!
+					PLEASE CHECK IN TOMORROW!</p>
+			</ion-card-content>
 		</ion-card>
 	</div>
 </ion-content>

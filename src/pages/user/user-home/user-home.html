@@ -5,11 +5,40 @@
   Ionic pages and navigation.
 -->
 
-
-<ion-content class="home_content"padding>
+<ion-content class="home_content" padding>
 	<!-- <div class="card-container" *ngIf="!isReady" style="background-color: whitesmoke">
 		LOADING...
 	</div> -->
+	<ion-header class="headertool" >
+		<button ion-button *ngIf="show" (tap)="show_div()">Show</button>
+		<ion-toolbar class="toolbar" (swipe)="swiped()" *ngIf="hideMe">
+			<!-- <button ion-button (click)="getReward()">Open Daily Reward</button> -->
+			<div style="display: flex;" *ngIf="isReady">
+				<ion-grid>
+					<ion-row>
+						<ion-col col-4>
+							<ion-item class="items">
+							  <ion-icon name="thumbs-up" item-start></ion-icon>
+							  <ion-badge item-start>{{tools['likes'].limit}}x</ion-badge>
+							</ion-item>
+	    				</ion-col>
+	    				<ion-col col-4>
+	    					<ion-item class="items">
+	    						<ion-icon name="cash" item-start></ion-icon>
+	    						<ion-badge item-start>{{myCoins}}</ion-badge>
+	    					</ion-item>
+	    				</ion-col>
+	    				<ion-col col-4>
+	    					<ion-item class="items" (click)="getReward()">
+	    						<ion-icon name="cash" item-start></ion-icon>
+	    						<button ion-button item-start><small>Open</small></button>
+	    					</ion-item>
+	    				</ion-col>
+	    			</ion-row>
+	    		</ion-grid>
+    		</div>
+		</ion-toolbar>
+	</ion-header>
 	<ion-grid style="height: 100%" *ngIf="!isReady">
 		<ion-row justify-content-center align-items-center style="height: 100%">
 			<div class="lds-css ng-scope" >
@@ -51,7 +80,7 @@
 					<ion-icon name="logo-facebook" style="color: #3b5998;" item-start></ion-icon>
 					<ion-badge item-start><ion-icon name="people"></ion-icon> {{card.friendCount}}</ion-badge>
 					<!-- Gawan mo icon yung super like, siguro pin na lang -->
-					<ion-badge item-start *ngIf="!card.superlike"><ion-icon name="star"></ion-icon> (Sample) Super Liked You</ion-badge>
+					<ion-badge item-start *ngIf="!card.superlike"><ion-icon name="star"></ion-icon></ion-badge>
 					<button id="button" ion-button item-end (click)="checkInfo(i)">
 						<ion-icon id="eye" name="eye"></ion-icon>
 					</button>
@@ -60,7 +89,7 @@
         </sc-card>
     </div>
 
-    <div class="card-container" *ngIf="isReady" style="margin-top:80px">
+    <!-- <div class="card-container" *ngIf="isReady" style="margin-top:80px">
     	<div>
     		<p>Likes: {{tools['likes'].limit}}X</p>
     		<p>Coins: {{myCoins}}</p>
@@ -71,7 +100,7 @@
     	<button ion-button [disabled]="!buttonsEnabled" (click)="onLikeButton(stackedUsers[0], false)">Dislike</button>
     	<button ion-button [disabled]="isBoost" (click)="onBoost()">Boost</button>
     	<button ion-button (click)="getReward()">Open Daily Reward</button>
-    </div>
+    </div> -->
 	<!-- <div id="show"></div>
 	<div>
 		<ion-grid id="grid">
@@ -99,3 +128,32 @@
 		</ion-grid>
 	</div> -->
 </ion-content>
+<ion-footer text-center no-border style="padding-bottom: 10px;">
+	<div *ngIf="isReady">
+    	<div>
+	    	<button ion-fab class="other_buttons" mini style="display: inline-block;" [disabled]="!buttonsEnabled" 
+	    	(click)="onRewind()">
+	    		<ion-icon class="button_icons" name="rewind"></ion-icon>
+	    	</button>
+	    	<button ion-fab class="other_buttons" mini style="display: inline-block;" [disabled]="!buttonsEnabled" (click)="onLikeButton(stackedUsers[0], false)">
+	    		<ion-icon class="button_icons" name="thumbs-down"></ion-icon>
+	    	</button>
+	    	<button ion-fab class="star" style="display: inline-block;" [disabled]="!buttonsEnabled" 
+	    	(click)="onSuperLike(stackedUsers[0], true, true)">
+	    		<ion-icon class="button_icons" name="star"></ion-icon>
+	    	</button>
+	    	<button ion-fab class="other_buttons" mini style="display: inline-block;" [disabled]="!buttonsEnabled" 
+	    	(click)="onLikeButton(stackedUsers[0], true)">
+	    		<ion-icon class="button_icons" name="thumbs-up"></ion-icon>
+	    	</button>
+	    	<button ion-fab class="other_buttons" mini style="display: inline-block;" [disabled]="isBoost" 
+	    	(click)="onBoost()">
+	    		<ion-icon class="button_icons" name="jet"></ion-icon>
+	    	</button><!-- 
+	    	<button ion-button class="other_buttons" mini style="display: inline-block;" [disabled]="isBoost" 
+	    	(click)="getReward()">
+	    		<ion-icon class="button_icons" name="jet"></ion-icon>
+	    	</button> -->
+    	</div>
+    </div>
+</ion-footer>
