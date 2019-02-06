@@ -39,11 +39,13 @@ export class UserGeoPage {
 	previousTracks = [];
 	geoStatus: boolean;
 
+	image = '../../../assets/imgs/marker1.png';
+
 	myMarker = new google.maps.Marker({		//user marker
 		map: this.map,
 		size: new google.maps.Size(10, 16),
-		center:location
-		//icon: image
+		center:location,
+		icon: this.image
 	});
 
 	matchMarker = new google.maps.Marker({		//match marker 
