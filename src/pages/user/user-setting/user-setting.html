@@ -50,18 +50,18 @@
 			<ion-card-content>
 				<ion-item>
 					<ion-label>Male</ion-label>
-		    		<ion-toggle [(ngModel)]="showGender.male" (ionChange)="showMaleChanged($event)"></ion-toggle>
+		    		<ion-toggle color="danger" [(ngModel)]="showGender.male" (ionChange)="showMaleChanged($event)"></ion-toggle>
 				</ion-item>
 				<ion-item>
 					<ion-label>Female</ion-label>
-		    		<ion-toggle [(ngModel)]="showGender.female" (ionChange)="showFemaleChanged($event)"></ion-toggle>
+		    		<ion-toggle color="danger" [(ngModel)]="showGender.female" (ionChange)="showFemaleChanged($event)"></ion-toggle>
 				</ion-item>
 			</ion-card-content>
 		</ion-card>
 		<ion-card>
 			<ion-item>
 				<ion-label>Account Visibility</ion-label>
-	    		<ion-toggle [(ngModel)]="userVisible"></ion-toggle>
+	    		<ion-toggle color="danger" [(ngModel)]="userVisible"></ion-toggle>
 			</ion-item>
 		</ion-card>
 	</ion-list>

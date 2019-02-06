@@ -9,9 +9,9 @@
   <ion-navbar>
   	<!--<button clear id="back" (click)="goBack()">
   		<ion-icon name="arrow-back" id="back" style="zoom:2.0;"></ion-icon>
-  	</button>-->
+  	</bu
     <ion-title style="display:inline-block">Edit</ion-title>
-    <!--<ion-buttons end>
+   	<ion-buttons end>
 	    <button clear id="back" (click)="goBack()">
 	  		<ion-icon name="md-checkbox-outline" id="back" style="zoom:2.0; display: inline-block; color:white;"></ion-icon>
 	  	</button>
@@ -45,14 +45,21 @@
 		<ion-card-header class="header" text-center>
 			Edit Intro
 		</ion-card-header>
+		<hr>
 		<ion-card-content>
-			<ion-input [(ngModel)]="bio" (ionBlur)="bioChanged()" placeholder="About you"></ion-input>
+
+			<!-- <ion-item lines="none"> -->
+				<ion-textarea [(ngModel)]="bio" (ionBlur)="bioChanged()" placeholder="About you"></ion-textarea>
+				<!-- <textarea #myInput id="myInput" rows="1" maxLength="500" (keyup)="resize()" placeholder="About you" (ionBlur)="bioChanged()" [(ngModel)]="bio"></textarea> -->
+			<!-- </ion-item> -->
+			
 		</ion-card-content>
 	</ion-card>
 	<ion-card class="cards">
 		<ion-card-header class="header" text-center>
 			Edit Interests
 		</ion-card-header>
+		<hr>
 		<ion-card-content (click)="editInterest()">
 			<span class="interests" *ngFor="let interest of interests; let i = index">{{interest}}</span>
 			<!-- <span class="interests" *ngFor="let cat of category; let i = index" #interestItem>{{cat}} </span> -->

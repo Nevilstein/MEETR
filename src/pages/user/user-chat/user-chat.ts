@@ -136,9 +136,9 @@ export class UserChatPage {
     //   chatKey: chatKey, 
     //   userKey: userKey
     // });
-    this.navCtrl.push(UserChatroomPage);
     this.chatProvider.chatKey = chatKey;
     this.chatProvider.receiverKey = userKey;
+    this.navCtrl.push(UserChatroomPage);
   }  
 
   searchMatch(){
