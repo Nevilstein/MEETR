@@ -11,8 +11,9 @@ page-user-draw {
 	}
 	.main_card{
 		height: 15vh;
-		width: 14vw;
+		width: 16vw;
 		display: flex;
+		text-align: center !important;
 		background-color: #091B26;
 	}
 	#num{
@@ -25,8 +26,16 @@ page-user-draw {
 		margin: auto;
 	}
 	.main_card_div{
-		display: flex;
 		float: left;
+		display: flex;
+		word-wrap: normal;
+		position: relative;
+		margin-left: 50%;
+	}
+	.fixed{
+	  float: left;
+      position: relative;
+      margin-left: -50%;
 	}
 	.parent_card{
 		background-image: url('../../../assets/imgs/back_final.jpg'); 
@@ -42,5 +51,17 @@ page-user-draw {
 	}
 	.bottom_text{
 		color: white;
+	}
+	.card_row{
+		text-align: center;
+		display: flex;
+		margin: auto;
+	}
+	.card_col{
+		margin: 0 auto;
+	}
+	.card_icon{
+		color: white;
+		font-size: 40px;
 	}
 }

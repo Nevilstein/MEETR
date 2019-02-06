@@ -47,10 +47,10 @@
 		</ion-slide>
 	</ion-slides>
 	<ion-fab right bottom [hidden]="slides.isEnd()">
-    	<button ion-fab color="secondary" [disabled]="(slideIndex===1 && interests.length<3)" (click)="gotoNext()"><ion-icon name="arrow-dropright"></ion-icon></button>
+    	<button ion-fab color="secondary" [disabled]="(slideIndex===1 && interests.length<3)" (click)="gotoNext()"><ion-icon class="form_icons" name="arrow-dropright"></ion-icon></button>
   	</ion-fab>
   	<ion-fab left bottom [hidden]="slides.isBeginning()">
-    	<button ion-fab color="danger" [disabled]="!back" (click)="goPrev()"><ion-icon name="arrow-dropleft"></ion-icon></button>
+    	<button ion-fab color="danger" [disabled]="!back" (click)="goPrev()"><ion-icon class="form_icons" name="arrow-dropleft"></ion-icon></button>
   	</ion-fab>
   	<ion-fab right bottom [hidden]="!slides.isEnd()">
     	<button ion-fab color="secondary" [disabled]="slideIndex===2 && !isInterest && !isLocation" (click)="formFinished()">Finish</button>

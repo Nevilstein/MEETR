@@ -13,6 +13,8 @@ page-user-reward {
 		height: 23vh;
 		width: 25vw;
 		background-color: #1C416C;
+		margin-left: auto;
+		margin-right: auto;
 	}
 	.question img{
 		border: none;
@@ -38,6 +40,8 @@ page-user-reward {
 	}
 	.draw{
 		display: flex;
+		margin-left: auto;
+		margin-right: auto;
 	}
 	.draw img{
 		height: 15vh;
@@ -50,6 +54,14 @@ page-user-reward {
 		height: 100%;
 	}
 	.secondary_card{
-		margin: auto
+		margin: auto;
+		background: rgba(186,87,94,0.9);
+	}
+	.secondary_card p {
+		color: white;
+	}
+	.card_icon{
+		color: white;
+		font-size: 40px;
 	}
 }

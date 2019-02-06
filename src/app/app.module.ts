@@ -51,6 +51,10 @@ import { UserInterestPageModule } from '../pages/user/user-interest/user-interes
 import { ImageViewPage } from '../pages/image-view/image-view';
 import { ImageViewPageModule } from '../pages/image-view/image-view.module';
 import { PopoverComponent } from '../components/popover/popover';
+import { LocRequirePage } from '../pages/loc-require/loc-require';
+import { LocRequirePageModule } from '../pages/loc-require/loc-require.module';
+import { FormInterestPage } from '../pages/user/form-interest/form-interest';
+import { FormInterestPageModule } from '../pages/user/form-interest/form-interest.module';
 
 //Plugins
 import { AngularFireModule } from 'angularfire2';
@@ -118,7 +122,9 @@ export const firebaseConfig = {
     UserAskPageModule,
     UserDrawPageModule,
     UserRewardPageModule,
-    ImageViewPageModule
+    ImageViewPageModule,
+    LocRequirePageModule,
+    FormInterestPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -137,7 +143,9 @@ export const firebaseConfig = {
     UserFormPage,
     UserGeoPage,
     UserMatchPage,
-    PopoverComponent
+    PopoverComponent,
+    LocRequirePage,
+    FormInterestPage
   ],
   providers: [
     StatusBar,
