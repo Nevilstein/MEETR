@@ -39,8 +39,17 @@ export class UserGeoPage {
 	previousTracks = [];
 	geoStatus: boolean;
 
-	myMarker;
-	matchMarker;
+	myMarker = new google.maps.Marker({		//user marker
+		map: this.map,
+		size: new google.maps.Size(10, 16),
+		center:location
+		//icon: image
+	});
+
+	matchMarker = new google.maps.Marker({		//match marker 
+		map: this.map,
+		size: new google.maps.Size(10, 16),
+	});
 
 	chatKey: string = this.chatProvider.chatKey;
   	receiverKey: string = this.chatProvider.receiverKey;
@@ -84,21 +93,13 @@ export class UserGeoPage {
 			this.map.setZoom(15)
 		}).catch(err => console.log(err));
 		this.startTracking();		//track mainUser
-		//this.trackMatch();		//track userMatch
+		this.trackMatch();		//track userMatch
 	}
 	
 	
 	startTracking(){
 		this.isTracking = true;
 		this.trackedRoute = [];
-		let myMarker = new google.maps.Marker({		//map marker
-			//position: {lat:data.coords.latitude, lng:data.coords.longitude},
-			map: this.map,
-			size: new google.maps.Size(10, 16),
-			center:location
-			//icon: image
-		});
-		
 		this.positionSubscription = this.geolocation.watchPosition()
 		.pipe(
 			filter((p) => p.coords !== undefined)
@@ -107,32 +108,13 @@ export class UserGeoPage {
 			setTimeout(() => {
 				var latlngUser = new google.maps.LatLng(data.coords.latitude, data.coords.longitude);
 				this.trackedRoute.push({lat:data.coords.latitude, lng:data.coords.longitude});
-				//this.redrawPath(this.trackedRoute); //line draw function called
-				//var image = 'assets/imgs/marker1.jpg';
-				myMarker.setPosition(latlngUser);
+				this.myMarker.setMap(this.map);
+				this.myMarker.setPosition(latlngUser); //marker 
 			});
 			this.currentMapTrack.setMap(null);
 		})
 	}
-/*
-	redrawPath(path){
-		if(this.currentMapTrack){
-			this.currentMapTrack.setMap(null);
-		}
 
-		if(path.length > 1){ //line drawing on map
-			this.currentMapTrack.setMap(null);
-			this.currentMapTrack = new google.maps.Polyline({
-				path:path,
-				geodesic:true,
-				strokeColor:'#ff00ff',
-				strokeOpacity:1.0,
-				strokeWeight:3
-			});
-			this.currentMapTrack.setMap(this.map);
-		}
-	}
-*/
 	trackMatch(){
 		this.chatObserver = this.db.list('chat', ref=> ref.child(this.receiverKey).orderByKey().equalTo(this.chatKey))
 			.snapshotChanges().subscribe( snapshot => {
@@ -155,40 +137,12 @@ export class UserGeoPage {
 				});
 			});
 	}
-/*
-	startTrackingMatch(coordinates){
-		this.isTracking = true;
-		this.trackedRoute = [];
 
-		this.positionSubscription = this.geolocation.watchPosition()
-		.pipe(
-			filter((p) => p.coords !== undefined)
-		)
-		.subscribe(data => {
-			setTimeout(() => {
-				this.trackedRoute.push({lat:coordinates.latitude, lng:coordinates.latitude});
-				let Marker2 = new google.maps.Marker({		//map marker
-					position: {lat:coordinates.latitude, lng:coordinates.latitude},
-					map: this.map,
-					size: new google.maps.Size(10, 16),
-				});
-			});
-		})
-	}
-*/
 	startTrackingMatch(coordinates){
 		this.isTracking = true;
 		this.trackedRoute = [];
 		this.trackedRoute.push({lat:coordinates.latitude, lng:coordinates.longitude});
 		var latlngMatch = new google.maps.LatLng(coordinates.latitude, coordinates.longitude);
-		// if(this.matchMarker){
-		// 	this.matchMarker.setMap(null);
-		// }
-		this.matchMarker = new google.maps.Marker({		//map marker
-			//position: {lat:coordinates.latitude, lng:coordinates.longitude},
-			map: this.map,
-			size: new google.maps.Size(10, 16),
-		});
 		this.matchMarker.setMap(this.map);
 		this.matchMarker.setPosition(latlngMatch);
 	}
