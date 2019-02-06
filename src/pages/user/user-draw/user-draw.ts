@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 
 //Plugin
@@ -29,13 +29,13 @@ export class UserDrawPage {
 	coinValues = [1,2,5,10];
 	authKey = this.authProvider.authUser;
 	constructor(public navCtrl: NavController, public navParams: NavParams, private db:AngularFireDatabase,
-		private authProvider: AuthProvider, private view: ViewController) {
+		private authProvider: AuthProvider) {
 	}
 
 	ionViewDidLoad() {
 	    console.log('ionViewDidLoad UserDrawPage');
 	    console.log(this.coinValues);
-		  this.randomizeCards();
+		this.randomizeCards();
 	}
 
   	randomizeCards(){
@@ -71,6 +71,6 @@ export class UserDrawPage {
 	    return Math.floor(Math.random() * (max - min)) + min;
 	  }
     continue(){
-      this.view.dismiss();
+      this.navCtrl.popToRoot();
     }
 }

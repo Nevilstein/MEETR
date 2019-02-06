@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,ViewController } from 'ionic-angular';
 
 //Pages
 import { UserAskPage } from '../user-ask/user-ask';
@@ -31,7 +31,7 @@ export class UserRewardPage {
 	isReward;
 	rewardChecker;
   constructor(public navCtrl: NavController, public navParams: NavParams,private viewCtrl: ViewController, private toolsProvider: ToolsProvider,
-  	private authProvider: AuthProvider, private db: AngularFireDatabase, private modalCtrl: ModalController) {
+  	private authProvider: AuthProvider, private db: AngularFireDatabase) {
   	
   }
 
@@ -58,14 +58,12 @@ export class UserRewardPage {
   	alert("Go to reward help page.");
   }
   rewardCards(){
-  	this.viewCtrl.dismiss();
-    let modal = this.modalCtrl.create(UserDrawPage);
-    modal.present();  
+  	this.navCtrl.pop();
+  	this.navCtrl.push(UserDrawPage);
   }
   rewardAsk(){
-    this.viewCtrl.dismiss();
-    let modal = this.modalCtrl.create(UserAskPage);
-    modal.present();  
+  	this.navCtrl.pop();
+  	this.navCtrl.push(UserAskPage);
   }
   close(){
     this.viewCtrl.dismiss();

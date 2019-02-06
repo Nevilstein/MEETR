@@ -27,35 +27,24 @@ export class UserInterestPage {
 	interestList =[];  //list of interest that must be in database
 	interestdb =[];  //list of interest that must be from interest collection database
 	interestValue: string;
-
   constructor(public navCtrl: NavController, public navParams: NavParams, private viewCtrl: ViewController,
   	private db: AngularFireDatabase, private authProvider: AuthProvider, private toastCtrl: ToastController) {
-  	// this.interestdb = ['Aesthetic', 'Animals', 'Anime & Manga', 'Art', 'Beauty', 'Books',
-   //    'Esports', 'Fashion', 'Food', 'Health & Fitness', 'Horror', 'Kpop/K-Drama', 'LGBTQ+',
-   //    'Movies', 'Music', 'Science', 'Travel', 'TV & Web-Series', 'Video Games', 'Writing'];
+  	this.interestdb = ['Aesthetic', 'Animals', 'Anime & Manga', 'Art', 'Beauty', 'Books',
+      'Esports', 'Fashion', 'Food', 'Health & Fitness', 'Horror', 'Kpop/K-Drama', 'LGBTQ+',
+      'Movies', 'Music', 'Science', 'Travel', 'TV & Web-Series', 'Video Games', 'Writing'];
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad UserInterestPage');
-    this.getInterestsdb();
+    this.getInterests();
     //function to get category list in db
     
   }
 
-  getInterestsdb(){
-    this.db.list('interests', ref=> ref.orderByValue()).query.once('value').then(snapshot =>{
-      snapshot.forEach(element => {
-        let data = element.val();
-        this.interestdb.push(data);
-      });
-    }).then(()=>{
-      this.getInterests();
-    })
-  }
   getInterests(){
   	this.db.list('profile', ref => ref.child(this.authUser))
   		.query.once('value', snapshot => {
-  			let data = snapshot.val();
+  			let data = snapshot.val()
   			this.selectedInterests = Object.assign([], data['interests']);
 	        this.allInterests = this.selectedInterests.concat(this.interestdb);  //add interests shown in option
 	        this.allInterests = this.removeDuples(this.allInterests);

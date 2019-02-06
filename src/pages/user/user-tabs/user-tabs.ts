@@ -79,7 +79,7 @@ export class UserTabsPage {
     this.checkLocationSetting();
     this.listenToPlatform();
     this.listenToMatches();
-    this.trackLocation();
+    // this.trackLocation();
     this.updateActive();
     this.tabChanges();
   }

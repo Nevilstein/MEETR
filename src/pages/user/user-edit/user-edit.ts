@@ -161,8 +161,8 @@ export class UserEditPage {
       // mediaType: this.camera.MediaType.PICTURE
       sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
       allowEdit: true,
-      targetHeight: 960,
-      targetWidth: 960 
+      targetHeight: 640,
+      targetWidth: 640 
     }
 
     this.camera.getPicture(options).then((imageData) => {
