@@ -37,7 +37,8 @@ import { MatchProvider } from '../../../providers/match/match';
 export class UserHomePage {
 
 	authUser = this.authProvider.authUser;  //ID of authenticated user
-
+	show=false;
+	hideMe=true;
 	//list 
 	userList = [];		//list of all users qualified for current user
 	// userBoostList = [];	//list of users who used boosts
@@ -246,6 +247,24 @@ export class UserHomePage {
 				alert("Not enough coins to use extra like.");
 			}
 			if(!isLiked || usedLike || usedExtraLike){
+				if(isLiked){
+					let toast = this.toastCtrl.create({
+		              message: "Liked!",
+		              duration: 1000,
+		              position: 'top',
+		              cssClass: "like_toast",
+		            });
+		            toast.present();
+				}
+				else{
+					let toast = this.toastCtrl.create({
+		              message: "Disliked",
+		              duration: 1000,
+		              position: 'top',
+		              cssClass: "dislike_toast",
+		            });
+		            toast.present();
+				}
 				this.buttonsEnabled = false;
 				this.userLike(swipedUser.id, isLiked);
 		   		var deletePromise = new Promise( resolve => {	//wait for user/card to be destroyed fully
@@ -280,7 +299,8 @@ export class UserHomePage {
 			let toast = this.toastCtrl.create({
 	          message: "You superliked someone",
 	          duration: 2000,
-	          position: 'top'
+	          position: 'top',
+	          cssClass: "superlike_toast",
 	        });
 	        toast.present();
 	        this.buttonsEnabled = false;
@@ -424,7 +444,8 @@ export class UserHomePage {
 				let toast = this.toastCtrl.create({
 	              message: "User boost is up.",
 	              duration: 2000,
-	              position: 'top'
+	              position: 'top',
+	              cssClass: "boost_toast",
 	            });
 	            toast.present();
 				this.isBoost = true;
@@ -921,5 +942,13 @@ export class UserHomePage {
 	}
 	updateProfile(){
 		this.navCtrl.push(UserEditPage);
+	}
+	swiped(){
+		this.hideMe = !this.hideMe;
+		this.show=!this.show;
+	}
+	show_div(){
+		this.hideMe=!this.hideMe;
+		this.show=!this.show;
 	}
 }

@@ -1,3 +1,55 @@
 page-user-reward {
+	.reward_screen{
+		background: rgba(0,0,0,0.7);
 
+	}
+	.draw{
+		height: 23vh;
+		width: 25vw;
+		background-color: #20AD87;
+	}
+	.question{
+		display: flex;
+		height: 23vh;
+		width: 25vw;
+		background-color: #1C416C;
+	}
+	.question img{
+		border: none;
+		margin: auto;
+	}
+	.main_card{
+		display: flex;
+		height: 100%;
+	}
+	.pick_card{
+		background-image: url('../../../assets/imgs/back_final.jpg'); 
+		background-position: center;
+		background-repeat: no-repeat;
+  		background-attachment: fixed;
+		margin: auto;
+	}
+	.bottom{
+		background: rgba(0,0,0,0.4);
+		border-radius: 10px;
+	}
+	.bottom_text{
+		color: white;
+	}
+	.draw{
+		display: flex;
+	}
+	.draw img{
+		height: 15vh;
+		width: auto;
+		border:none;
+		margin: auto;
+	}
+	.secondary_div{
+		display: flex;
+		height: 100%;
+	}
+	.secondary_card{
+		margin: auto
+	}
 }

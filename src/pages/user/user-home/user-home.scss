@@ -18,6 +18,7 @@ page-user-home {
     .card-container {
         height: 90vw;
         width: 90vw;
+        margin-top: 30px;
         animation-name: zoomIn;
         animation-duration: 2s;
     }
@@ -70,8 +71,66 @@ page-user-home {
       color: white;
       padding: 10px;
     }
+    .toolbar-background {
+      background-color: #189dae;
+    }
+    .toolbar{
+      height: 5vh !important;
+    }    .items{
+      background-color: transparent;
+    }
+    .items ion-icon{
+      color: white;
+    }
+    .items button{
+      height: 10px;
+    }
+    .star{
+      background-color:#189dae;
+    }
+    .other_buttons{
+      background-color: #37A4E8;
+    }
+    .show_button{
+      height: 50px;
+    }
+
+}
+.like_toast{
+      text-align:center;
+}
+.like_toast{
+   > div{
+       background-color:#59d699 !important;
+   }
+}
+.dislike_toast{
+  text-align:center;
+}
+.dislike_toast{
+  > div{
+       background-color:#d65963  !important;
+   }
 }
 
+.superlike_toast{
+  text-align:center;
+}
+
+.superlike_toast{
+  > div{
+       background-color:#59a1d6  !important;
+   }
+}
+
+.boost_toast{
+  text-align:center;
+}
+.boost_toast{
+  > div{
+       background-color:#d6b059  !important;
+   }
+}
 //loading css{
 
 @keyframes lds-gear {

@@ -5,15 +5,19 @@
   Ionic pages and navigation.
 -->
 
-<ion-content *ngIf="questionReady" padding>
-	<ion-card>
-		<ion-card-header>{{currentQuestion.name}}</ion-card-header>
-		<ion-card-content>
-			<ion-input [(ngModel)]="myAnswer" placeholder="Enter your answer"></ion-input>
-			<div text-right>
-				<button clear ion-button (click)="cancel()">CANCEL</button>
-				<button clear ion-button (click)="answer(currentQuestion)">OK</button>
-			</div>
-		</ion-card-content>
-	</ion-card>
+<ion-content class="ask_content" *ngIf="questionReady" padding>
+	<div class="main_div">
+		<ion-card class="main_card">
+			<ion-card-header>
+				<h3 class="qheader">{{currentQuestion.name}}</h3>
+			</ion-card-header>
+			<ion-card-content>
+				<ion-input class="qans" [(ngModel)]="myAnswer" placeholder="Enter your answer"></ion-input>
+				<div text-right>
+					<button color="light" clear ion-button (click)="cancel()">CANCEL</button>
+					<button color="light" clear ion-button (click)="answer(currentQuestion)">OK</button>
+				</div>
+			</ion-card-content>
+		</ion-card>
+	</div>
 </ion-content>

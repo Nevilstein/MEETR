@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,ViewController } from 'ionic-angular';
 
 //Pages
 import { UserAskPage } from '../user-ask/user-ask';
@@ -30,7 +30,7 @@ export class UserRewardPage {
 	rewardTime = 86400000;	//day in milliseconds //refresh of reward
 	isReward;
 	rewardChecker;
-  constructor(public navCtrl: NavController, public navParams: NavParams, private toolsProvider: ToolsProvider,
+  constructor(public navCtrl: NavController, public navParams: NavParams,private viewCtrl: ViewController, private toolsProvider: ToolsProvider,
   	private authProvider: AuthProvider, private db: AngularFireDatabase) {
   	
   }
@@ -64,5 +64,8 @@ export class UserRewardPage {
   rewardAsk(){
   	this.navCtrl.pop();
   	this.navCtrl.push(UserAskPage);
+  }
+  close(){
+    this.viewCtrl.dismiss();
   }
 }

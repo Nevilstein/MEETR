@@ -43,6 +43,7 @@ export class UserEditPage {
   currentImage:string;
   category = [];
   questions = [];
+  backQuestions = [];
 
   quizDuration = 7*86400000; //7 days in milliseconds is the duration of all questions
   

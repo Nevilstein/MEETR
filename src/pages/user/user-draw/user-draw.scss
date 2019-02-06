@@ -1,3 +1,46 @@
 page-user-draw {
-
+	.draw{
+		background: rgba(0,0,0,0.7);
+	}
+	.maindiv{
+		display: flex;
+		height: 100%;
+	}
+	.parent_card{
+		margin: auto;
+	}
+	.main_card{
+		height: 15vh;
+		width: 14vw;
+		display: flex;
+		background-color: #091B26;
+	}
+	#num{
+		margin:auto;
+	}
+	.main_card img{
+		height: 10vh;
+		width: auto;
+		border: none;
+		margin: auto;
+	}
+	.main_card_div{
+		display: flex;
+		float: left;
+	}
+	.parent_card{
+		background-image: url('../../../assets/imgs/back_final.jpg'); 
+		background-position: center;
+		background-repeat: no-repeat;
+  		background-attachment: fixed;
+	}
+	.bottom{
+		background: rgba(0,0,0,0.4);
+		border-radius: 10px;
+		text-align: center;
+		padding: 5px;
+	}
+	.bottom_text{
+		color: white;
+	}
 }
