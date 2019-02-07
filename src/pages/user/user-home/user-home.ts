@@ -583,6 +583,7 @@ export class UserHomePage {
 			}
 		});
 		Promise.all([malePromise, femalePromise]).then( () =>{	//wait to retrieve userbyGender promise to get values
+			console.log("Users", this.userList);
 			this.filterByInterests();
 			// this.filterByLocation();
 		});
@@ -603,6 +604,7 @@ export class UserHomePage {
 			}
 		});
 		this.userList = newList;
+		console.log("Interests", this.userList);
 		this.filterByLocation();
 	}
 	filterByLocation(){
@@ -626,6 +628,7 @@ export class UserHomePage {
 								latitude: this.myCoordinates['latitude'],
 								longitude: this.myCoordinates['longitude']
 							}
+							console.log(otherPoint, myPoint);
 							let isInRange = geolib.isPointInCircle(
 							    otherPoint,myPoint,
 							    this.myProfile['maxDistance']*1000);	//check if in distance preference
@@ -643,6 +646,7 @@ export class UserHomePage {
 		});
 		locationPromise.then(() => {
 			this.userList = newList;	//change update current list
+			console.log("Location", this.userList);
 			this.filterByAge();
 		});
 	}
@@ -685,6 +689,7 @@ export class UserHomePage {
 		});
 		agePromise.then(() => {
 			this.userList = newList;
+			console.log("Age", this.userList);
 			this.filterByActive();
 		});
 	}
@@ -719,53 +724,72 @@ export class UserHomePage {
 		});
 		activePromise.then(()=>{
 			this.userList = newList;
-			this.checkLikeStatus();
+			console.log("Active", this.userList);
+			this.checkMatchStatus();
 		});
 	}
-	checkLikeStatus(){
+	checkMatchStatus(){
 		let newList = [];
 		let userLength = this.userList.length;
-		var likedPromise = new Promise(resolve =>{
+		var matchPromise = new Promise(resolve =>{
 			if(!(userLength > 0)){
 				resolve(true);
 			}
 			this.userList.forEach( (value, index) => {
 				this.db.list('match', ref => ref.child(this.authUser).child(value.id))
 				.query.once('value').then( matchSnap => {
-					if(!matchSnap.val()){	//if not found in match collection
-						this.db.list('likes', ref => ref.child(this.authUser).child(value.id))
-						.query.once('value').then( likeSnap =>{
-							if(likeSnap.val()){	//if liked/unliked
-								let data = likeSnap.val();
-								let dayUnix = 86400000;
-								let timeUnliked = moment().valueOf()-data.timestamp;
-								if(!data.likes && timeUnliked >= dayUnix){	//if unliked and in cooldown(1 day cooldown)
-									newList.push(value);
-								}
-							}
-							else{	//if not liked/unliked yet
-								newList.push(value);
-							}
-						}).then(() =>{
-							if(index+1 === userLength){
-								resolve(true);
-							}
-						});
+					if(matchSnap.val() === null){
+						newList.push(value);
 					}
-					else{	//if found in match
-						if(index+1 === userLength){
-							resolve(true);
+					if(index+1 === userLength){
+						resolve(true);
+					}
+				})
+			})
+		});
+		matchPromise.then(() =>{
+			this.userList = newList;
+			console.log("Match", this.userList);
+			this.checkLikeStatus(newList);
+		});
+	}
+
+	checkLikeStatus(userList){
+		let newList = [];
+		let userLength = userList.length;
+		console.log(userList);
+		console.log("like1", userLength);
+		var likedPromise = new Promise(resolve =>{
+			if(!(userLength > 0)){
+				resolve(true);
+			}
+			userList.forEach( (value, index) => {
+				this.db.list('likes', ref => ref.child(this.authUser).child(value.id))
+				.query.once('value').then( likeSnap =>{
+					if(likeSnap.val() !== null){	//if liked/unliked
+						let data = likeSnap.val();
+						let dayUnix = 86400000;
+						let timeUnliked = moment().valueOf()-data.timestamp;
+						if(!data.likes && timeUnliked >= dayUnix){	//if unliked and in cooldown(1 day cooldown)
+							newList.push(value);
 						}
+					}
+					else{	//if not liked/unliked yet
+						newList.push(value);
+					}
+					if(index+1 === userLength){
+						resolve(true);
 					}
 				})
 			})
 		});
 		likedPromise.then(() =>{
 			this.userList = newList;
-			this.listUsers();
+			console.log("Like", this.userList);
+			this.checkDuplicates();
+			
 		});
 	}
-
 	listUsers(){	//listing users with higher chances
 		let likerList = [];	//list of users who liked you
 		let superList = [];	//list of users who superliked
@@ -811,10 +835,21 @@ export class UserHomePage {
 			this.userLikerList = likerList;
 			this.userSuperList = superList;
 			this.userBoostList = boostList;
+			// this.checkDuplicates();
 			this.stackUser();
 		});
 	}
 
+	checkDuplicates(){
+		let newList = [];
+		for(let i =0;i<this.userList.length;i++){
+        if(newList.findIndex(item => item.id === this.userList[i]['id']) === -1) {
+           	newList.push(this.userList[i]);
+           }    
+        }
+        this.userList = newList;
+        this.listUsers();
+	}
 	stackUser(){
 		console.log('stack');
 		let numOfCards = ((this.userList.length<20) ? this.userList.length : 20);	//safety check if low count of users

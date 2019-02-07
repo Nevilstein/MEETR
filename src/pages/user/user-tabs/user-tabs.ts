@@ -68,6 +68,8 @@ export class UserTabsPage {
 
   isStart: boolean = true;
   locCheckOpen: boolean = false;
+
+  deregisterFunction
   // count=0;
 
   // ngOnDestroy(){
@@ -86,8 +88,14 @@ export class UserTabsPage {
     // this.trackLocation();
     this.updateActive();
     this.tabChanges();
-    this.diagnostic.registerLocationStateChangeHandler( () =>{  //check if location setting changed
-      this.checkLocationSetting();
+    this.deregisterFunction = this.diagnostic.registerLocationStateChangeHandler( () =>{  //check if location setting changed
+      if(this.navCtrl.getActive().name !== "UserTabsPage"){
+        throw "Location State is in the wrong page.";
+        // console.log(this.deregisterFunction());
+      }
+      else{
+        this.checkLocationSetting();
+      }
     })
   }
 
