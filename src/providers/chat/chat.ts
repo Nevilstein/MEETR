@@ -14,10 +14,13 @@ import moment from 'moment';
 */
 @Injectable()
 export class ChatProvider {
-	authKey = this.fireAuth.auth.currentUser.uid;
+  authKey = this.fireAuth.auth.currentUser.uid;
   chatKey: string;
   receiverKey: string;
   userProfile:any;
+
+  myLocation: any;
+  meetupRequest: any;
   // chatList = [];
 
   //Observer/Subscription
@@ -28,7 +31,7 @@ export class ChatProvider {
   }
 
   // getChat(){
-  	
+    
   // }
 
   // messageDateFormat(date){

@@ -1,0 +1,53 @@
+<!--
+  Generated template for the LocationRequestPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>location-request</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+	<ion-label>Date</ion-label>
+	<ion-item>
+		{{meetupDetails?.date}}
+	</ion-item>
+	<ion-label>Time</ion-label>
+	<ion-item>
+		{{meetupDetails?.time}}
+	</ion-item>
+	<ion-item>
+		<ion-card>
+			<div>
+				<b>{{placeDetails?.name}}</b>
+				<p>{{placeDetails?.address}}</p>
+			</div>
+		</ion-card>
+		<div #map id="map"></div>
+	</ion-item>
+	<ion-item *ngIf="meetupDetails?.receiverStatus === 'Pending' && !meetupDetails?.isCancelled && meetupDetails?.sender !== authKey">
+		<button ion-button (click)="acceptRequest()">Accept</button>
+		<button ion-button (click)="declineRequest()">>Decline</button>
+	</ion-item>
+	<ion-item *ngIf="meetupDetails?.senderStatus === 'Accepted' && !meetupDetails?.isCancelled">
+		<button ion-button (click)="cancelMeetup()">Cancel Meetup</button>
+	</ion-item>
+	<ion-item *ngIf="meetupDetails?.receiverStatus === 'Accepted' && meetupDetails?.sender !== authKey && !meetupDetails?.isCancelled">
+		<button ion-button (click)="cancelMeetup()">Cancel Meetup</button>
+	</ion-item>
+	<ion-item *ngIf="meetupDetails?.receiverStatus === 'Declined' && meetupDetails?.sender === authKey">
+		Oops, current meetup request has been declined.
+	</ion-item>
+	<ion-item *ngIf="meetupDetails?.receiverStatus === 'Declined' && meetupDetails?.sender !== authKey">
+		You declined the current meetup.
+	</ion-item>
+	<ion-item *ngIf="meetupDetails?.isCancelled">
+		Oops, current meetup request has been cancelled.
+	</ion-item>
+</ion-content>

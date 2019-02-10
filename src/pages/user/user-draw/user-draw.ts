@@ -22,54 +22,54 @@ import { AuthProvider } from '../../../providers/auth/auth';
 })
 export class UserDrawPage {
 
-	coinCards = [];
-	hasChosen = false;
-	cardNumber;
-	coinEarned = 0;
-	coinValues = [1,2,5,10];
-	authKey = this.authProvider.authUser;
-	constructor(public navCtrl: NavController, public navParams: NavParams, private db:AngularFireDatabase,
-		private authProvider: AuthProvider, private view: ViewController) {
-	}
+  coinCards = [];
+  hasChosen = false;
+  cardNumber;
+  coinEarned = 0;
+  coinValues = [1,2,5,10];
+  authKey = this.authProvider.authUser;
+  constructor(public navCtrl: NavController, public navParams: NavParams, private db:AngularFireDatabase,
+    private authProvider: AuthProvider, private view: ViewController) {
+  }
 
-	ionViewDidLoad() {
-	    console.log('ionViewDidLoad UserDrawPage');
-	    console.log(this.coinValues);
-		  this.randomizeCards();
-	}
+  ionViewDidLoad() {
+      console.log('ionViewDidLoad UserDrawPage');
+      console.log(this.coinValues);
+      this.randomizeCards();
+  }
 
-  	randomizeCards(){
-  		while(this.coinCards.length<3){
-  			let num = this.getRandomInt(0, this.coinValues.length);
-  			if(!(this.coinCards.indexOf(this.coinValues[num]) > -1)){
-  				this.coinCards.push(this.coinValues[num]);
-  			}
-  		}
-  		console.log(this.coinCards);
-  	}
+    randomizeCards(){
+      while(this.coinCards.length<3){
+        let num = this.getRandomInt(0, this.coinValues.length);
+        if(!(this.coinCards.indexOf(this.coinValues[num]) > -1)){
+          this.coinCards.push(this.coinValues[num]);
+        }
+      }
+      console.log(this.coinCards);
+    }
 
-  	pickCard(coin, cardNumber){
-  		if(!this.hasChosen){
-  			this.cardNumber = cardNumber;
-  			this.coinEarned = coin;
-  			this.db.list('tools', ref=> ref.child(this.authKey))
-  			.query.once('value').then(toolSnap =>{
-  				let data = toolSnap.val();
-  				let coinCount = data['coins'];
-  				this.db.list('tools').update(this.authKey, {
-  					coins: coinCount+coin,
-  					dailyReward: firebase.database.ServerValue.TIMESTAMP
-  				});
-  			});
-  			this.hasChosen = true;
-  		}
-  	}
+    pickCard(coin, cardNumber){
+      if(!this.hasChosen){
+        this.cardNumber = cardNumber;
+        this.coinEarned = coin;
+        this.db.list('tools', ref=> ref.child(this.authKey))
+        .query.once('value').then(toolSnap =>{
+          let data = toolSnap.val();
+          let coinCount = data['coins'];
+          this.db.list('tools').update(this.authKey, {
+            coins: coinCount+coin,
+            dailyReward: firebase.database.ServerValue.TIMESTAMP
+          });
+        });
+        this.hasChosen = true;
+      }
+    }
 
-  	getRandomInt(min, max) {	//sample to keep cards going
-	    min = Math.ceil(min);
-	    max = Math.floor(max);
-	    return Math.floor(Math.random() * (max - min)) + min;
-	  }
+    getRandomInt(min, max) {  //sample to keep cards going
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min)) + min;
+    }
     continue(){
       this.view.dismiss();
     }

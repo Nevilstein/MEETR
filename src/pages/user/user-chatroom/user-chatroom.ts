@@ -4,6 +4,10 @@ import { IonicPage, NavController, NavParams, PopoverController,
 
 //Pages
 import { UserGeoPage } from '../user-geo/user-geo';
+import { UserMeetupPage } from '../user-meetup/user-meetup';
+import { UserCheckPage } from '../user-check/user-check';
+import { LocationSelectPage } from '../../location-select/location-select';
+import { LocationRequestPage } from '../../location-request/location-request';
 import { ImageViewPage } from '../../image-view/image-view';
 import { PopoverComponent } from '../../../components/popover/popover';
 
@@ -41,11 +45,11 @@ export class UserChatroomPage {
   imageMessage = [];
   loadingImage = [];
   messageEmpty: boolean = true;
-  geoStatus = { sender: false, receiver: false}
+  geoStatus = { sender: null, receiver: null}
   matchDate;
   unseenCount:number;
   uploadTask:AngularFireUploadTask;
-
+  hasMeetup:boolean = true;
 
   userPhoto: string;
   userFirstName: string;
@@ -54,6 +58,7 @@ export class UserChatroomPage {
   statusDate: number;
   isActive: boolean;
   userProfile;
+  meetDetails;
 
   //Observer/Subscription
   chatObserver;
@@ -63,6 +68,7 @@ export class UserChatroomPage {
   profileObserver;
   questionObserver;
   uploadObserver;
+  meetupObserver;
   timeInterval;  //gets the active time interval of user while in chat
 
   //Promises
@@ -80,12 +86,14 @@ export class UserChatroomPage {
     private modalCtrl: ModalController) {
   }
   ionViewWillLoad(){
+    this.getUserData();
+    this.getChatData();
+    this.getMeetups();
+
     this.timeInterval = setInterval(() =>{
       this.activeWhen = this.getActiveStatus();  
     }, 60000)
-    this.getUserData();
-    this.getChatData();
-
+    
     this.mutationObserver = new MutationObserver((mutations) => {
         this.content.scrollToBottom(0);
     });
@@ -105,6 +113,7 @@ export class UserChatroomPage {
     this.chatObserver2.unsubscribe();
     this.messageObserver.unsubscribe();
     this.profileObserver.unsubscribe();
+    // this.meetupObserver.unsubscribe();
     clearInterval(this.timeInterval);
     this.navCtrl.popToRoot();
   }
@@ -141,6 +150,22 @@ export class UserChatroomPage {
         snapshot.forEach( element =>{
           let data = element.payload.val();
           data['id'] = element.key;
+          //If meetups available and geostatus is not null, meaning not start of page and geostatus is changed
+          if(this.meetDetails && this.geoStatus.receiver!==null && data['geoStatus']!==this.geoStatus.receiver){ 
+            var message;
+            if(data['geoStatus']){
+              message = this.userFirstName+" can now be tracked on the map.";
+            }
+            else{
+              message = this.userFirstName+" turned off location tracking.";
+            }
+            let toast = this.toastCtrl.create({
+              message: message,
+              duration: 2000,
+              position: 'top'
+            });
+            toast.present();
+          }
           this.geoStatus = {sender:this.geoStatus.sender, receiver:data['geoStatus']};
           this.unseenCount = data['unseenCount'];
         });
@@ -191,6 +216,40 @@ export class UserChatroomPage {
            this.userFirstName = data['firstName'];
          });
          this.profilePromise = Promise.resolve(true);
+      });
+  }
+
+  getMeetups(){
+    this.meetupObserver = this.db.list('meetups', ref => ref.child(this.chatKey)
+      .orderByChild('timestamp').limitToLast(1)).snapshotChanges().subscribe(snapshot =>{
+        if(!(snapshot.length>0)){
+          this.hasMeetup = false;
+        }
+        snapshot.forEach( (element, index) => {
+          if(index === 0 ){
+            let dateNow = moment().valueOf();
+            let data = element.payload.val();
+            data['id'] = element.key;
+            let minutes = 1800000;  //30 minutes allowance
+            let dateTime = moment(data['date']+" "+data['time']).valueOf()+minutes;
+            data['hasStarted'] = (data['senderStatus']==='Accepted' && data['receiverStatus']==='Accepted')? true: false;
+            let isDeclined = (data['senderStatus']==='Declined' || data['receiverStatus']==='Declined')? true: false;
+            if(dateNow <= dateTime){
+              if(!data['isCancelled'] && (!isDeclined || data['hasStarted'])){
+                this.hasMeetup = true;
+              }
+              else{
+                this.hasMeetup = false;
+              }
+              this.meetDetails = data;
+              this.chatProvider.meetupRequest = data;  //pass latest meetUpRequest to chat provider
+            }
+            else{
+              //expired update
+              this.hasMeetup = false;
+            }
+          }
+        });
       });
   }
 
@@ -316,13 +375,26 @@ export class UserChatroomPage {
     this.modalCtrl.create(ImageViewPage, {image: imageUrl}).present();
   }
 
-  sendQuestion(){ 
-
-  }
-
   gotoGeo(){
     this.navCtrl.push(UserGeoPage);
   }
+
+  meetup(){
+    // this.navCtrl.push(LocationSelectPage);
+    let modal = this.modalCtrl.create(UserMeetupPage);
+    modal.present();
+  }
+
+  checkMeetup(){
+    let modal = this.modalCtrl.create(LocationRequestPage);
+    modal.present();
+  }
+
+  checkProfile(){
+    let modal = this.modalCtrl.create(UserCheckPage, {user: this.userProfile});
+    modal.present();
+  }
+
   presentPopover(myEvent) {
     let popover = this.popoverCtrl.create(PopoverComponent, {
       chatKey: this.chatKey,
