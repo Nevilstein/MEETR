@@ -85,14 +85,14 @@
   
 </ion-content>
 
-<ion-footer>
+<ion-footer style="background-color: white;">
     <ion-row>
         <ion-col col-1>
            <button id="pin" (click)="show_div()">
               <ion-icon name="apps"></ion-icon>
             </button>
         </ion-col>
-        <ion-col col-8>
+        <ion-col col-7>
              <ion-input type="text" [(ngModel)]="myMessage" (ionChange)="checkMessage()" placeholder="Type something..." id="input_box"></ion-input>  
              <!-- Change to text area? -->
         </ion-col>
@@ -107,7 +107,7 @@
             </button>
         </ion-col>
     </ion-row>
-    <ion-row *ngIf="show" text-center>
+    <ion-row id="footer1" *ngIf="show" text-center>
       <ion-col>
            <button id="pin" [disabled]="hasMeetup" (click)="meetup()">
               <ion-icon name="compass"></ion-icon>

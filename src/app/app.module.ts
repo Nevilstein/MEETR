@@ -52,6 +52,16 @@ import { UserMeetupPage } from '../pages/user/user-meetup/user-meetup';
 import { UserMeetupPageModule } from '../pages/user/user-meetup/user-meetup.module';
 import { UserTutorialPage } from '../pages/user/user-tutorial/user-tutorial';
 import { UserTutorialPageModule } from '../pages/user/user-tutorial/user-tutorial.module';
+import { UserMatchTutorialPageModule } from '../pages/user/user-match-tutorial/user-match-tutorial.module';
+import { UserMatchTutorialPage } from '../pages/user/user-match-tutorial/user-match-tutorial';
+import { UserRewardTutorialPage } from '../pages/user/user-reward-tutorial/user-reward-tutorial';
+import { UserRewardTutorialPageModule } from '../pages/user/user-reward-tutorial/user-reward-tutorial.module';
+import { UserChatTutorialPageModule } from '../pages/user/user-chat-tutorial/user-chat-tutorial.module';
+import { UserChatTutorialPage } from '../pages/user/user-chat-tutorial/user-chat-tutorial';
+
+
+
+
 import { ImageViewPage } from '../pages/image-view/image-view';
 import { ImageViewPageModule } from '../pages/image-view/image-view.module';
 import { PopoverComponent } from '../components/popover/popover';
@@ -136,7 +146,10 @@ export const firebaseConfig = {
     LocRequirePageModule,
     FormInterestPageModule,
     LocationSelectPageModule,
-    LocationRequestPageModule
+    LocationRequestPageModule,
+    UserRewardTutorialPageModule,
+    UserMatchTutorialPageModule,
+    UserChatTutorialPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -157,7 +170,11 @@ export const firebaseConfig = {
     UserMatchPage,
     PopoverComponent,
     LocRequirePage,
-    FormInterestPage
+    FormInterestPage,
+    UserRewardTutorialPage,
+    UserChatTutorialPage,
+    UserMatchTutorialPage
+
   ],
   providers: [
     StatusBar,
