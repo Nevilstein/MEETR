@@ -58,10 +58,18 @@
 	<hr *ngIf="questions.length > 0">
 	<div padding *ngIf="questions.length > 0">
 		<h4 class="head">Questions</h4>
-		<div padding *ngFor="let question of questions">
+		<ion-card *ngFor="let question of questions">
+			<ion-card-header style="word-wrap: break-word; white-space: normal;" text-center>
+				<h2>{{question.question}}</h2>
+			</ion-card-header><hr>
+			<ion-card-content text-center>
+				<p>{{question.answer}}</p>
+			</ion-card-content>
+		</ion-card>
+		<!-- <div padding *ngFor="let question of questions">
 			<div>{{question.question}}</div>
 			<div>{{question.answer}}</div>
-		</div>
+		</div> -->
 		<!-- <p class="interests" *ngFor="let interest of userInterests">
 			{{interest}}
 		</p> -->

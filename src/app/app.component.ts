@@ -14,7 +14,7 @@ import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any=LoginPage;
+  rootPage: any;
   showSplash = true;
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private fb: Facebook) {
     platform.ready().then(() => {
@@ -22,6 +22,7 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       // statusBar.styleDefault();
       // splashScreen.hide();
+      this.rootPage = LoginPage;
       statusBar.styleLightContent();
       splashScreen.hide();
       timer(4000).subscribe(() => this.showSplash = false)

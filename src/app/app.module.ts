@@ -48,6 +48,8 @@ import { UserRewardPage } from '../pages/user/user-reward/user-reward';
 import { UserRewardPageModule } from '../pages/user/user-reward/user-reward.module';
 import { UserInterestPage } from '../pages/user/user-interest/user-interest';
 import { UserInterestPageModule } from '../pages/user/user-interest/user-interest.module';
+import { UserTutorialPageModule } from '../pages/user/user-tutorial/user-tutorial.module';
+import { UserTutorialPage } from '../pages/user/user-tutorial/user-tutorial';
 import { ImageViewPage } from '../pages/image-view/image-view';
 import { ImageViewPageModule } from '../pages/image-view/image-view.module';
 import { PopoverComponent } from '../components/popover/popover';
@@ -124,7 +126,8 @@ export const firebaseConfig = {
     UserRewardPageModule,
     ImageViewPageModule,
     LocRequirePageModule,
-    FormInterestPageModule
+    FormInterestPageModule,
+    UserTutorialPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -145,7 +148,8 @@ export const firebaseConfig = {
     UserMatchPage,
     PopoverComponent,
     LocRequirePage,
-    FormInterestPage
+    FormInterestPage,
+    UserTutorialPage
   ],
   providers: [
     StatusBar,

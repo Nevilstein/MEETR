@@ -13,9 +13,9 @@
 		<button ion-button *ngIf="show" (tap)="show_div()">Show</button>
 		<ion-toolbar class="toolbar" (swipe)="swiped()" *ngIf="hideMe">
 			<!-- <button ion-button (click)="getReward()">Open Daily Reward</button> -->
-			<div style="display: flex;">
+			<div>
 				<ion-grid>
-					<ion-row>
+					<ion-row text-center>
 						<ion-col col-4 text-center>
 							<ion-item class="items">
 							  <ion-icon name="thumbs-up" item-start></ion-icon>
@@ -30,8 +30,8 @@
 	    				</ion-col>
 	    				<ion-col col-4 text-center>
 	    					<ion-item class="items" (click)="getReward()">
-	    						<ion-icon name="game-controller-b" item-start></ion-icon>
-	    						<ion-badge ion-button item-start style="box-shadow: none;">Open</ion-badge>
+	    						<ion-icon id="game" name="game-controller-b" item-start></ion-icon>
+	    						<ion-badge ion-button item-start style="box-shadow: none;">Reward</ion-badge>
 	    					</ion-item>
 	    				</ion-col>
 	    			</ion-row>
@@ -58,7 +58,8 @@
 		</ion-row>
 		<div *ngIf="findUserCount === 10">
 			<div class="no_user">
-				<p>No users around, update your <a (click)="updateProfile()">profile.</a></p>
+				<p>Oops! no users found with matching interest.</p>
+				<p class="change">Try changing your preferences <a (click)="updateProfile()">here.</a></p>
 			</div>
 		</div>
 	</ion-grid>

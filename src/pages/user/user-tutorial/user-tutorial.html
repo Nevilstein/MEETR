@@ -1,0 +1,54 @@
+<!--
+  Generated template for the UserTutorialPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Tutorial</ion-title>
+    <ion-buttons end>
+	    <button clear id="back">
+	  		<p style="color: white;">Skip</p>
+	  	</button>
+  	</ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+	<ion-slides pager>
+
+		<ion-slide class="slide1">
+			<h3>Swiping!</h3>
+			<img src="../../../assets/gifs/swipe.gif">
+			<p>Swiping the card right means you liked the user</p>
+			<p>Swiping the card left means you disliked the user</p>
+		</ion-slide>
+
+		<ion-slide  class="slide2">
+			<div class="div2">
+				<h3>Checking out profiles!</h3>
+				<img src="../../../assets/gifs/checkprofile.gif">
+				<p>Tapping the eye icon on the card shows you information about the user</p>
+			</div>
+		</ion-slide>
+
+		<ion-slide>
+			<div class="div3">
+				<h3>Special Buttons</h3>
+				<img src="../../../assets/gifs/buttons.gif">
+				<p>Buttons at the bottom of the screen consumes in-app cash.</p>
+				<p><ion-icon style="color: #7d68d1;" name="rewind"></ion-icon> button gives you the ability to return the user to the stack upon disliking.</p>
+				<p><ion-icon style="color: #d65963;" name="md-thumbs-down"></ion-icon> button dislikes the user.</p>
+				<p><ion-icon style="color: #59a1d6;" name="star"></ion-icon> button superlikes the user. Has a high chance to be liked back.</p>
+				<p><ion-icon style="color: #59d699;" name="md-thumbs-up"></ion-icon> button likes the user.</p>
+				<p><ion-icon style="color: #d6b059;" name="jet"></ion-icon> button boosts your profile. Makes you appear on top of stack.</p>
+			</div>
+		</ion-slide>
+
+	</ion-slides>
+
+</ion-content>

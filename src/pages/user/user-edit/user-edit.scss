@@ -16,19 +16,22 @@ page-user-edit {
 		// width: 25vw; 
 		height: 19vh;
 		width: 33vw; 
-		margin-right: 10px; 
+		position: relative;
+		margin-left: 5px;
+		margin-right: 5px;
 		margin-bottom: 10px;
-		float: left;
-		text-align: center;
 		border-radius: 10px;
+		object-fit: cover;
 
 	}
 	.default_image ion-icon{
 		font-size: 35px;
-		float: left;
-		margin-left: -10vw;
-		margin-top: -1vh;
-		color: #189dae;
+		float: right;
+		margin-top: -21.5vh;
+		margin-left: 7.5vw;
+		position:absolute;
+		z-index: 2;
+		color: #f76f81;
 	}
 	.other_image ion-icon{
 		position: absolute;
@@ -37,13 +40,14 @@ page-user-edit {
 		margin-top: -1vh;
 	}
 	#images{
+		position: relative;
 		background-color: whitesmoke; 
 		text-align: center;
 		height: 19vh;
 		width: 33vw; 
+		margin-left: 5px;
+		margin-right: 5px;
 		margin-bottom:10px;
-		margin-right: 10px; 
-		float: left;
 		border-style: dashed;
 		border-width: 2px;
 		border-color: gray;
@@ -92,18 +96,10 @@ page-user-edit {
 		border-color: #35324e;
 	}
 	.pics{
-		text-align: center;
-		align-self: center;
-		padding:10px;
-		margin-left: 5vw;
-	}
-	.wrapper{
-		margin-left:50%;
-	}
-	.main_card{
-		text-align:center;
-	}
-	.loading{
-		margin-top: -10vh;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+  		justify-content: center;
+  		padding: 10px 0px;
 	}
 }
