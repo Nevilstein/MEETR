@@ -45,6 +45,7 @@ export class UserChatPage {
   ionViewWillLoad() {
     console.log('ionViewDidLoad UserChatPage');
     this.loader = this.loadingCtrl.create({
+      content: 'Please wait..'
     });
     this.loader.present();
     this.getChats();

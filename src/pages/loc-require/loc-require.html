@@ -5,12 +5,20 @@
   Ionic pages and navigation.
 -->
 
-<ion-content padding>
+<ion-content class="req" padding>
 	<div *ngIf="!isRetry">
-		SHOW SOMETHING HERE?? LIKE LOGO ??
+		<div class="main">
+			<img src="../../assets/icon/logo_2.png" >
+		</div>
 	</div>
 	<div *ngIf="isRetry">
-		<p>Please enable your location in order to continue using Meetr.</p>
-		<button ion-button (click)="locationRequest()">Enable Location</button>
+		<div class="second_div">
+			<img src="../../assets/icon/logo_2.png" >
+		</div>
+		<div class="text" text-center>
+			<p>Oh no! Something went wrong :(</p>
+			<p>Please try enabling your location and try again</p>
+			<button ion-button (click)="locationRequest()">Enable Location</button>
+		</div>
 	</div>
 </ion-content>

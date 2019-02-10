@@ -3,7 +3,8 @@ page-user-check {
  	 	background-color: #29263E;
 	}
 	.check{
-		background-image: url('../../../assets/imgs/texture-01.jpg') !important;
+		//background-image: url('../../../assets/imgs/texture-01.jpg') !important;
+		background-color: whitesmoke;
 	}
 	ion-slide{
 		height: 40vh !important;
@@ -21,6 +22,7 @@ page-user-check {
 	}
 	.interests{
 		background-color: #2F6690;
+		text-align: center;
 		margin: 2px 5px;
 		padding: 5px 10px;
 		display: inline-flex;
@@ -28,6 +30,5 @@ page-user-check {
 		color: white;
 		padding: 5px 10px;
 		display: inline-flex;
-		min-width: 50px;
 	}
 }

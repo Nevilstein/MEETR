@@ -298,7 +298,7 @@ export class UserHomePage {
 	onSuperLike(swipedUser, isLiked, superlike){
 		if(this.myCoins>=superlike){
 			let toast = this.toastCtrl.create({
-	          message: "You superliked someone",
+	          message: "Superliked!",
 	          duration: 2000,
 	          position: 'top',
 	          cssClass: "superlike_toast",
@@ -696,7 +696,7 @@ export class UserHomePage {
 	filterByActive(){
 		let newList = [];
 		let userLength = this.userList.length;
-		let activeTime = 86400000;	//day in milliseconds	//only active 1 day ago
+		let activeTime = 604800000;	//day in milliseconds	//only active 1 day ago
 		let dateNow = moment().valueOf();
 		var activePromise = new Promise(resolve =>{
 			if(!(userLength > 0)){

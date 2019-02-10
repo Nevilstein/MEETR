@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, App,ToastController  } from 'ionic
 
 //Pages
 import { UserProfilePage } from '../user-profile/user-profile';
+import { UserTutorialPage} from '../user-tutorial/user-tutorial';
 import { LoginPage } from '../../login/login';
 
 //Plugin
@@ -109,7 +110,7 @@ export class UserSettingPage {
       const toast = this.toastCtrl.create({
         message: 'Your settings were successfully saved',
         duration: 1000,
-        position: 'top'
+        position: 'bottom'
       });
       toast.present();
       this.goBack();
@@ -126,5 +127,8 @@ export class UserSettingPage {
     if(!this.showGender['male'] && !this.showGender['female']){
       this.showGender['male'] = true;
     }
+  }
+  go_tutorial(){
+    this.navCtrl.push(UserTutorialPage);
   }
 }
