@@ -3,7 +3,7 @@
     <name>Meetr</name>
     <description>An awesome Ionic/Cordova dating app.</description>
     <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
-    <content src="index.html" />
+    <content original-src="index.html" src="http://192.168.1.100:8102" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -112,5 +112,6 @@
     <plugin name="cordova-plugin-request-location-accuracy" spec="^2.2.3" />
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashShowOnlyFirstTime" value="false" />
+    <preference name="loadUrlTimeoutValue" value="60000" />
     <engine name="android" spec="7.1.4" />
 </widget>

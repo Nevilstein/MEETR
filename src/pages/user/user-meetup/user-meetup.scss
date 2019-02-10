@@ -3,4 +3,14 @@ page-user-meetup {
 		height: 100%;
 		min-height: 300px;
 	}
+	.plan{
+		background: rgba(0,0,0,0.7);
+	}
+	.main{
+		height: 100%;
+		display: flex;
+	}
+	.main_card{
+		margin: auto;
+	}
 }

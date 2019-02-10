@@ -13,6 +13,12 @@ page-user-chatroom {
 		background-color: transparent;
 		height: 45px;
 	}
+	#pin{
+		color: #3D95A0;
+		font-size: 30px;
+		background-color: transparent;
+		height: 45px;
+	}
 	#input_box{
 		border-radius: 20px;
 		background-color: white;
@@ -41,7 +47,12 @@ page-user-chatroom {
 	.more{
 		color: white;
 		font-size: 40px;
-	}/*
+	}
+	.gps{
+		color: white;
+		font-size: 40px;
+	}
+	/*
 	ion-footer{
 		border-radius: 40px;
 		background-color: white;

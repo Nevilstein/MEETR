@@ -3,4 +3,16 @@ page-location-request {
 		height: 100%;
 		min-height: 300px;
 	}
+	.toolbar-background {
+ 	 	background-color: #189dae;
+	}
+	.loc_content{
+		background-image: url('../assets/imgs/finalbg-01.jpg') !important;
+        background-repeat: no-repeat;
+        background-size: cover;
+	}
+	.card_header{
+		word-wrap: break-word;
+		white-space: normal;
+	}
 }

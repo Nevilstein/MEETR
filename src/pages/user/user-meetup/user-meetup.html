@@ -4,36 +4,41 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<ion-header>
-
-  <ion-navbar>
-    <ion-title>user-meetup</ion-title>
-  </ion-navbar>
-
-</ion-header>
-
-
-<ion-content padding>
-	<ion-item>
-		<ion-label>Date</ion-label>
-		<ion-datetime displayFormat="MMM DD, YYYY" [min]="minDate" [max]="maxDate" [(ngModel)]="date" placeholder="Select Date" ></ion-datetime>
-	</ion-item>
-	<ion-item>
-		<ion-label>Time</ion-label>
-		<ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" minuteValues="0,10,20,30,40,50" [(ngModel)]="time" placeholder="Select Time"></ion-datetime>
-	</ion-item>
-	<ion-item>
-		<button ion-button (click)="selectLocation()">Select Location</button>
-		<ion-card>
-			<div [hidden]="!hasLocation">
-			<b>{{location?.name}}</b>
-			<p>{{location?.address}}</p>
-		</div>
+<ion-content class="plan" padding>
+	<div class="main">
+		<ion-card class="main_card">
+			<ion-card-header text-center>
+				<h2 style="font-weight: bold;">Initiate a meet up</h2>
+			</ion-card-header>
+			<ion-card-content>
+				<ion-item>
+					<ion-label>Date</ion-label>
+					<ion-datetime displayFormat="MMM DD, YYYY" [min]="minDate" [max]="maxDate" [(ngModel)]="date" placeholder="Select Date" ></ion-datetime>
+				</ion-item>
+				<ion-item>
+					<ion-label>Time</ion-label>
+					<ion-datetime displayFormat="HH:mm" pickerFormat="HH:mm" minuteValues="0,10,20,30,40,50" [(ngModel)]="time" placeholder="Select Time"></ion-datetime>
+				</ion-item>
+				<ion-item>
+					<button ion-button block (click)="selectLocation()">Select Location</button>
+					<ion-card [hidden]="!hasLocation">
+						<ion-card-header style="word-wrap: break-word; white-space: normal;" text-center>
+							<div >
+								<b>{{location?.name}}</b>
+								<p>{{location?.address}}</p>
+							</div>
+						</ion-card-header>
+						<ion-card-content>
+							<div #map id="map" [hidden]="!hasLocation"></div>
+						</ion-card-content>
+					</ion-card>
+					
+				</ion-item>
+				<ion-item>
+					<button clear ion-button item-right (click)="cancel()">CANCEL</button>
+					<button clear ion-button item-right [disabled]="isSent" (click)="sendMeetup()">SEND REQUEST</button>
+				</ion-item>
+			</ion-card-content>
 		</ion-card>
-		<div #map id="map" [hidden]="!hasLocation"></div>
-	</ion-item>
-	<ion-item>
-		<button clear ion-button item-right (click)="cancel()">CANCEL</button>
-		<button clear ion-button item-right [disabled]="isSent" (click)="sendMeetup()">SEND REQUEST</button>
-	</ion-item>
+	</div>
 </ion-content>

@@ -216,4 +216,7 @@ export class LocationSelectPage {
             toast.present();
 		}
 	}
+	dismiss(){
+		this.view.dismiss();
+	}
 }
