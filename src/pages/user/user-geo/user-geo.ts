@@ -13,9 +13,11 @@ import { google } from 'google-maps';
 import { Subscription } from 'rxjs/Subscription';
 import { filter, timeout } from 'rxjs/operators'
 import { AngularFireDatabase } from 'angularfire2/database';
+import geolib from 'geolib';
 
 //Providers
 import { ChatProvider } from '../../../providers/chat/chat';
+import { AuthProvider } from '../../../providers/auth/auth';
 
 declare var google:any;
 
@@ -40,19 +42,29 @@ export class UserGeoPage {
 
 	myMarker;
 	matchMarker;
+	meetupMarker;
+	placesService;
+	placeDetails;
 
+	authKey: string = this.authProvider.authUser;
 	chatKey: string = this.chatProvider.chatKey;
   	receiverKey: string = this.chatProvider.receiverKey;
+  	meetupDetails = this.chatProvider.meetupRequest;
+  	userProfile = this.chatProvider.userProfile;
+
+  	meetupStatus;
 
   	//Observer/Subscriber
   	positionSubscription:Subscription;
   	locationObserver :Subscription;
-  	chatObserver :Subscription;       
+  	chatObserver :Subscription;     
+  	meetupObserver :Subscription;     
+  	meetupChecker;  
 	@ViewChild('map') mapRef:ElementRef;
 
 	constructor(private sanitizer: DomSanitizer, private alertCtrl: AlertController, private modalCtrl: ModalController, 
 		private geolocation:Geolocation, private platform:Platform, private db: AngularFireDatabase, 
-		private chatProvider: ChatProvider) {
+		private chatProvider: ChatProvider, private authProvider: AuthProvider) {
 	}
 
 	ionViewDidLoad(){
@@ -63,6 +75,8 @@ export class UserGeoPage {
 		this.positionSubscription.unsubscribe();
 		this.locationObserver.unsubscribe();
 		this.chatObserver.unsubscribe();
+		this.meetupObserver.unsubscribe();
+		// clearInterval(this.meetupChecker);
 	}
 	
 	
@@ -73,19 +87,98 @@ export class UserGeoPage {
 			mapTypeId:google.maps.MapTypeId.ROADMAP,
 			mapTypeControl:false,
 			streetViewControl:false,
-			fullscreenControl:false
 		}
 		this.map = new google.maps.Map(this.mapRef.nativeElement, mapOptions);		//MAP INITIALIZATION
-		
-		this.geolocation.getCurrentPosition().then(pos=>{		//map location
-			let location = new google.maps.LatLng(pos.coords.latitude , pos.coords.longitude);
+		var location
+		this.geolocation.getCurrentPosition().then( pos=> {		//map location
+			location = new google.maps.LatLng(pos.coords.latitude , pos.coords.longitude);
 			this.map.setCenter(location);
-			this.map.setZoom(15)
+			this.map.setZoom(15);
+		}).then(() =>{
+			this.myMarker = new google.maps.Marker({
+	        	position: location,
+	       	 	map: this.map,
+	      	});
+			this.setMeetupPlace();	//setting meetup place
+			this.startTracking();		//track mainUser
+			this.trackMatch();		//track userMatch
 		}).catch(err => console.log(err));
-		this.startTracking();		//track mainUser
-		//this.trackMatch();		//track userMatch
+		// let coordinates = {
+		// 	lat: 14.642425,
+		// 	lng: 120.9785022
+		// }
+		// var location = new google.maps.LatLng(coordinates.lat, coordinates.lng);
+		// this.map.setCenter(location);
+		// this.map.setZoom(15);
+		// this.myMarker = new google.maps.Marker({
+  //       	position: location,
+  //      	 	map: this.map,
+  //     	});
+		// this.setMeetupPlace();	//setting meetup place
+		// this.checkMeetups();
+		// this.startTracking();		//track mainUser
+		
 	}
 	
+	checkMeetups(){
+		this.db.list('meetups', ref=> ref.child(this.chatKey).orderByKey().equalTo(this.meetupDetails.id))
+			.snapshotChanges().subscribe( snapshot => {
+				snapshot.forEach( element =>{
+					let data = element.payload.val()
+					data['id'] = element.key;
+					this.meetupStatus = data;
+					
+				});
+			});
+	}
+
+	setMeetupPlace(){
+		var latLng = new google.maps.LatLng(this.meetupDetails.location.latitude, this.meetupDetails.location.longitude)
+		this.placesService = new google.maps.places.PlacesService(this.map);
+	    let request =  {
+			placeId: this.meetupDetails.placeId,
+			fields: ['name', 'formatted_address', 'place_id', 'geometry', 'types']
+		};
+		this.placesService.getDetails(request, (place, status) => {
+			console.log(place);
+			this.placeDetails = {
+				latLng: place.geometry.location,
+				latitude: place.geometry.location.lat(),
+				longitude: place.geometry.location.lng(),
+				address: place.formatted_address,
+				name: place.name,
+				placeId: place.place_id
+			}
+			this.meetupMarker = new google.maps.Marker({
+	        	position: this.placeDetails.latLng,
+	       	 	map: this.map,
+      		});
+      		new google.maps.Circle({
+	            center: this.placeDetails.latLng,
+	            radius: 1500,
+	            strokeColor: "",
+	            strokeOpacity: 0.0,
+	            strokeWeight: 2,
+	            fillColor: "#FFD700",
+	            fillOpacity: 0.5,
+	            map: this.map
+	        });
+	        this.trackMatch();
+      	});
+      	
+	    // var newCircle = new google.maps.Marker({
+	    //     icon: whiteCircle,
+	    //     position: latLng
+	    // });
+	    // newCircle.setMap(this.map);
+
+	    // let isInRange = geolib.isPointInCircle(
+		   //  otherPoint,myPoint,
+		   //  this.myProfile['maxDistance']*1000);
+		// this.meetupChecker = setInterval(() =>{
+
+		// });
+	}
 	
 	startTracking(){
 		this.isTracking = true;
@@ -96,19 +189,34 @@ export class UserGeoPage {
 			filter((p) => p.coords !== undefined)
 		)
 		.subscribe(data => {
-			setTimeout(() => {
-				this.trackedRoute.push({lat:data.coords.latitude, lng:data.coords.longitude});
-				//this.redrawPath(this.trackedRoute); //line draw function called
-				//var image = 'assets/imgs/marker1.jpg';
-				let Marker1 = new google.maps.Marker({		//map marker
-					position: {lat:data.coords.latitude, lng:data.coords.longitude},
-					map: this.map,
-					size: new google.maps.Size(10, 16),
-					center:location
-					//icon: image
-				});
+			this.trackedRoute.push({lat:data.coords.latitude, lng:data.coords.longitude});
+			//this.redrawPath(this.trackedRoute); //line draw function called
+			//var image = 'assets/imgs/marker1.jpg';
+			if(this.myMarker){
+				this.myMarker.setMap(null);
+			}
+			this.myMarker = new google.maps.Marker({		//map marker
+				position: {lat:data.coords.latitude, lng:data.coords.longitude},
+				map: this.map,
+				size: new google.maps.Size(10, 16),
+				center:location
+				//icon: image
 			});
-			this.currentMapTrack.setMap(null);
+			let userPoint = {
+				latitude: data.coords.latitude,
+				longitude: data.coords.longitude
+			}
+			let meetPoint = {
+				latitude: this.placeDetails.latitude,
+				longitude: this.placeDetails.longitude
+			}
+			let userInCircle = geolib.isPointInCircle(userPoint,meetPoint,20);
+			if(userInCircle){
+				this.db.list('meetups', ref=> ref.child(this.chatKey)).update(this.meetupDetails.id+"/hasArrived",{
+					[this.authKey]: true
+				});
+			}
+			// this.currentMapTrack.setMap(null);
 		})
 	}
 /*
@@ -152,51 +260,28 @@ export class UserGeoPage {
 				});
 			});
 	}
-/*
-	startTrackingMatch(coordinates){
-		this.isTracking = true;
-		this.trackedRoute = [];
-
-		this.positionSubscription = this.geolocation.watchPosition()
-		.pipe(
-			filter((p) => p.coords !== undefined)
-		)
-		.subscribe(data => {
-			setTimeout(() => {
-				this.trackedRoute.push({lat:coordinates.latitude, lng:coordinates.latitude});
-				let Marker2 = new google.maps.Marker({		//map marker
-					position: {lat:coordinates.latitude, lng:coordinates.latitude},
-					map: this.map,
-					size: new google.maps.Size(10, 16),
-				});
-			});
-		})
-	}
-*/
 	startTrackingMatch(coordinates){
 		this.isTracking = true;
 		this.trackedRoute = [];
 		this.trackedRoute.push({lat:coordinates.latitude, lng:coordinates.longitude});
-		// if(this.matchMarker){
-		// 	this.matchMarker.setMap(null);
-		// }
-		this.matchMarker = new google.maps.Marker({		//map marker
-			position: {lat:coordinates.latitude, lng:coordinates.longitude},
-			map: this.map,
-			size: new google.maps.Size(10, 16),
-		});
-		this.matchMarker.setMap(this.map);
-	}
-
-	// onCardInteract(event){
- //   		console.log(event);
-	// }
-	// report_user(){
-	// 	const report = this.modalCtrl.create(UserReportPage);
-	// 	report.present();
-	// }	
-	// check_user(){
-	// 	const check = this.modalCtrl.create(UserCheckPage);
-	// 	check.present();
-	// }	
+		if(this.matchMarker){
+			this.matchMarker.setMap(null);
+		}
+		let userPoint = {
+			latitude: coordinates.latitude,
+			longitude: coordinates.longitude
+		}
+		let meetPoint = {
+			latitude: this.placeDetails.latitude,
+			longitude: this.placeDetails.longitude
+		}
+		let isInCircle = geolib.isPointInCircle(userPoint,meetPoint,1500);
+		if(this.geoStatus && isInCircle){
+			this.matchMarker = new google.maps.Marker({		//map marker
+				position: {lat:coordinates.latitude, lng:coordinates.longitude},
+				map: this.map,
+				size: new google.maps.Size(10, 16),
+			});
+		}
+	}	
 }

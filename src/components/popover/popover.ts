@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, ViewController, ModalController} from 'ionic-angular';
+
+
+//Pages
 import { UserGeoPage } from '../../pages/user/user-geo/user-geo';
+import { UserCheckPage } from '../../pages/user/user-check/user-check';
 
 //Plugin
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -31,7 +35,8 @@ export class PopoverComponent {
 
 
   constructor(public navCtrl: NavController, private navParams: NavParams, private authProvider:AuthProvider, 
-  	private db: AngularFireDatabase, private chatProvider:ChatProvider) {
+  	private db: AngularFireDatabase, private chatProvider:ChatProvider, private view: ViewController, 
+    private modalCtrl: ModalController) {
   }
 
   gotoGeo(){
@@ -46,6 +51,7 @@ export class PopoverComponent {
     });
     this.db.list('match', ref => ref.child(this.authKey)).remove(this.receiverKey);
     this.db.list('match', ref => ref.child(this.receiverKey)).remove(this.authKey);
+    this.view.dismiss();
   }
 
   clearChat(){
@@ -59,6 +65,7 @@ export class PopoverComponent {
         this.db.list('chat', ref=> ref.child(this.authKey)).update(this.chatKey, {
           timestamp: firebase.database.ServerValue.TIMESTAMP
         });
-      })
+      });
+    this.view.dismiss();
   }
 }
