@@ -87,6 +87,11 @@
 
 <ion-footer>
     <ion-row>
+        <ion-col col-1>
+           <button id="pin" (click)="show_div()">
+              <ion-icon name="apps"></ion-icon>
+            </button>
+        </ion-col>
         <ion-col col-8>
              <ion-input type="text" [(ngModel)]="myMessage" (ionChange)="checkMessage()" placeholder="Type something..." id="input_box"></ion-input>  
              <!-- Change to text area? -->
@@ -95,21 +100,27 @@
            <button id="send_pic" (click)="sendImage()">
               <ion-icon name="image"></ion-icon>
             </button>
-          </ion-col>
-        <ion-col>
+        </ion-col>
+        <ion-col >
             <button id="send" [disabled]="messageEmpty" (click)="sendMessage()">
               <ion-icon name="send" ></ion-icon>
             </button>
         </ion-col>
+    </ion-row>
+    <ion-row *ngIf="show" text-center>
+      <ion-col>
+           <button id="pin" [disabled]="hasMeetup" (click)="meetup()">
+              <ion-icon name="compass"></ion-icon>
+            </button>
+        </ion-col>
         <ion-col>
-            <button ion-button [disabled]="hasMeetup" (click)="meetup()">
-              <ion-icon name="compass" ></ion-icon>
+           <button id="pin" [disabled]="!meetDetails" (click)="checkMeetup()">
+              <ion-icon name="ios-eye"></ion-icon>
             </button>
-            <button ion-button [disabled]="!meetDetails" (click)="checkMeetup()">
-              Check Meetup
-            </button>
-            <button ion-button (click)="gotoGeo()">
-              Geopage
+        </ion-col>
+        <ion-col>
+           <button id="pin" (click)="gotoGeo()">
+              <ion-icon name="pin"></ion-icon>
             </button>
         </ion-col>
     </ion-row>

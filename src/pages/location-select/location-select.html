@@ -5,20 +5,27 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-  <ion-toolbar color="primary">
-    <ion-searchbar #input id="input" [(ngModel)]="searchItem" (ionFocus)="updateSearchResults()" (ionInput)="updateSearchResults()" placeholder="Search for a place"></ion-searchbar>
-	<ion-list [hidden]="mapSelected">
-		<ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
-			{{item.description}}
-		<!-- {{ item['terms'][0].value }} -->
-		<!-- <span *ngFor="let place of item.terms; let i = index"><span *ngIf="i!==0">{{place.value}}</span></span> -->
-		</ion-item>
-	</ion-list>
-  </ion-toolbar>
+ 	<ion-navbar>
+		<ion-title>Select Location</ion-title>	
+		<ion-buttons end>
+	      <button ion-button (click)="selectLocation()">Submit
+	      </button>
+	    </ion-buttons>
+	</ion-navbar>
 </ion-header>
 
 
 <ion-content>
+	 <ion-toolbar>
+	    <ion-searchbar #input id="input" [(ngModel)]="searchItem" (ionFocus)="updateSearchResults()" (ionInput)="updateSearchResults()" placeholder="Search for a place"></ion-searchbar>
+		<ion-list [hidden]="mapSelected">
+			<ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
+				{{item.description}}
+			<!-- {{ item['terms'][0].value }} -->
+			<!-- <span *ngFor="let place of item.terms; let i = index"><span *ngIf="i!==0">{{place.value}}</span></span> -->
+			</ion-item>
+		</ion-list>
+	  </ion-toolbar>
 	<div #map id="map"><button ion-button (click)="goToLocation()"></button></div>
 	<ion-item>
 		<!-- Lagyan pin icon -->

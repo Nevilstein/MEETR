@@ -35,6 +35,7 @@ import { ChatProvider } from '../../../providers/chat/chat';
 })
 export class UserChatroomPage {
   //Variables
+  show=false;
   authKey: string = this.authProvider.authUser;
   chatKey: string = this.chatProvider.chatKey;
   receiverKey: string = this.chatProvider.receiverKey;
@@ -386,8 +387,9 @@ export class UserChatroomPage {
   }
 
   checkMeetup(){
-    let modal = this.modalCtrl.create(LocationRequestPage);
-    modal.present();
+   /* let modal = this.modalCtrl.create(LocationRequestPage);
+    modal.present();*/
+    this.navCtrl.push(LocationRequestPage);
   }
 
   checkProfile(){
@@ -403,5 +405,8 @@ export class UserChatroomPage {
     popover.present({
       ev: myEvent
     });
+  }
+  show_div(){
+    this.show = !this.show;
   }
 }

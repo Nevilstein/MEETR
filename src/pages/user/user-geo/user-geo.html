@@ -9,16 +9,19 @@
 <ion-content class="map_content">
 	<div #map id="map"></div>
 	<div>
-		<ion-item item-left>
-			<p>You:</p>
-			<p>Tracking</p>
-			<p>..km away</p>
-		</ion-item>
-		<ion-item item-right>
-			<p>{{userProfile?.firstName}}:</p>
-			<p>Tracking</p>
-			<p>..km away</p>
-		</ion-item>
-		
+		<ion-grid>
+			<ion-row text-center>
+				<ion-col>
+					<p>You:</p>
+					<p>Tracking</p>
+					<p>..km away</p>
+				</ion-col>
+				<ion-col>
+					<p>{{userProfile?.firstName}}:</p>
+					<p>Tracking</p>
+					<p>..km away</p>
+				</ion-col>
+			</ion-row>
+		</ion-grid>
 	</div>
 </ion-content>
