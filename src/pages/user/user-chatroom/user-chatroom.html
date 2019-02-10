@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar class="head">
-    <ion-row *ngIf="((profilePromise | async) && (activePromise | async )) as head ">
+    <ion-row (click)="checkProfile()" *ngIf="((profilePromise | async) && (activePromise | async )) as head ">
       <ion-col col-3>
         <img id="user_img" src="{{userPhoto}}" >
       </ion-col>
@@ -22,7 +22,7 @@
       </ion-col>
         <!-- <button style="background-color: transparent; display: inline-block;" >
           <ion-icon class="gps" name="pin" (click)="gotoGeo()"></ion-icon>
-        </button>  -->
+        </button> -->
     </ion-row>
       <ion-buttons class="more_button" end (click)="presentPopover($event)">
         <button style="background-color: transparent;">
@@ -99,6 +99,17 @@
         <ion-col>
             <button id="send" [disabled]="messageEmpty" (click)="sendMessage()">
               <ion-icon name="send" ></ion-icon>
+            </button>
+        </ion-col>
+        <ion-col>
+            <button ion-button [disabled]="hasMeetup" (click)="meetup()">
+              <ion-icon name="compass" ></ion-icon>
+            </button>
+            <button ion-button [disabled]="!meetDetails" (click)="checkMeetup()">
+              Check Meetup
+            </button>
+            <button ion-button (click)="gotoGeo()">
+              Geopage
             </button>
         </ion-col>
     </ion-row>

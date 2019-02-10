@@ -48,13 +48,19 @@ import { UserRewardPage } from '../pages/user/user-reward/user-reward';
 import { UserRewardPageModule } from '../pages/user/user-reward/user-reward.module';
 import { UserInterestPage } from '../pages/user/user-interest/user-interest';
 import { UserInterestPageModule } from '../pages/user/user-interest/user-interest.module';
-import { UserTutorialPageModule } from '../pages/user/user-tutorial/user-tutorial.module';
+import { UserMeetupPage } from '../pages/user/user-meetup/user-meetup';
+import { UserMeetupPageModule } from '../pages/user/user-meetup/user-meetup.module';
 import { UserTutorialPage } from '../pages/user/user-tutorial/user-tutorial';
+import { UserTutorialPageModule } from '../pages/user/user-tutorial/user-tutorial.module';
 import { ImageViewPage } from '../pages/image-view/image-view';
 import { ImageViewPageModule } from '../pages/image-view/image-view.module';
 import { PopoverComponent } from '../components/popover/popover';
 import { LocRequirePage } from '../pages/loc-require/loc-require';
 import { LocRequirePageModule } from '../pages/loc-require/loc-require.module';
+import { LocationSelectPage } from '../pages/location-select/location-select';
+import { LocationSelectPageModule } from '../pages/location-select/location-select.module';
+import { LocationRequestPage } from '../pages/location-request/location-request';
+import { LocationRequestPageModule } from '../pages/location-request/location-request.module';
 import { FormInterestPage } from '../pages/user/form-interest/form-interest';
 import { FormInterestPageModule } from '../pages/user/form-interest/form-interest.module';
 
@@ -124,10 +130,13 @@ export const firebaseConfig = {
     UserAskPageModule,
     UserDrawPageModule,
     UserRewardPageModule,
+    UserMeetupPageModule,
+    UserTutorialPageModule,
     ImageViewPageModule,
     LocRequirePageModule,
     FormInterestPageModule,
-    UserTutorialPageModule
+    LocationSelectPageModule,
+    LocationRequestPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -148,8 +157,7 @@ export const firebaseConfig = {
     UserMatchPage,
     PopoverComponent,
     LocRequirePage,
-    FormInterestPage,
-    UserTutorialPage
+    FormInterestPage
   ],
   providers: [
     StatusBar,

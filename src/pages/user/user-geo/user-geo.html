@@ -7,9 +7,18 @@
 </ion-header>
 
 <ion-content class="map_content">
-	<!--
-	<p>{{ latitude }}</p>
-	<p>{{ longitude }}</p>
-	-->
 	<div #map id="map"></div>
+	<div>
+		<ion-item item-left>
+			<p>You:</p>
+			<p>Tracking</p>
+			<p>..km away</p>
+		</ion-item>
+		<ion-item item-right>
+			<p>{{userProfile?.firstName}}:</p>
+			<p>Tracking</p>
+			<p>..km away</p>
+		</ion-item>
+		
+	</div>
 </ion-content>

@@ -20,17 +20,17 @@ import { AuthProvider } from '../../../providers/auth/auth';
   templateUrl: 'user-interest.html',
 })
 export class UserInterestPage {
-	authUser = this.authProvider.authUser;
+  authUser = this.authProvider.authUser;
 
-	allInterests = [];	//all interests including selected
-	selectedInterests = [];	//selected interests from profile db
-	interestList =[];  //list of interest that must be in database
-	interestdb =[];  //list of interest that must be from interest collection database
-	interestValue: string;
+  allInterests = [];  //all interests including selected
+  selectedInterests = [];  //selected interests from profile db
+  interestList =[];  //list of interest that must be in database
+  interestdb =[];  //list of interest that must be from interest collection database
+  interestValue: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private viewCtrl: ViewController,
-  	private db: AngularFireDatabase, private authProvider: AuthProvider, private toastCtrl: ToastController) {
-  	// this.interestdb = ['Aesthetic', 'Animals', 'Anime & Manga', 'Art', 'Beauty', 'Books',
+    private db: AngularFireDatabase, private authProvider: AuthProvider, private toastCtrl: ToastController) {
+    // this.interestdb = ['Aesthetic', 'Animals', 'Anime & Manga', 'Art', 'Beauty', 'Books',
    //    'Esports', 'Fashion', 'Food', 'Health & Fitness', 'Horror', 'Kpop/K-Drama', 'LGBTQ+',
    //    'Movies', 'Music', 'Science', 'Travel', 'TV & Web-Series', 'Video Games', 'Writing'];
   }
@@ -53,14 +53,14 @@ export class UserInterestPage {
     })
   }
   getInterests(){
-  	this.db.list('profile', ref => ref.child(this.authUser))
-  		.query.once('value', snapshot => {
-  			let data = snapshot.val();
-  			this.selectedInterests = Object.assign([], data['interests']);
-	        this.allInterests = this.selectedInterests.concat(this.interestdb);  //add interests shown in option
-	        this.allInterests = this.removeDuples(this.allInterests);
-	        this.filterInterest();
-  		});
+    this.db.list('profile', ref => ref.child(this.authUser))
+      .query.once('value', snapshot => {
+        let data = snapshot.val();
+        this.selectedInterests = Object.assign([], data['interests']);
+          this.allInterests = this.selectedInterests.concat(this.interestdb);  //add interests shown in option
+          this.allInterests = this.removeDuples(this.allInterests);
+          this.filterInterest();
+      });
   }
 
   removeDuples(interests){
@@ -74,88 +74,88 @@ export class UserInterestPage {
   }
 
   filterInterest(){
-  	this.interestList = [];
-  	this.allInterests.forEach( interest =>{
-  		if(this.selectedInterests.indexOf(interest) > -1){
-  			this.interestList.push({
-  				name: interest,
-  				isSelected: true
-  			});
-  		}
-  		else{
-  			this.interestList.push({
-  				name: interest,
-  				isSelected: false
-  			});
-  		}
-  	});
+    this.interestList = [];
+    this.allInterests.forEach( interest =>{
+      if(this.selectedInterests.indexOf(interest) > -1){
+        this.interestList.push({
+          name: interest,
+          isSelected: true
+        });
+      }
+      else{
+        this.interestList.push({
+          name: interest,
+          isSelected: false
+        });
+      }
+    });
   }
 
   addCustomInterest(){
     let selectIndex = this.selectedInterests.indexOf(this.interestValue);  //index in selected interests
     let allIndex = this.allInterests.indexOf(this.interestValue);  //if found in all interest
     console.log(allIndex);
-  	if(this.interestValue.trim() == ''){
-  		return
-  	}
-  	if(this.selectedInterests.length <=10){
+    if(this.interestValue.trim() == ''){
+      return
+    }
+    if(this.selectedInterests.length <=10){
       if(selectIndex < 0){
         if(allIndex < 0){
           this.allInterests.unshift(this.interestValue);
         }
         this.selectedInterests.push(this.interestValue);
       }
-  	}
-  	else{
-  		let toast = this.toastCtrl.create({
+    }
+    else{
+      let toast = this.toastCtrl.create({
           message: "You have reached the maximum number of interests(10)",
           duration: 1000,
           position: 'bottom'
         });
         toast.present();
-  	}
-  	this.filterInterest();
-  	this.interestValue = '';
+    }
+    this.filterInterest();
+    this.interestValue = '';
   }
 
   selectInterest(event, value){
-  	let maxCount = 10;
-  	if(event.checked){
-  		if(this.selectedInterests.length <= maxCount){
-  			this.selectedInterests.push(value);
-  		}
-  		else{
+    let maxCount = 10;
+    if(event.checked){
+      if(this.selectedInterests.length <= maxCount){
+        this.selectedInterests.push(value);
+      }
+      else{
         let toast = this.toastCtrl.create({
           message: "You have reached the maximum number of interests(10)",
           duration: 1000,
           position: 'bottom'
         });
         toast.present();
-  		}
-  	}
-  	else{
-  		if(this.selectedInterests.length >1){
-  			let valueIndex = this.selectedInterests.indexOf(value);
-  			this.selectedInterests.splice(valueIndex, 1);
-  		}
-  		else{
+      }
+    }
+    else{
+      if(this.selectedInterests.length >1){
+        let valueIndex = this.selectedInterests.indexOf(value);
+        this.selectedInterests.splice(valueIndex, 1);
+      }
+      else{
         let toast = this.toastCtrl.create({
           message: "You must have at least one interest",
           duration: 1000,
           position: 'bottom'
         });
         toast.present();
-  		}
-  		
-  	}
-  	this.filterInterest();
+      }
+      
+    }
+    this.filterInterest();
   }
   cancel(){
-  	this.viewCtrl.dismiss();
+    this.viewCtrl.dismiss();
   }
   updateInterest(){
-  	this.db.list('profile').update(this.authUser, {interests: this.selectedInterests})
-  	this.viewCtrl.dismiss();
+    this.db.list('profile').update(this.authUser, {interests: this.selectedInterests})
+    this.viewCtrl.dismiss();
   }
 
 

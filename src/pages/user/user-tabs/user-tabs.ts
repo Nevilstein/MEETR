@@ -61,6 +61,7 @@ export class UserTabsPage {
   pauseObserver: any;  //listens to app pause activity
   resumeObserver: any; //listens to app resume activity
   toolsObserver: any; //listens changes in tools
+  meetupObserver: any; //listens to meetups
   trackGeo:any;  //listens to location
 
   tabIndex: number;
@@ -85,6 +86,7 @@ export class UserTabsPage {
     this.checkLocationSetting();
     this.listenToPlatform();
     this.listenToMatches();
+    this.listenToMeetups();
     // this.trackLocation();
     this.updateActive();
     this.tabChanges();
@@ -102,6 +104,7 @@ export class UserTabsPage {
   ionViewWillUnload(){
     this.trackGeo.unsubscribe();
     this.onMatchObserver.unsubscribe();
+    this.meetupObserver.unsubscribe();
     this.pauseObserver.unsubscribe();
     this.resumeObserver.unsubscribe();
   }
@@ -123,36 +126,37 @@ export class UserTabsPage {
   }
 
   checkLocationSetting(){
-
-    this.diagnostic.isLocationEnabled().then( isAvailable =>{
-      if(isAvailable){
-        if(this.isStart){    //Enable subscription only at start of app
-          this.isStart = false;
-          this.trackLocation();
+    if(!this.isPaused){
+      this.diagnostic.isLocationEnabled().then( isAvailable =>{
+        if(isAvailable){
+          if(this.isStart){    //Enable subscription only at start of app
+            this.isStart = false;
+            this.trackLocation();
+          }
+        }else{
+          if(!this.locCheckOpen){
+            this.locCheckOpen = true;
+            let modal = this.modalCtrl.create(LocRequirePage);
+            modal.present();
+            modal.onDidDismiss(()=>{
+              this.locCheckOpen = false;
+            });
+          }
         }
-      }else{
-        if(!this.locCheckOpen){
-          this.locCheckOpen = true;
-          let modal = this.modalCtrl.create(LocRequirePage);
-          modal.present();
-          modal.onDidDismiss(()=>{
-            this.locCheckOpen = false;
-          });
-        }
-      }
-    }).catch( error =>{
-      console.log(error);
-    })
+      }).catch( error =>{
+        console.log(error);
+      })
+    }
   }
 
   trackLocation(){  
-    this.trackGeo = this.geolocation.watchPosition()
+    this.trackGeo = this.geolocation.watchPosition({enableHighAccuracy: true})
       .subscribe( data => {
         this.db.list('location').update(this.authUser, {
           currentLocation: {
             latitude: data.coords.latitude,
             longitude: data.coords.longitude,
-            timestamp: data.timestamp
+            timestamp: firebase.database.ServerValue.TIMESTAMP
           }
         });
       })
@@ -204,6 +208,56 @@ export class UserTabsPage {
       });
   }
 
+  listenToMeetups(){
+    this.meetupObserver = this.db.list('userMeetups', ref=> ref.child(this.authUser).orderByChild('timestamp')
+      .limitToLast(1)).snapshotChanges().subscribe(snapshot =>{
+          snapshot.forEach( element =>{
+            let data = element.payload.val();
+            data['id'] = element.key;
+            if(!data['action'].isShown){
+              this.db.list('userMeetups', ref => ref.child(this.authUser)).update(data['id']+"/action", {
+                isShown:true
+              });
+              this.db.list('profile', ref=> ref.child(data['action'].actor))
+                .query.once('value').then( profileSnap =>{
+                  var message: string;
+                  let actor = profileSnap.val().firstName;
+                  switch (data['action'].method) {
+                    case "send":
+                      message = actor+" sent you a meetup request!"
+                      break;
+                    case "accept":
+                      message = actor+" accepted your meetup request!"
+                      break;
+                    case "decline":
+                      message = actor+" declined your meetup request!"
+                      break;
+                    case "cancel":
+                      message = actor+" cancelled the meetup request!"
+                      break;
+                  }
+                  if(!this.isPaused){
+                      let toast = this.toastCtrl.create({
+                        message: message,
+                        duration: 2000,
+                        position: 'top'
+                      });
+                      toast.present();
+                  }
+                  else{
+                    this.localNotif.schedule({
+                      id:1,
+                      title: "News from Meetup Request!",
+                      text: message
+                    });
+                  }
+                })
+            }
+          });
+      })
+
+  }
+
   listenToPlatform(){
     console.log('platform');
     this.resumeObserver = this.platform.resume.subscribe(() =>{
@@ -214,6 +268,7 @@ export class UserTabsPage {
           timestamp: firebase.database.ServerValue.TIMESTAMP
         }
       });
+      this.checkLocationSetting();
     });
 
     this.pauseObserver =this.platform.pause.subscribe(() =>{

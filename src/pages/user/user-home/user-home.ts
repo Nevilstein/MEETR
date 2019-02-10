@@ -71,7 +71,7 @@ export class UserHomePage {
 	// Tool Prices
 	extralikeValue = 5;
 	superlikeValue = 20;
-	rewindValue = 20;
+	rewindValue = 10;
 	boostValue = 50;
 
 
@@ -298,7 +298,7 @@ export class UserHomePage {
 	onSuperLike(swipedUser, isLiked, superlike){
 		if(this.myCoins>=superlike){
 			let toast = this.toastCtrl.create({
-	          message: "Superliked!",
+	          message: "Superliked",
 	          duration: 2000,
 	          position: 'top',
 	          cssClass: "superlike_toast",
@@ -398,7 +398,6 @@ export class UserHomePage {
 		//if coins insufficient display add coins shop
 		if(this.myCoins >= this.rewindValue){
 			this.buttonsEnabled = false;
-			this.toolPurchase(this.rewindValue);
 			this.db.list('likes', ref=> ref.child(this.authUser).orderByChild('like').equalTo(false))
 				.query.once('value').then(snapshot => {
 					let dislikedUsers = [];
@@ -422,6 +421,7 @@ export class UserHomePage {
 					});
 					dislikedUsers.sort((a,b) => (a.timestamp < b.timestamp)? 1: -1);	//sort by timestamp
 					if(dislikedUsers.length>0){
+						this.toolPurchase(this.rewindValue);
 						let lastUser = dislikedUsers[0].id;	//last disliked user id
 						this.db.list('likes', ref => ref.child(this.authUser)).remove(lastUser);
 						this.returnCard(lastUser);	//get latest disliked user's data
@@ -508,6 +508,8 @@ export class UserHomePage {
 		this.userList = [];		//refresh user list and cards if current user profile is changed
 		this.stackedUsers = [];
 		this.userLikerList = [];
+		this.userSuperList = [];
+		this.userBoostList = [];
 		// this.cardObserver.forEach( subscription => {
 		// 	subscription.unsubscribe();
 		// });
@@ -696,7 +698,7 @@ export class UserHomePage {
 	filterByActive(){
 		let newList = [];
 		let userLength = this.userList.length;
-		let activeTime = 604800000;	//day in milliseconds	//only active 1 day ago
+		let activeTime = 604800000;	//week in milliseconds	//only active a week ago
 		let dateNow = moment().valueOf();
 		var activePromise = new Promise(resolve =>{
 			if(!(userLength > 0)){
@@ -966,9 +968,11 @@ export class UserHomePage {
 		let userListIndex = this.userList.findIndex(item => item['id'] === removeID);
 		let likerListIndex = this.userLikerList.findIndex(item => item['id'] === removeID);
 		let superListIndex = this.userSuperList.findIndex(item => item['id'] === removeID);
+		let superBoostIndex = this.userBoostList.findIndex(item => item['id'] === removeID);
 		this.userList.splice(userListIndex, 1);
 		this.userLikerList.splice(likerListIndex, 1);
-		this.userSuperList.splice(likerListIndex, 1);
+		this.userSuperList.splice(superListIndex, 1);
+		this.userBoostList.splice(superBoostIndex, 1);
 	}
 	report_user(){
 		const report = this.modalCtrl.create(UserReportPage);
