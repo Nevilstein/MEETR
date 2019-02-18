@@ -4,6 +4,7 @@ import { IonicPage, NavController, NavParams, App,ToastController  } from 'ionic
 //Pages
 import { UserProfilePage } from '../user-profile/user-profile';
 import { UserTutorialPage} from '../user-tutorial/user-tutorial';
+import { UserAllTutorialPage} from '../user-all-tutorial/user-all-tutorial';
 import { LoginPage } from '../../login/login';
 
 //Plugin
@@ -130,5 +131,8 @@ export class UserSettingPage {
   }
   go_tutorial(){
     this.navCtrl.push(UserTutorialPage);
+  }
+  go_firsttutorial(){
+    this.navCtrl.push(UserAllTutorialPage);
   }
 }

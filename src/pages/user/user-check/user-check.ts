@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, ModalController } from 'ionic-angular';
 
+//Pages
+import { UserReportPage } from '../user-report/user-report';
 //Plugin
 import { AngularFireDatabase } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -44,7 +46,8 @@ export class UserCheckPage {
   distanceObserver;
   activeObserver;
   constructor(public navCtrl: NavController, public navParams: NavParams,private view: ViewController, 
-    private db: AngularFireDatabase, private fireAuth: AngularFireAuth, private authProvider: AuthProvider) {
+    private db: AngularFireDatabase, private fireAuth: AngularFireAuth, private authProvider: AuthProvider,
+    private modalCtrl: ModalController) {
   }
 
   ionViewDidLoad() {
@@ -153,5 +156,8 @@ export class UserCheckPage {
   close_modal(){
     this.view.dismiss();
   }
-
+  reportUser(){
+    let modal = this.modalCtrl.create(UserReportPage, {user: this.userKey});
+    modal.present();
+  }
 }

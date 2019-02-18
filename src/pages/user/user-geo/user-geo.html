@@ -10,17 +10,28 @@
 	<div #map id="map"></div>
 	<div>
 		<ion-grid>
-			<ion-row text-center>
+			<ion-row text-center *ngIf="hasMeetup && !isLoading">
 				<ion-col>
-					<p>You:</p>
-					<p>Tracking</p>
-					<p>..km away</p>
+					<ion-card>
+						<b>You</b>
+						<p>{{distance.sender}}km away</p>
+					</ion-card>
 				</ion-col>
-				<ion-col>
-					<p>{{userProfile?.firstName}}:</p>
-					<p>Tracking</p>
-					<p>..km away</p>
+				<ion-col *ngIf="geoStatus.sender && geoStatus.receiver && !isInactive">
+					<ion-card>
+						<b>{{userProfile?.firstName}}</b>
+						<p>{{distance.receiver}}km away</p>
+					</ion-card>
 				</ion-col>
+				<ion-col *ngIf="!geoStatus.sender || !geoStatus.receiver || isInactive">
+					<p>Unavailable</p>
+				</ion-col>
+			</ion-row>
+			<ion-row text-center *ngIf="!hasMeetup && !isLoading">
+				No meetup currently available
+			</ion-row>
+			<ion-row text-center *ngIf="isLoading">
+				Checking meetup availability
 			</ion-row>
 		</ion-grid>
 	</div>

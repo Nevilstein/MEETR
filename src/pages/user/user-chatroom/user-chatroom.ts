@@ -35,7 +35,7 @@ import { ChatProvider } from '../../../providers/chat/chat';
 })
 export class UserChatroomPage {
   //Variables
-  show=false;
+  show=true;
   authKey: string = this.authProvider.authUser;
   chatKey: string = this.chatProvider.chatKey;
   receiverKey: string = this.chatProvider.receiverKey;
@@ -408,5 +408,28 @@ export class UserChatroomPage {
   }
   show_div(){
     this.show = !this.show;
+  }
+  geoChanged(){
+    this.db.list('chat', ref => ref.child(this.authKey)).update(this.chatKey, {
+      geoStatus: this.geoStatus.sender
+    });
+    if(this.geoStatus.sender){
+      let toast = this.toastCtrl.create({
+        message: "Location services is now available",
+        duration: 1000,
+        position: 'top',
+        cssClass: 'location_avail'
+      });
+      toast.present();  
+    }
+    else{
+      let toast = this.toastCtrl.create({
+        message: "Location services is now unavailable",
+        duration: 1000,
+        position: 'top',
+        cssClass: 'location_unavail'
+      });
+      toast.present();
+    }
   }
 }

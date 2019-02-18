@@ -61,7 +61,7 @@ export class LocationSelectPage {
     this.showMap();
   }
   ionViewWillUnload(){
-  	// this.trackGeo.unsubscribe();
+  	this.trackGeo.unsubscribe();
   }
 	setMapClick(){
 		this.map.addListener('click', event =>{
@@ -79,6 +79,7 @@ export class LocationSelectPage {
 		});
 	}
 	showMap(){
+		var image = "../../../assets/imgs/markerfinal.png";
 	  	let mapOptions = {			//map options
 				zoom:10,
 				mapTypeId:google.maps.MapTypeId.ROADMAP,
@@ -90,53 +91,36 @@ export class LocationSelectPage {
 		this.placesService = new google.maps.places.PlacesService(this.map);
 		this.directionsDisplay.setMap(this.map);
 
-		// this.geolocation.getCurrentPosition().then(pos=>{		//map location
-		// 	let location = new google.maps.LatLng(pos.coords.latitude , pos.coords.longitude);
-		// 	this.map.setCenter(location);
-		// 	this.map.setZoom(15)
-		// }).catch(err => console.log(err));
+		this.geolocation.getCurrentPosition().then(pos=>{		//map location
+			let location = new google.maps.LatLng(pos.coords.latitude , pos.coords.longitude);
+			this.map.setCenter(location);
+			this.map.setZoom(15);
+			this.myMarker = new google.maps.Marker({
+	        	position: this.location,
+	       	 	map: this.map,
+	       	 	//icon:image,
+	      	});
+		}).catch(err => console.log(err));
 
-		// this.trackGeo = this.geolocation.watchPosition({enableHighAccuracy: true})
-	 //      .subscribe( data => {
-  //           this.coordinates = {
-  //           	latitude: data.coords.latitude,
-  //           	longitude: data.coords.longitude
-  //         	}
-  //         	this.location = new google.maps.LatLng(coordinates.lat, coordinates.lng);
-  //         	if(this.myMarker){
-  //         		this.myMarker.setMap(null);
-  //         	}
-			
-		// 	this.myMarker = new google.maps.Marker({
-	 //        	position: this.location,
-	 //       	 	map: this.map,
-	 //      	});
-	 //      })
-	 //      this.map.setCenter(this.location);
-		// 	this.map.setZoom(17);
-
-		let coordinates = {
-			lat: 14.642425,
-			lng: 120.9785022
-		}
-		this.location = new google.maps.LatLng(coordinates.lat, coordinates.lng);
-		this.map.setCenter(this.location);
-		this.map.setZoom(17);
-		this.myMarker = new google.maps.Marker({
-        	position: this.location,
-       	 	map: this.map,
-      	});
+		this.trackGeo = this.geolocation.watchPosition({enableHighAccuracy: true})
+	      .subscribe( data => {
+            this.coordinates = {
+            	latitude: data.coords.latitude,
+            	longitude: data.coords.longitude
+          	}
+          	this.zone.run(() => {
+	          	this.location = new google.maps.LatLng(this.coordinates.latitude, this.coordinates.longitude);
+	          	if(this.myMarker){
+	          		this.myMarker.setMap(null);
+	          	}
+				this.myMarker = new google.maps.Marker({
+		        	position: this.location,
+		       	 	map: this.map,
+		       	 	icon:image,
+		      	});
+		    });
+	      });
       	this.setMapClick();
-      	// var cityCircle = new google.maps.Circle({
-       //      strokeColor: '#FF0000',
-       //      strokeOpacity: 0.8,
-       //      strokeWeight: .2,
-       //      fillColor: '#FF0000',
-       //      fillOpacity: 0.35,
-       //      map: this.map,
-       //      center: this.location,
-       //      radius: 500
-       //    });
 	}
 
   	updateSearchResults(){
@@ -179,6 +163,7 @@ export class LocationSelectPage {
 	}
 
 	setLocation(position, placeId){
+		var image = "../../../assets/imgs/markerfinal.png";
 		let request = {
 			placeId: placeId,
 			fields: ['name', 'formatted_address', 'place_id', 'geometry', 'types']
@@ -198,7 +183,8 @@ export class LocationSelectPage {
 		}
 		this.selectedMarker = new google.maps.Marker({
         	position: position,
-       	 	map: this.map
+       	 	map: this.map,
+       	 	//icon:image,
       	});
 	}
 	goToLocation(){

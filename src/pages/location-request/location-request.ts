@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, ToastController } from 'ionic-angular';
 
 //Plugins
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -21,26 +21,26 @@ import { ChatProvider } from '../../providers/chat/chat';
   templateUrl: 'location-request.html',
 })
 export class LocationRequestPage {
-	authKey = this.authProvider.authUser;
-	chatKey = this.chatProvider.chatKey;
-	receiverKey = this.chatProvider.receiverKey;
-	meetupDetails = this.chatProvider.meetupRequest;
+  authKey = this.authProvider.authUser;
+  chatKey = this.chatProvider.chatKey;
+  receiverKey = this.chatProvider.receiverKey;
+  meetupDetails = this.chatProvider.meetupRequest;
 
-	placeDetails: any;
-	coordinates: any;
-	isExpired:boolean;
+  placeDetails: any;
+  coordinates: any;
+  isExpired:boolean;
 
-	map:any;
-	formMarker;
-	@ViewChild('map') mapRef: ElementRef;
+  map:any;
+  formMarker;
+  @ViewChild('map') mapRef: ElementRef;
 
-	placesService;
+  placesService;
 
-	//Observer/Subscription
-	trackGeo;
+  //Observer/Subscription
+  trackGeo;
   constructor(public navCtrl: NavController, public navParams: NavParams, private chatProvider: ChatProvider, 
-  	private authProvider: AuthProvider, private geolocation: Geolocation, private db: AngularFireDatabase,
-  	private view: ViewController) {
+    private authProvider: AuthProvider, private geolocation: Geolocation, private db: AngularFireDatabase,
+    private view: ViewController, private toastCtrl: ToastController) {
   }
 
   ionViewDidLoad() {
@@ -51,11 +51,12 @@ export class LocationRequestPage {
   }
 
   ionViewWillUnload(){
-  	// this.trackGeo.unsubscribe()
+    // this.trackGeo.unsubscribe()
   }
 
   showMap(){
-  	let mapOptions = {      //map options
+    var image = "../../../assets/imgs/markerfinal.png";
+    let mapOptions = {      //map options
         zoom:10,
         mapTypeId:google.maps.MapTypeId.ROADMAP,
         mapTypeControl:false,
@@ -66,105 +67,124 @@ export class LocationRequestPage {
     this.map = new google.maps.Map(this.mapRef.nativeElement, mapOptions);
     this.placesService = new google.maps.places.PlacesService(this.map);
     let request =  {
-			placeId: this.meetupDetails.placeId,
-			fields: ['name', 'formatted_address', 'place_id', 'geometry', 'types']
-		};
-		this.placesService.getDetails(request, (place, status) => {
-			console.log(place);
-			this.placeDetails = {
-				latLng: place.geometry.location,
-				latitude: place.geometry.location.lat(),
-				longitude: place.geometry.location.lng(),
-				address: place.formatted_address,
-				name: place.name,
-				placeId: place.place_id
-			}
-			this.map.setCenter(this.placeDetails.latLng);
+      placeId: this.meetupDetails.placeId,
+      fields: ['name', 'formatted_address', 'place_id', 'geometry', 'types']
+    };
+    this.placesService.getDetails(request, (place, status) => {
+      console.log(place);
+      this.placeDetails = {
+        latLng: place.geometry.location,
+        latitude: place.geometry.location.lat(),
+        longitude: place.geometry.location.lng(),
+        address: place.formatted_address,
+        name: place.name,
+        placeId: place.place_id
+      }
+      this.map.setCenter(this.placeDetails.latLng);
       this.map.setZoom(17);
       this.formMarker = new google.maps.Marker({
           position: this.placeDetails.latLng,
           map: this.map,
+          //icon:image,
       });
-	      // let latLng = new google.maps.LatLng(coordinates.lat, coordinates.lng);
-		})
-		
+        // let latLng = new google.maps.LatLng(coordinates.lat, coordinates.lng);
+    })
+    
   }
 
   trackLocation(){
-  	// this.trackGeo = this.geolocation.watchPosition({enableHighAccuracy: true})
+    // this.trackGeo = this.geolocation.watchPosition({enableHighAccuracy: true})
    //    .subscribe( data => {
-   //    	this.coordinates = {
-   //    		lat: data.coords.latitude,
-   //    		lng: data.coords.longitude
-   //    	}
+   //      this.coordinates = {
+   //        lat: data.coords.latitude,
+   //        lng: data.coords.longitude
+   //      }
    //    })
   }
 
   acceptRequest(){
-  	this.db.list('userMeetups', ref=> ref.child(this.authKey)).update(this.meetupDetails.id, {
-  		receiverStatus: 'Accepted',
-  		action:{
+    this.db.list('userMeetups', ref=> ref.child(this.authKey)).update(this.meetupDetails.id, {
+      receiverStatus: 'Accepted',
+      action:{
           method: 'accept',
           actor: this.authKey,
           isShown: true
         }
-  	})
-  	this.db.list('userMeetups', ref=> ref.child(this.receiverKey)).update(this.meetupDetails.id, {
-  		receiverStatus: 'Accepted',
-  		action:{
+    })
+    this.db.list('userMeetups', ref=> ref.child(this.receiverKey)).update(this.meetupDetails.id, {
+      receiverStatus: 'Accepted',
+      action:{
           method: 'accept',
           actor: this.authKey,
           isShown: false
         }
-  	});
-  	this.db.list('meetups', ref=> ref.child(this.chatKey)).update(this.meetupDetails.id, {
-  		receiverStatus: 'Accepted'
-  	});
+    });
+    this.db.list('meetups', ref=> ref.child(this.chatKey)).update(this.meetupDetails.id, {
+      receiverStatus: 'Accepted'
+    });
+    let toast = this.toastCtrl.create({
+      message: "Meetup request accepted.",
+      duration: 2000,
+      position: 'top'
+    });
+    toast.present();
+    this.view.dismiss();
   }
 
   declineRequest(){
-  	this.db.list('userMeetups', ref=> ref.child(this.authKey)).update(this.meetupDetails.id, {
-  		receiverStatus: 'Declined',
-  		action:{
+    this.db.list('userMeetups', ref=> ref.child(this.authKey)).update(this.meetupDetails.id, {
+      receiverStatus: 'Declined',
+      action:{
           method: 'decline',
           actor: this.authKey,
           isShown: true
         }
-  	});
-  	this.db.list('userMeetups', ref=> ref.child(this.authKey)).update(this.meetupDetails.id, {
-  		receiverStatus: 'Declined',
-  		action:{
+    });
+    this.db.list('userMeetups', ref=> ref.child(this.authKey)).update(this.meetupDetails.id, {
+      receiverStatus: 'Declined',
+      action:{
           method: 'decline',
           actor: this.authKey,
           isShown: false
         }
-  	});
-  	this.db.list('meetups', ref=> ref.child(this.chatKey)).update(this.meetupDetails.id, {
-  		receiverStatus: 'Declined'
-  	});
+    });
+    this.db.list('meetups', ref=> ref.child(this.chatKey)).update(this.meetupDetails.id, {
+      receiverStatus: 'Declined'
+    });
+    let toast = this.toastCtrl.create({
+      message: "Meetup request declined.",
+      duration: 2000,
+      position: 'top'
+    });
+    this.view.dismiss();
   }
 
   cancelMeetup(){
-  	this.db.list('userMeetups', ref=> ref.child(this.authKey)).update(this.meetupDetails.id,{
-  		isCancelled: true,
-  		action:{
+    this.db.list('userMeetups', ref=> ref.child(this.authKey)).update(this.meetupDetails.id,{
+      isCancelled: true,
+      action:{
           method: 'cancel',
           actor: this.authKey,
           isShown: true
         }
-  	});
-  	this.db.list('userMeetups', ref=> ref.child(this.receiverKey)).update(this.meetupDetails.id,{
-  		isCancelled: true,
-  		action:{
+    });
+    this.db.list('userMeetups', ref=> ref.child(this.receiverKey)).update(this.meetupDetails.id,{
+      isCancelled: true,
+      action:{
           method: 'cancel',
           actor: this.authKey,
           isShown: false
         }
-  	});
-  	this.db.list('meetups', ref=> ref.child(this.chatKey)).update(this.meetupDetails.id,{
-  		isCancelled: true
-  	});
-  	this.view.dismiss();
+    });
+    this.db.list('meetups', ref=> ref.child(this.chatKey)).update(this.meetupDetails.id,{
+      isCancelled: true
+    });
+    let toast = this.toastCtrl.create({
+      message: "Meetup request cancelled.",
+      duration: 2000,
+      position: 'top'
+    });
+    this.view.dismiss();
   }
 
 }

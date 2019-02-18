@@ -20,6 +20,7 @@ import { Facebook } from '@ionic-native/facebook';
 export class AuthProvider {
 	authUser;
 	currentTab: number;
+	isFirstLogin: boolean;
   constructor(public http: HttpClient, private fireAuth: AngularFireAuth, private zone: NgZone, private appCtrl: App, 
   	private fb: Facebook) {
     console.log('Hello AuthProvider Provider');

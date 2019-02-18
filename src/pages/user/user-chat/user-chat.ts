@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-an
 
 //Pages
 import { UserChatroomPage } from '../user-chatroom/user-chatroom';
+import { UserChatTutorialPage } from '../user-chat-tutorial/user-chat-tutorial';
 
 //Plugin
 import { AngularFireDatabase } from 'angularfire2/database';

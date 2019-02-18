@@ -5,6 +5,7 @@ import { NavController, NavParams, ViewController, ModalController} from 'ionic-
 //Pages
 import { UserGeoPage } from '../../pages/user/user-geo/user-geo';
 import { UserCheckPage } from '../../pages/user/user-check/user-check';
+import { UserReportPage } from '../../pages/user/user-report/user-report';
 
 //Plugin
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -67,5 +68,9 @@ export class PopoverComponent {
         });
       });
     this.view.dismiss();
+  }
+  reportUser(){
+    let modal = this.modalCtrl.create(UserReportPage, {user: this.receiverKey});
+    modal.present();
   }
 }

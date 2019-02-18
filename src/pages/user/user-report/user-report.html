@@ -17,5 +17,28 @@
 
 
 <ion-content padding>
-
+	<ion-list>
+	  <ion-item>
+	    <ion-label>Report User</ion-label>
+	    <ion-select [(ngModel)]="report" (ionChange)="issueChanged()">
+	      <ion-option value="Fake Profile">Fake Profile Information/Photos</ion-option>
+	      <ion-option value="Spam">Spam</ion-option>
+	      <ion-option value="Fraud">Fraud</ion-option>
+	      <ion-option value="Explicit Content">Explicit Content</ion-option>
+	      <ion-option value="Profanity/Harrassment">Profanity/Harassment</ion-option>
+	      <ion-option value="Other">Other</ion-option>
+	    </ion-select>
+	  </ion-item>
+	</ion-list>
+	<p>Upload a screenshot of the issue</p>
+	<ion-item *ngIf="report === 'Other'">
+		<ion-input placeholder="Input issue" [(ngModel)]="otherIssue" (ionChange)="othersInput()"></ion-input>
+	</ion-item>
+	<div *ngFor="let image of images"><img src="{{image}}"></div>
+	<div *ngIf="images.length<6" (click)="addPhoto()" style="min-height: 200px; background-color: whitesmoke"></div>
+	<ion-item>
+		<ion-textarea placeholder="Fill in your report" [(ngModel)]="reportMessage" >
+		</ion-textarea>
+	</ion-item>
+	<button ion-button [disabled]="!canSend" (click)="sendReport()">Submit</button>
 </ion-content>

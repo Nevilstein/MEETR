@@ -11,6 +11,8 @@ import { UserMatchPage } from '../user-match/user-match';
 import { UserEditPage } from '../user-edit/user-edit';
 import { UserGeoPage } from '../user-geo/user-geo';
 import { UserRewardPage } from '../user-reward/user-reward';
+import { UserMatchTutorialPage } from '../user-match-tutorial/user-match-tutorial';
+import { UserAllTutorialPage } from '../user-all-tutorial/user-all-tutorial';
 
 //Libraries
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -104,12 +106,20 @@ export class UserHomePage {
 		
 	}
 
-	ionViewDidLoad(){
+	ionViewDidLoad(){	
+	    if(this.authProvider.isFirstLogin){	//tutorials for first login users
+	     	let modal = this.modalCtrl.create(UserAllTutorialPage);
+	     	modal.present();
+	     	modal.onDidDismiss(() =>{
+	     		let modal = this.modalCtrl.create(UserRewardPage);
+		    	modal.present();
+	     	})
+	    }
 		this.changedProfile();	//stacking starts inside this function
 	    this.getLocation();
 	    this.getTools();
 	    this.rewardChecker = setInterval(() =>{
-	    	if(this.isReward != undefined && this.isReward){
+	    	if(this.isReward != undefined && this.isReward && !this.authProvider.isFirstLogin){
 	    		clearInterval(this.rewardChecker);
 		    	let modal = this.modalCtrl.create(UserRewardPage);
 		    	modal.present();
@@ -296,7 +306,7 @@ export class UserHomePage {
 	}
 
 	onSuperLike(swipedUser, isLiked, superlike){
-		if(this.myCoins>=superlike){
+		if(this.myCoins>=this.superlikeValue){
 			let toast = this.toastCtrl.create({
 	          message: "Superliked",
 	          duration: 2000,

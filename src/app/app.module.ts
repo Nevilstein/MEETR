@@ -58,10 +58,6 @@ import { UserRewardTutorialPage } from '../pages/user/user-reward-tutorial/user-
 import { UserRewardTutorialPageModule } from '../pages/user/user-reward-tutorial/user-reward-tutorial.module';
 import { UserChatTutorialPageModule } from '../pages/user/user-chat-tutorial/user-chat-tutorial.module';
 import { UserChatTutorialPage } from '../pages/user/user-chat-tutorial/user-chat-tutorial';
-
-
-
-
 import { ImageViewPage } from '../pages/image-view/image-view';
 import { ImageViewPageModule } from '../pages/image-view/image-view.module';
 import { PopoverComponent } from '../components/popover/popover';
@@ -73,6 +69,8 @@ import { LocationRequestPage } from '../pages/location-request/location-request'
 import { LocationRequestPageModule } from '../pages/location-request/location-request.module';
 import { FormInterestPage } from '../pages/user/form-interest/form-interest';
 import { FormInterestPageModule } from '../pages/user/form-interest/form-interest.module';
+import { UserAllTutorialPageModule } from '../pages/user/user-all-tutorial/user-all-tutorial.module';
+import { UserAllTutorialPage} from '../pages/user/user-all-tutorial/user-all-tutorial';
 
 //Plugins
 import { AngularFireModule } from 'angularfire2';
@@ -149,7 +147,8 @@ export const firebaseConfig = {
     LocationRequestPageModule,
     UserRewardTutorialPageModule,
     UserMatchTutorialPageModule,
-    UserChatTutorialPageModule
+    UserChatTutorialPageModule,
+    UserAllTutorialPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -171,10 +170,7 @@ export const firebaseConfig = {
     PopoverComponent,
     LocRequirePage,
     FormInterestPage,
-    UserRewardTutorialPage,
-    UserChatTutorialPage,
-    UserMatchTutorialPage
-
+    UserAllTutorialPage
   ],
   providers: [
     StatusBar,

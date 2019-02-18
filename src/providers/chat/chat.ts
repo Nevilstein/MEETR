@@ -18,6 +18,7 @@ export class ChatProvider {
   chatKey: string;
   receiverKey: string;
   userProfile:any;
+  geoStatus:boolean;
 
   myLocation: any;
   meetupRequest: any;

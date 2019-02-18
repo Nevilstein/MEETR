@@ -23,6 +23,9 @@
         <!-- <button style="background-color: transparent; display: inline-block;" >
           <ion-icon class="gps" name="pin" (click)="gotoGeo()"></ion-icon>
         </button> -->
+        <ion-toggle [(ngModel)]="geoStatus.sender" (ionChange)="geoChanged()">
+          
+        </ion-toggle>
     </ion-row>
       <ion-buttons class="more_button" end (click)="presentPopover($event)">
         <button style="background-color: transparent;">
@@ -93,8 +96,9 @@
             </button>
         </ion-col>
         <ion-col col-7>
+          <ion-item no-lines>
              <ion-input type="text" [(ngModel)]="myMessage" (ionChange)="checkMessage()" placeholder="Type something..." id="input_box"></ion-input>  
-             <!-- Change to text area? -->
+          </ion-item>
         </ion-col>
         <ion-col>
            <button id="send_pic" (click)="sendImage()">
@@ -112,16 +116,31 @@
            <button id="pin" [disabled]="hasMeetup" (click)="meetup()">
               <ion-icon name="compass"></ion-icon>
             </button>
+            <ion-row class="icon_text" text-center>
+              <ion-col>
+                <small>Meetup request</small>
+              </ion-col>
+            </ion-row>
         </ion-col>
         <ion-col>
            <button id="pin" [disabled]="!meetDetails" (click)="checkMeetup()">
               <ion-icon name="ios-eye"></ion-icon>
             </button>
+            <ion-row class="icon_text" text-center>
+              <ion-col>
+                <small>Current meetup</small>
+              </ion-col>
+            </ion-row>
         </ion-col>
         <ion-col>
            <button id="pin" (click)="gotoGeo()">
               <ion-icon name="pin"></ion-icon>
             </button>
+            <ion-row class="icon_text" text-center>
+              <ion-col>
+                <small>Pinpoint Location</small>
+              </ion-col>
+            </ion-row>
         </ion-col>
     </ion-row>
 </ion-footer>

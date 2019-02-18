@@ -28,9 +28,9 @@ import firebase from 'firebase';
 export class UserMeetupPage {
   minDate = moment().format();
   maxDate = moment().add(1, 'years').format();
-	date;
-	time;
-	location;
+  date;
+  time;
+  location;
   hasLocation: boolean = false;
   authKey =  this.authProvider.authUser;
   chatKey = this.chatProvider.chatKey;
@@ -71,9 +71,9 @@ export class UserMeetupPage {
   }
 
   selectLocation(){
-  	let modal = this.modalCtrl.create(LocationSelectPage);
-  	modal.present();
-  	modal.onDidDismiss(data =>{
+    let modal = this.modalCtrl.create(LocationSelectPage);
+    modal.present();
+    modal.onDidDismiss(data =>{
       if(data){
         if(data.location){
           this.location = data.location;
@@ -89,7 +89,7 @@ export class UserMeetupPage {
           this.hasLocation = true;
         }
       }
-  	});
+    });
   }
 
   cancel(){

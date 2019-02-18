@@ -105,4 +105,21 @@ page-user-chatroom {
 	.more_button{
 		margin-right: 10px;
 	}
+	.icon_text{
+		margin-top: -1vh;
+	}
+}
+.location_avail{
+	text-align: center;
+	margin-top: 4.7rem;
+	> div{
+	   background-color:#59d699  !important;
+	}
+}
+.location_unavail{
+	text-align: center;
+	margin-top: 4.7rem;
+	> div{
+	   background-color:#d65963  !important;
+	}
 }

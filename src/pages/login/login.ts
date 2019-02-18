@@ -120,6 +120,7 @@ export class LoginPage {
           isLoggedIn: true
         }
         this.zone.run(() => {    //if snapshot doesn't exist redirect to wizard form
+            this.authProvider.isFirstLogin = true;
             this.navCtrl.setRoot(UserFormPage, {
               profile: profile
             });
@@ -135,6 +136,7 @@ export class LoginPage {
         }).then( () =>{
           this.zone.run(() => {
             // this.navCtrl.push(LoadingPage);
+            this.authProvider.isFirstLogin = false;
             this.navCtrl.setRoot(UserTabsPage)
           });
         });

@@ -44,6 +44,7 @@ export class UserProfilePage {
 
   //Observer/Subscription
   profileObserver;
+  // likeObserver;
 
   //Variables
   firstName: string;
@@ -65,6 +66,7 @@ export class UserProfilePage {
   }
   ionViewWillUnload(){
     this.profileObserver.unsubscribe();
+    // this.likeObserver.unsubscribe();
   }
 
   loadProfile(){
@@ -80,7 +82,9 @@ export class UserProfilePage {
         this.userProvider.getUserProfile();
       });
   }
-  
+  // getLikes(){
+  //   this.likeObserver = this.db.list('likes')
+  // }
   goToEdit(){
     this.navCtrl.push(UserEditPage);
   }
