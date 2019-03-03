@@ -1,0 +1,46 @@
+<!--
+  Generated template for the RequestListPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<!-- <ion-header>
+
+  <ion-navbar>
+    <ion-title>request-list</ion-title>
+  </ion-navbar>
+
+</ion-header> -->
+
+
+<ion-content padding>
+	<div *ngIf="requests.length > 0">
+		<h2>Active</h2>
+		<div *ngIf="activeIndex > -1" (click)="selectRequest(activeMeetup)">
+			<p>{{activeMeetup.date}}</p>
+			<p>{{activeMeetup.time}}</p>
+			<p>{{activeMeetup.status}}</p>
+			<p>Date Sent: {{activeMeetup.dateSent}}</p>
+		</div>
+		<div *ngIf="activeIndex === -1">
+			No Pending/Scheduled Meetup.
+		</div>
+		<hr>
+		<div *ngIf="inactiveRequests.length > 0">
+			<h2>Inactive</h2>
+			<div *ngFor="let inactive of inactiveRequests" (click)="selectRequest(inactive)">
+				<p>{{inactive.date}}</p>
+				<p>{{inactive.time}}</p>
+				<p *ngIf="inactive.isCancelled">Cancelled</p>
+				<p *ngIf="!inactive.isCancelled">{{inactive.status}}</p>
+				<p>Date Sent: {{inactive.dateSent}}</p>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="requests.length === 0">
+		No Meetups.
+	</div>
+	<ion-fab right bottom>
+    	<button ion-fab color="secondary" [disabled]="activeIndex > -1" (click)="sendRequest()"><ion-icon class="form_icons" name="compass"></ion-icon></button>
+  	</ion-fab>
+</ion-content>

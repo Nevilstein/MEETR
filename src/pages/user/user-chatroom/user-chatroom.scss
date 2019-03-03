@@ -83,6 +83,9 @@ page-user-chatroom {
 		padding: 0px 10px;
 		border-radius: 10px;
 	}
+	.chatmate p{
+		white-space: pre-wrap;
+	}
 	.user{
 		background-color: #2F6690;
 		display: inline-block;
@@ -94,6 +97,7 @@ page-user-chatroom {
 	}
 	.user p{
 		color: white;
+		white-space: pre-wrap;
 	}
 	.circle_pic{
 		float: left;

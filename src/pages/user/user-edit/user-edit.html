@@ -48,7 +48,7 @@
 		<hr>
 		<ion-card-content>
 			<ion-item no-lines>
-				<ion-textarea id="text" [(ngModel)]="bio" (ionBlur)="bioChanged()" placeholder="About you"></ion-textarea>
+				<ion-textarea #bioText id="text" rows="4" [(ngModel)]="bio" (ionBlur)="bioChanged()" placeholder="About you"></ion-textarea>
 			</ion-item>
 		</ion-card-content>
 	</ion-card>

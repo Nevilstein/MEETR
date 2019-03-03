@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, TextInput} from 'ionic-angular';
 
 //Page
 import { UserProfilePage } from '../user-profile/user-profile';
@@ -45,7 +45,7 @@ export class UserEditPage {
   questions = [];
   backQuestions = [];
 
-  quizDuration = 7*86400000; //7 days in milliseconds is the duration of all questions
+  // quizDuration = 7*86400000; //7 days in milliseconds is the duration of all questions
   
 
   //Element variables
@@ -53,6 +53,7 @@ export class UserEditPage {
   isUploading: boolean = false;
   uploadTask: AngularFireUploadTask;
    @ViewChild('myInput') myInput: ElementRef;
+   @ViewChild('bioText') textbox: TextInput;
 
   //Observer/Subscription
   profileObserver;
@@ -67,12 +68,12 @@ export class UserEditPage {
 
   ionViewDidLoad() {
     this.loadProfile();
-    this.loadAnswers();
+    // this.loadAnswers();
     console.log('ionViewDidLoad UserEditPage');
   }
   ionViewWillUnload(){
     this.profileObserver.unsubscribe();
-    this.answerObserver.unsubscribe();
+    // this.answerObserver.unsubscribe();
   }
 
   goBack(){
@@ -93,22 +94,22 @@ export class UserEditPage {
         // this.interestList = this.removeDuples(this.interestList);
       });
   }
-  loadAnswers(){
-    this.answerObserver = this.db.list('answers', ref=> ref.child(this.authUser).orderByChild('timestamp')
-      .limitToLast(10)).snapshotChanges().subscribe(snapshot =>{
-        let dateNow = moment().valueOf();
-        let quizList = [];
-        snapshot.forEach(element => {
-          let data = element.payload.val();
-          data['answerKey'] = element.key;
-          if((dateNow-data['timestamp'])<this.quizDuration){
-            quizList.push(data);
-          }
-        });
-        this.questions = quizList;
-        this.backQuestions = quizList;
-      });
-  }
+  // loadAnswers(){
+  //   this.answerObserver = this.db.list('answers', ref=> ref.child(this.authUser).orderByChild('timestamp')
+  //     .limitToLast(10)).snapshotChanges().subscribe(snapshot =>{
+  //       let dateNow = moment().valueOf();
+  //       let quizList = [];
+  //       snapshot.forEach(element => {
+  //         let data = element.payload.val();
+  //         data['answerKey'] = element.key;
+  //         if((dateNow-data['timestamp'])<this.quizDuration){
+  //           quizList.push(data);
+  //         }
+  //       });
+  //       this.questions = quizList;
+  //       this.backQuestions = quizList;
+  //     });
+  // }
   // removeDuples(interests){
   //   let newList = [];
   //   interests.forEach( element =>{
@@ -134,7 +135,7 @@ export class UserEditPage {
   dbUpdateProfile(){  //Update all values in profile
     this.db.list('profile').update(this.authUser, {
       interests: this.interests,
-      bio: this.bio,
+      bio: this.bio.trim(),
       gender: {
          male: this.isMale,
          female: this.isFemale
@@ -156,7 +157,7 @@ export class UserEditPage {
 
   uploadPhoto(){
     const options: CameraOptions = {
-      quality: 75,
+      quality: 100,
       destinationType: this.camera.DestinationType.DATA_URL,
       // encodingType: this.camera.EncodingType.JPEG,
       // mediaType: this.camera.MediaType.PICTURE

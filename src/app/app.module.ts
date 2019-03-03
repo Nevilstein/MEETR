@@ -69,6 +69,8 @@ import { LocationRequestPage } from '../pages/location-request/location-request'
 import { LocationRequestPageModule } from '../pages/location-request/location-request.module';
 import { FormInterestPage } from '../pages/user/form-interest/form-interest';
 import { FormInterestPageModule } from '../pages/user/form-interest/form-interest.module';
+import { RequestListPage } from '../pages/request-list/request-list';
+import { RequestListPageModule } from '../pages/request-list/request-list.module';
 import { UserAllTutorialPageModule } from '../pages/user/user-all-tutorial/user-all-tutorial.module';
 import { UserAllTutorialPage} from '../pages/user/user-all-tutorial/user-all-tutorial';
 
@@ -85,6 +87,7 @@ import firebase from 'firebase';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import { Diagnostic } from '@ionic-native/diagnostic';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
+import { ImagePicker } from '@ionic-native/image-picker';
 
 //Provider
 import { AuthProvider } from '../providers/auth/auth';
@@ -110,7 +113,7 @@ export const firebaseConfig = {
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp,{tabsPlacement: 'top'}),
+    IonicModule.forRoot(MyApp,{tabsPlacement: 'top', scrollAssist: false, autoFocusAssist: false }),
     HttpClientModule,
     SwipeCardsModule,
     AngularFireModule.initializeApp(firebaseConfig),
@@ -145,6 +148,7 @@ export const firebaseConfig = {
     FormInterestPageModule,
     LocationSelectPageModule,
     LocationRequestPageModule,
+    RequestListPageModule,
     UserRewardTutorialPageModule,
     UserMatchTutorialPageModule,
     UserChatTutorialPageModule,
@@ -182,6 +186,7 @@ export const firebaseConfig = {
     LocalNotifications,
     Diagnostic,
     LocationAccuracy,
+    ImagePicker,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthProvider,
     ChatProvider,

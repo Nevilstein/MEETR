@@ -37,6 +37,7 @@ export class UserMeetupPage {
   receiverKey = this.chatProvider.receiverKey;
 
   isSent: boolean = false;
+  allRequests = [];
   meetUpData;
 
   map:any;
@@ -98,91 +99,117 @@ export class UserMeetupPage {
 
   sendMeetup(){
     let dateNow = moment().valueOf();
-    if(this.date && this.time && this.location){
-      this.isSent = true;
-      this.meetUpData = {
-        date: this.date,
-        time: this.time
+    let dateSet = moment(this.date+" "+this.time).valueOf();
+    let sameDateIndex = this.allRequests.findIndex(x => !x.isCancelled && x.date === this.date
+      && (x.status === "Ongoing" || x.status === "Success"));
+    alert(sameDateIndex);
+    let timePassed = dateNow >= dateSet ? true: false;
+    if(sameDateIndex === -1 && !timePassed){
+      if(this.date && this.time && this.location){
+        this.isSent = true;
+        this.meetUpData = {
+          date: this.date,
+          time: this.time
+        }
+        this.meetUpData = Object.assign(this.meetUpData, this.location);
+        console.log(this.meetUpData);  
+        this.db.list('meetups', ref=> ref.child(this.chatKey)).push({
+          date: this.meetUpData.date,
+          time: this.meetUpData.time,
+          location: {
+            latitude: this.meetUpData.latitude,
+            longitude: this.meetUpData.longitude
+          },
+          sender: this.authKey,
+          receiver: this.receiverKey,
+          placeId: this.meetUpData.placeId,
+          receiverStatus: 'Pending',
+          senderStatus: 'Accepted',
+          status: 'Pending',
+          isCancelled: false,
+          createdDate: dateNow,
+          timestamp: firebase.database.ServerValue.TIMESTAMP,
+          hasArrived:{
+            [this.authKey]: false,
+            [this.receiverKey]: false,
+          },
+        }).then( uniqueSnap =>{
+            this.db.list('userMeetups', ref=> ref.child(this.authKey)).set(uniqueSnap.key,{
+              date: this.meetUpData.date,
+              time: this.meetUpData.time,
+              location: {
+                latitude: this.meetUpData.latitude,
+                longitude: this.meetUpData.longitude
+              },
+              sender: this.authKey,
+              receiver: this.receiverKey,
+              placeId: this.meetUpData.placeId,
+              chatId: this.chatKey,
+              timestamp: firebase.database.ServerValue.TIMESTAMP,
+              receiverStatus: 'Pending',
+              senderStatus: 'Accepted',
+              status: 'Pending',
+              isCancelled: false,
+              createdDate: dateNow,
+              action:{
+                method: 'send',
+                actor: this.authKey,
+                isShown: true
+              }
+            });
+            this.db.list('userMeetups', ref=> ref.child(this.receiverKey)).set(uniqueSnap.key,{
+              date: this.meetUpData.date,
+              time: this.meetUpData.time,
+              location: {
+                latitude: this.meetUpData.latitude,
+                longitude: this.meetUpData.longitude
+              },
+              sender: this.authKey,
+              receiver: this.receiverKey,
+              placeId: this.meetUpData.placeId,
+              chatId: this.chatKey,
+              timestamp: firebase.database.ServerValue.TIMESTAMP,
+              receiverStatus: 'Pending',
+              senderStatus: 'Accepted',
+              status: 'Pending',
+              isCancelled: false,
+              createdDate: dateNow,
+              action:{
+                method: 'send',
+                actor: this.authKey,
+                isShown: false
+              }
+            });
+        }).then(() =>{
+          this.view.dismiss();
+          let toast = this.toastCtrl.create({
+            message: "Request sent.",
+            duration: 1000,
+            position: 'bottom',
+          });
+          toast.present();
+        });
       }
-      this.meetUpData = Object.assign(this.meetUpData, this.location);
-      console.log(this.meetUpData);  
-      this.db.list('meetups', ref=> ref.child(this.chatKey)).push({
-        date: this.meetUpData.date,
-        time: this.meetUpData.time,
-        location: {
-          latitude: this.meetUpData.latitude,
-          longitude: this.meetUpData.longitude
-        },
-        sender: this.authKey,
-        receiver: this.receiverKey,
-        placeId: this.meetUpData.placeId,
-        receiverStatus: 'Pending',
-        senderStatus: 'Accepted',
-        isCancelled: false,
-        createdDate: dateNow,
-        timestamp: firebase.database.ServerValue.TIMESTAMP,
-        hasArrived:{
-          [this.authKey]: false,
-          [this.receiverKey]: false,
-        },
-      }).then( uniqueSnap =>{
-          this.db.list('userMeetups', ref=> ref.child(this.authKey)).set(uniqueSnap.key,{
-            date: this.meetUpData.date,
-            time: this.meetUpData.time,
-            location: {
-              latitude: this.meetUpData.latitude,
-              longitude: this.meetUpData.longitude
-            },
-            sender: this.authKey,
-            receiver: this.receiverKey,
-            placeId: this.meetUpData.placeId,
-            chatId: this.chatKey,
-            timestamp: firebase.database.ServerValue.TIMESTAMP,
-            receiverStatus: 'Pending',
-            senderStatus: 'Accepted',
-            isCancelled: false,
-            createdDate: dateNow,
-            action:{
-              method: 'send',
-              actor: this.authKey,
-              isShown: true
-            }
-          });
-          this.db.list('userMeetups', ref=> ref.child(this.receiverKey)).set(uniqueSnap.key,{
-            date: this.meetUpData.date,
-            time: this.meetUpData.time,
-            location: {
-              latitude: this.meetUpData.latitude,
-              longitude: this.meetUpData.longitude
-            },
-            sender: this.authKey,
-            receiver: this.receiverKey,
-            placeId: this.meetUpData.placeId,
-            chatId: this.chatKey,
-            timestamp: firebase.database.ServerValue.TIMESTAMP,
-            receiverStatus: 'Pending',
-            senderStatus: 'Accepted',
-            isCancelled: false,
-            createdDate: dateNow,
-            action:{
-              method: 'send',
-              actor: this.authKey,
-              isShown: false
-            }
-          });
-      }).then(() =>{
-        this.view.dismiss();
+      else{
         let toast = this.toastCtrl.create({
-          message: "Request sent.",
+            message: "Please enter meetup information.",
+            duration: 1000,
+            position: 'bottom',
+          });
+          toast.present();
+      }
+    }
+    else if(timePassed){
+      let toast = this.toastCtrl.create({
+          message: "Date already passed.",
           duration: 1000,
           position: 'bottom',
         });
         toast.present();
-      });
     }
-    else{
+    else if(sameDateIndex > -1){
       let toast = this.toastCtrl.create({
-          message: "Please enter meetup information.",
+          message: "Date already scheduled. Please enter another date.",
           duration: 1000,
           position: 'bottom',
         });

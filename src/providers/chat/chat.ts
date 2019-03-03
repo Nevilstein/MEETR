@@ -22,7 +22,12 @@ export class ChatProvider {
 
   myLocation: any;
   meetupRequest: any;
-  // chatList = [];
+
+  //newly Added variables 02/24/19
+  messages = [];
+  requests = [];
+  allrequests = [];
+
 
   //Observer/Subscription
   // chatObserver;

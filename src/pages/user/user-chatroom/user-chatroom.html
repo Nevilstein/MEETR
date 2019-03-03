@@ -37,7 +37,7 @@
 </ion-header>
 
 
-<ion-content class="chatroom_content" padding >
+<ion-content class="chatroom_content" padding (ionScroll)="contentScrolled()" style="min-height: 200px">
   <!-- <div class="chatwindow">
     <ion-list no-lines>
       <ion-item *ngFor = "let message of messages" text-wrap>
@@ -80,39 +80,42 @@
       <ion-col col-3></ion-col>
       <ion-col>
         <div class="user">
+          IMAGE LOADING...
           <img src="{{image.image}}" alt="No photo available.">
         </div>
       </ion-col>
     </ion-row>
   </ion-list>
-  
+  <ion-fab center bottom *ngIf="!isBottom">
+      <button ion-fab clear (click)="toBottom()"><ion-icon name="arrow-round-down"></ion-icon></button>
+    </ion-fab>
 </ion-content>
 
-<ion-footer style="background-color: white;">
+<ion-footer style="background-color: white">
     <ion-row>
         <ion-col col-1>
            <button id="pin" (click)="show_div()">
               <ion-icon name="apps"></ion-icon>
             </button>
         </ion-col>
-        <ion-col col-7>
+        <ion-col col-9>
           <ion-item no-lines>
-             <ion-input type="text" [(ngModel)]="myMessage" (ionChange)="checkMessage()" placeholder="Type something..." id="input_box"></ion-input>  
+             <ion-textarea #message rows="1" type="text" [(ngModel)]="myMessage" (ionChange)="checkMessage()" placeholder="Type something..." id="input_box"></ion-textarea>  
           </ion-item>
         </ion-col>
-        <ion-col>
+        <!-- <ion-col>
            <button id="send_pic" (click)="sendImage()">
               <ion-icon name="image"></ion-icon>
             </button>
-        </ion-col>
-        <ion-col >
+        </ion-col> -->
+        <ion-col>
             <button id="send" [disabled]="messageEmpty" (click)="sendMessage()">
               <ion-icon name="send" ></ion-icon>
             </button>
         </ion-col>
     </ion-row>
     <ion-row id="footer1" *ngIf="show" text-center>
-      <ion-col>
+        <!-- <ion-col>
            <button id="pin" [disabled]="hasMeetup" (click)="meetup()">
               <ion-icon name="compass"></ion-icon>
             </button>
@@ -121,14 +124,34 @@
                 <small>Meetup request</small>
               </ion-col>
             </ion-row>
-        </ion-col>
+        </ion-col> -->
         <ion-col>
+           <button id="send_pic" (click)="sendImage()">
+              <ion-icon name="image"></ion-icon>
+            </button>
+            <ion-row class="icon_text" text-center>
+              <ion-col>
+                <small>Send Image</small>
+              </ion-col>
+            </ion-row>
+        </ion-col>
+        <!-- <ion-col>
            <button id="pin" [disabled]="!meetDetails" (click)="checkMeetup()">
               <ion-icon name="ios-eye"></ion-icon>
             </button>
             <ion-row class="icon_text" text-center>
               <ion-col>
                 <small>Current meetup</small>
+              </ion-col>
+            </ion-row>
+        </ion-col> -->
+        <ion-col>
+           <button id="pin" (click)="checkMeetup()">
+              <ion-icon name="ios-eye"></ion-icon>
+            </button>
+            <ion-row class="icon_text" text-center>
+              <ion-col>
+                <small>Meetup Request</small>
               </ion-col>
             </ion-row>
         </ion-col>

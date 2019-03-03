@@ -8,6 +8,7 @@ import { LoginPage } from '../pages/login/login';
 import { UserProfilePage } from '../pages/user/user-profile/user-profile';
 import { timer } from 'rxjs/observable/timer';
 
+
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 
 @Component({

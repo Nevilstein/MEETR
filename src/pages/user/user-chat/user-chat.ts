@@ -34,11 +34,15 @@ export class UserChatPage {
   chatCount = 50;
   chatTabLoading = true;
   loader;
+  allMeetups = [];
+
+  chatData = [];  //contains all chat including its messages
 
   //Observer/Subscriptions
   chatObserver;
-  chatNewObserver;
+  newChatObserver;
   userProfileObserver;
+  meetupObserver;
   constructor(public navCtrl: NavController, public navParams: NavParams, private db:AngularFireDatabase, 
     private authProvider: AuthProvider, private chatProvider: ChatProvider, private loadingCtrl: LoadingController) {
   }
@@ -57,50 +61,50 @@ export class UserChatPage {
       .snapshotChanges().subscribe( snapshot => {
         if(snapshot.length>0){
           var chatPromise = new Promise(resolve =>{
-          let reversedSnap = snapshot.slice().reverse();
-          let chatArray = [];
-          reversedSnap.forEach( (element, index) =>{
-            let data = element.payload.val();
-            data['id'] = element.key;
-            this.db.list('profile', ref=> ref.child(data['receiver'])).query.once('value', profileSnap => {
-                let profileData = profileSnap.val();
-                data['firstName'] = profileData.firstName;
-                data['lastName'] = profileData.lastName;
-                data['userImage'] = profileData.photos[0];
-                data['userKey'] = profileSnap.key;
-            });
-            this.db.list('messages', ref=> ref.child(this.authKey).child(data['id']).orderByChild('timestamp').limitToLast(1))
-              .query.once('value', messageSnap =>{
-                console.log("message", messageSnap);
-                if(messageSnap){
-                  messageSnap.forEach( element =>{  //only returns one, foreach to include checking if got 1
-                    let messageData = element.val();
-                    var message;
-                    if(messageData.type === 'message'){
-                      message = ((messageData['sender'] === this.authKey)? "You: " : (data['firstName']+": "))+messageData['message'];
-                      data['message'] = (message.length>25 ? message.substring(0, 25)+"..." : message);
-                    }
-                    else if(messageData.type === 'image'){
-                      message = ((messageData['sender'] === this.authKey)? "You" : (data['firstName']));
-                      data['message'] = message+" "+"sent a photo.";
-                    }
-                    data['messageDate'] = this.messageDateFormat(messageData['timestamp']);
-                    data['messageStatus'] = messageData['status'];
-                    data['isRead'] = messageData['isRead'];
-                  });
-                  if(data['matchStatus']){  //only chats with active matches
-                    chatArray.push(data);
-                  }
-                  if(index+1 === reversedSnap.length){
-                    resolve(chatArray);
-                  } 
-                }
-                else{    //02-02-19 if added, might have error
-                  if(index+1 === reversedSnap.length){
-                    resolve(chatArray);
-                  } 
-                }  
+            let reversedSnap = snapshot.slice().reverse();
+            let chatArray = [];
+            reversedSnap.forEach( (element, index) =>{
+              let data = element.payload.val();
+              data['id'] = element.key;
+              this.db.list('profile', ref=> ref.child(data['receiver'])).query.once('value', profileSnap => {
+                  let profileData = profileSnap.val();
+                  data['firstName'] = profileData.firstName;
+                  data['lastName'] = profileData.lastName;
+                  data['userImage'] = profileData.photos[0];
+                  data['userKey'] = profileSnap.key;
               });
+              this.db.list('messages', ref=> ref.child(this.authKey).child(data['id']).orderByChild('timestamp').limitToLast(1))
+                .query.once('value', messageSnap =>{
+                  // console.log("message", messageSnap);
+                  if(messageSnap){
+                    messageSnap.forEach( newElement =>{  //only returns one, foreach to include checking if got 1
+                      let messageData = newElement.val();
+                      var message;
+                      if(messageData.type === 'message'){
+                        message = ((messageData['sender'] === this.authKey)? "You: " : (data['firstName']+": "))+messageData['message'];
+                        data['message'] = (message.length>25 ? message.substring(0, 25)+"..." : message);
+                      }
+                      else if(messageData.type === 'image'){
+                        message = ((messageData['sender'] === this.authKey)? "You" : (data['firstName']));
+                        data['message'] = message+" "+"sent a photo.";
+                      }
+                      data['messageDate'] = this.messageDateFormat(messageData['timestamp']);
+                      data['messageStatus'] = messageData['status'];
+                      data['isRead'] = messageData['isRead'];
+                    });
+                    if(data['matchStatus']){  //only chats with active matches
+                      chatArray.push(data);
+                    }
+                    if(index+1 === reversedSnap.length){
+                      resolve(chatArray);
+                    } 
+                  }
+                  else{    //02-02-19 if added, might have error
+                    if(index+1 === reversedSnap.length){
+                      resolve(chatArray);
+                    } 
+                  }  
+                });
             });
           }).then( chatList => {
             this.chatList = [];
@@ -109,12 +113,68 @@ export class UserChatPage {
               this.filterChat = this.chatList;
             }
             this.searchMatch();  //update changes even while in searching process
-            this.loader.dismiss();
+            // this.loader.dismiss();
+            this.getChatData();
           });
         }
         else{
           this.loader.dismiss();
         }
+      });
+  }
+  getChatData(){
+    this.newChatObserver = this.db.list('chat', ref => ref.child(this.authKey).orderByChild('timestamp'))
+      .snapshotChanges().subscribe( snapshot => {
+        var chatPromise = new Promise (resolve =>{
+          snapshot.forEach( (element,index) => {
+            let data = element.payload.val();
+            data['id'] = element.key;
+            data['messages'] = [];
+            this.db.list('messages', ref=> ref.child(this.authKey).child(data['id']).orderByChild('timestamp'))
+              .query.once('value', messageSnap =>{
+                if(messageSnap){
+                  messageSnap.forEach( newElement =>{  //only returns one, foreach to include checking if got 1
+                    let messageData = newElement.val();
+                    messageData['id'] = newElement.key;
+                    data['messages'].push(messageData);
+                  });
+                  this.chatData.push(data);
+                  if(index+1 === snapshot.length){
+                    resolve(true);
+                  } 
+                }
+                else{    //02-02-19 if added, might have error
+                  if(index+1 === snapshot.length){
+                    resolve(true);
+                  } 
+                }
+              });
+          });
+        });
+        chatPromise.then(() =>{
+          this.getMeetups();
+        });
+      });
+  }
+  getMeetups(){
+    this.meetupObserver = this.db.list('userMeetups', ref=> ref.orderByKey().equalTo(this.authKey))
+      .snapshotChanges().subscribe(snapshot =>{
+        let reversedSnap = snapshot.slice().reverse();
+        let meetups = [];
+        var meetupPromise = new Promise(resolve =>{
+          reversedSnap.forEach(element => {
+            let data = element.payload.val();
+            data['id'] = element.key;
+            meetups.push(data);
+          });
+          resolve(true);
+        });
+        meetupPromise.then(() =>{
+          this.allMeetups = [];
+          this.allMeetups = meetups;
+          this.chatProvider.allrequests = meetups;
+          this.loader.dismiss();
+        });
       });
   }
   messageDateFormat(date){
@@ -139,6 +199,8 @@ export class UserChatPage {
     // });
     this.chatProvider.chatKey = chatKey;
     this.chatProvider.receiverKey = userKey;
+    let chatIndex = this.chatData.findIndex(item => item.id === chatKey);
+    this.chatProvider.messages = this.chatData[chatIndex]['messages'];
     this.navCtrl.push(UserChatroomPage);
   }  
 

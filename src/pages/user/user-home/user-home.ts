@@ -206,7 +206,6 @@ export class UserHomePage {
 
    		// setTimeout(() =>{
    		// 	this.stackedUsers.splice(0, 1);	//remove 1st stack after adding to db
-   		// 	console.log('time');
    		// },500);
 
    		let isLiked = event.like;
@@ -576,7 +575,6 @@ export class UserHomePage {
 				this.db.list('profile', ref => ref.orderByChild('gender/female')
 					.equalTo(true)).query.once('value').then( snapshot => {
 						snapshot.forEach(element =>{
-							console.log("female");
 							if(element.key !== this.authUser){ //avoid getting self
 								let data = element.val();
 								data.id = element.key;
@@ -595,7 +593,6 @@ export class UserHomePage {
 			}
 		});
 		Promise.all([malePromise, femalePromise]).then( () =>{	//wait to retrieve userbyGender promise to get values
-			console.log("Users", this.userList);
 			this.filterByInterests();
 			// this.filterByLocation();
 		});
@@ -608,7 +605,6 @@ export class UserHomePage {
 			let sameInterest = myInterests.filter( item =>{
 				return userInterests.indexOf(item) > -1;
 			});
-			console.log(sameInterest);
 			if(sameInterest.length>0){
 				let data = value;
 				data['sameInterest'] = sameInterest;
@@ -616,7 +612,6 @@ export class UserHomePage {
 			}
 		});
 		this.userList = newList;
-		console.log("Interests", this.userList);
 		this.filterByLocation();
 	}
 	filterByLocation(){
@@ -640,7 +635,6 @@ export class UserHomePage {
 								latitude: this.myCoordinates['latitude'],
 								longitude: this.myCoordinates['longitude']
 							}
-							console.log(otherPoint, myPoint);
 							let isInRange = geolib.isPointInCircle(
 							    otherPoint,myPoint,
 							    this.myProfile['maxDistance']*1000);	//check if in distance preference
@@ -649,7 +643,6 @@ export class UserHomePage {
 							}
 						}
 					}).then(() =>{
-						console.log(index+1, "===", userLength);
 						if(index+1 === userLength){
 							resolve(true);
 						}
@@ -658,7 +651,6 @@ export class UserHomePage {
 		});
 		locationPromise.then(() => {
 			this.userList = newList;	//change update current list
-			console.log("Location", this.userList);
 			this.filterByAge();
 		});
 	}
@@ -677,7 +669,6 @@ export class UserHomePage {
 						data.id = snapshot.key;
 						let age = value.age;
 						let ageRange = this.myProfile['ageRange'];	//age range preference of user
-						console.log(age, ageRange.min, ageRange.max);
 						var isInRange;
 						if(ageRange.max < 50){
 							isInRange = ((age >= ageRange.min && 
@@ -701,7 +692,6 @@ export class UserHomePage {
 		});
 		agePromise.then(() => {
 			this.userList = newList;
-			console.log("Age", this.userList);
 			this.filterByActive();
 		});
 	}
@@ -736,7 +726,6 @@ export class UserHomePage {
 		});
 		activePromise.then(()=>{
 			this.userList = newList;
-			console.log("Active", this.userList);
 			this.checkMatchStatus();
 		});
 	}
@@ -761,7 +750,6 @@ export class UserHomePage {
 		});
 		matchPromise.then(() =>{
 			this.userList = newList;
-			console.log("Match", this.userList);
 			this.checkLikeStatus(newList);
 		});
 	}
@@ -769,8 +757,6 @@ export class UserHomePage {
 	checkLikeStatus(userList){
 		let newList = [];
 		let userLength = userList.length;
-		console.log(userList);
-		console.log("like1", userLength);
 		var likedPromise = new Promise(resolve =>{
 			if(!(userLength > 0)){
 				resolve(true);
@@ -797,7 +783,6 @@ export class UserHomePage {
 		});
 		likedPromise.then(() =>{
 			this.userList = newList;
-			console.log("Like", this.userList);
 			this.checkDuplicates();
 			
 		});
@@ -863,26 +848,24 @@ export class UserHomePage {
         this.listUsers();
 	}
 	stackUser(){
-		console.log('stack');
 		let numOfCards = ((this.userList.length<20) ? this.userList.length : 20);	//safety check if low count of users
 		for(let i=0; i<numOfCards; i++){
-			console.log("User", i)
 			this.getCard();
 		}
 		if(numOfCards>0){
 			setTimeout(()=>{    //<<<---    using ()=> syntax
+				this.findUserCount = 0;
 			    this.isReady = true;
 			}, 2000);
 		}
 		else{
 			setTimeout( () => {
-				if(this.findUserCount !== 10){
-					this.findUserCount++;
+				if(this.findUserCount !== 5){
+					this.findUserCount++;	//findUserCount to check how many times the app looked for match; it notifies user to update interest
 					this.stackStart();
 				}
 			}, 2000);
 			//loop to find users again
-			// this.findUserCount++;	//findUserCount to check how many times the app looked for match; it notifies user to update interest
 		}
 	}
 	setCard(userID){
@@ -920,19 +903,15 @@ export class UserHomePage {
 				let percent = this.getRandomInt(0, 100);
 				if(percent < 20){
 					data = this.getFromLikers();
-					console.log(percent, data);
 				}
 				else if(percent < 60){
 					data = this.getFromBoosters();
-					console.log(percent, data);
 				}
 				else if(percent < 80){
 					data = this.getFromSupers();
-					console.log(percent, data);
 				}
 				else{
 					data = this.getFromList();
-					console.log(percent, data);
 				}
 			}
 		}
