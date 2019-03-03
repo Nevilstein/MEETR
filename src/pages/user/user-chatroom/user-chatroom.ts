@@ -122,10 +122,10 @@ export class UserChatroomPage {
             this.db.list('meetups', ref=> ref.child(chatID)).update(meetupID, {
               status: "Fail"
             }).then(()=>{
-              this.db.list('UserMeetups', ref=> ref.child(this.authKey)).update(meetupID, {
+              this.db.list('userMeetups', ref=> ref.child(this.authKey)).update(meetupID, {
                 status: "Fail"
               });
-              this.db.list('UserMeetups', ref=> ref.child(userID)).update(meetupID, {
+              this.db.list('userMeetups', ref=> ref.child(userID)).update(meetupID, {
                 status: "Fail"
               });
             }).then(() =>{
@@ -141,10 +141,10 @@ export class UserChatroomPage {
             this.db.list('meetups', ref=> ref.child(this.chatKey)).update(this.activeMeetup.id, {
               status: "Expired"
             }).then(()=>{
-              this.db.list('UserMeetups', ref=> ref.child(this.authKey)).update(meetupID, {
+              this.db.list('userMeetups', ref=> ref.child(this.authKey)).update(meetupID, {
                 status: "Expired"
               });
-              this.db.list('UserMeetups', ref=> ref.child(userID)).update(meetupID, {
+              this.db.list('userMeetups', ref=> ref.child(userID)).update(meetupID, {
                 status: "Expired"
               });
             }).then(() =>{
