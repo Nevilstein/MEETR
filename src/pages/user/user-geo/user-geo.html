@@ -10,7 +10,7 @@
 	<div #map id="map"></div>
 	<div>
 		<ion-grid>
-			<ion-row text-center *ngIf="hasMeetup && !isLoading">
+			<ion-row text-center *ngIf="activeIndex>-1 && !isLoading">
 				<ion-col>
 					<ion-card>
 						<b>You</b>
@@ -27,7 +27,11 @@
 					<p>Unavailable</p>
 				</ion-col>
 			</ion-row>
-			<ion-row text-center *ngIf="!hasMeetup && !isLoading">
+			<!-- <ion-row text-center *ngIf="activeIndex>-1 && !isLoading">
+				<p>If you</p>
+				<button ion-button (click)="userArrived()">Mark Arrived</button>
+			</ion-row> -->
+			<ion-row text-center *ngIf="activeIndex === -1 && !isLoading">
 				No meetup currently available
 			</ion-row>
 			<ion-row text-center *ngIf="isLoading">

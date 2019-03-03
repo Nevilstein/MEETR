@@ -22,7 +22,6 @@ page-user-edit {
 		margin-bottom: 10px;
 		border-radius: 10px;
 		object-fit: cover;
-
 	}
 	.default_image ion-icon{
 		font-size: 35px;
@@ -101,5 +100,8 @@ page-user-edit {
 		align-items: center;
   		justify-content: center;
   		padding: 10px 0px;
+	}
+	.main_card{
+		min-height: 50%;
 	}
 }

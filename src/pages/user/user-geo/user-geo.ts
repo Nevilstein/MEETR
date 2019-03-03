@@ -39,6 +39,10 @@ export class UserGeoPage {
 	isInactive;
 	userActivity;
 
+	//new variables 02/26/19
+	activeIndex = -1;
+	activeMeetup;
+
 	myMarker;
 	matchMarker;
 	meetupMarker;
@@ -49,7 +53,8 @@ export class UserGeoPage {
 	authKey: string = this.authProvider.authUser;
 	chatKey: string = this.chatProvider.chatKey;
   	receiverKey: string = this.chatProvider.receiverKey;
-  	meetupDetails = this.chatProvider.meetupRequest;
+  	meetupDetails;
+  	requests = [];
   	userProfile = this.chatProvider.userProfile;
 
   	meetupStatus = this.chatProvider.meetupRequest;
@@ -70,7 +75,25 @@ export class UserGeoPage {
 	}
 
 	ionViewDidLoad(){
+		if(this.chatProvider.requests.length > 0){
+	    	this.requests = this.chatProvider.requests;
+	    }
+	    this.getActiveMeetup(); 
+	    if(this.activeIndex === -1){
+	    	this.isLoading = false;
+	      	let toast = this.toastCtrl.create({
+	          message: "No meetup is available today.",
+	          duration: 1000,
+	          position: 'top'
+	        });
+	        toast.present();
+	      }
+	    else{
+	    	this.setMeetupPlace();	//setting meetup place	
+	    }
+	    this.checkMeetup();
 		this.showMap();
+		
 	}
 
 	ionViewWillUnload(){
@@ -82,6 +105,31 @@ export class UserGeoPage {
 		// clearInterval(this.meetupChecker);
 	}
 	
+	checkMeetup(){
+		this.meetupObserver = this.db.list('meetups', ref=> ref.child(this.chatKey))
+		.snapshotChanges().subscribe( snapshot => {
+			let meetupArr = []
+	        var meetupPromise = new Promise(resolve =>{
+	          snapshot.forEach( (element, index) => {
+	              let data = element.payload.val();
+	              data['id'] = element.key;
+	              meetupArr.push(data);
+	          });
+	          resolve(true);
+	        });
+	        meetupPromise.then(() =>{
+	          this.requests = meetupArr;
+	          this.getActiveMeetup();
+	          if(this.activeIndex > -1){
+	          	this.setMeetupPlace();	//setting meetup place	
+	          }
+	          if(this.meetupMarker){
+					this.meetupMarker.setMap(null);
+					this.meetupCircle.setMap(null);
+				}
+			});
+		});
+	}
 	
 	// JAVASCRIPT GMAPS API----works
 	showMap(){
@@ -100,10 +148,10 @@ export class UserGeoPage {
 				latitude: pos.coords.latitude,
 				longitude: pos.coords.longitude
 			} 
-			if(this.meetupDetails){
+			if(this.activeIndex > -1){
 				let meetupPoint = {
-					latitude: this.meetupDetails.location.latitude, 
-					longitude: this.meetupDetails.location.longitude
+					latitude: this.activeMeetup.location.latitude, 
+					longitude: this.activeMeetup.location.longitude
 				}
 				let distance = geolib.getDistance(this.currentPosition, meetupPoint);
 				this.distance.sender = (Math.round(distance/100.0)*100)/1000;	//estimating
@@ -116,8 +164,7 @@ export class UserGeoPage {
 	       	 	map: this.map,
 	       	 	icon:image1,
 	      	});
-	      	if(this.meetupDetails){
-				this.checkMeetups();
+	      	if(this.activeIndex > -1){
 				this.startTracking();
 	      	}
 		}).catch(err => console.log(err));
@@ -138,47 +185,56 @@ export class UserGeoPage {
 		
 	}
 	
-	checkMeetups(){
-		this.meetupObserver = this.db.list('meetups', ref=> ref.child(this.chatKey).orderByKey().equalTo(this.meetupDetails.id))
-			.snapshotChanges().subscribe( snapshot => {
-				let dateNow = moment().valueOf();
-				snapshot.forEach( element =>{
-					let data = element.payload.val()
-					data['id'] = element.key;
-					data['isAccepted'] = this.meetupStatus.receiverStatus === 'Accepted' && 
-						this.meetupStatus.senderStatus === 'Accepted' ? true : false;
-					this.meetupStatus = data;
-					let minutes = 1800000;  //30 minutes allowance
-					let dateTime = moment(data['date']+" "+data['time']).valueOf()+minutes;
-					data['isExpired'] = dateNow > dateTime ? true: false;
-					if(!this.meetupStatus.isCancelled && this.meetupStatus.isAccepted && !this.meetupStatus.isExpired){
-						this.setMeetupPlace();	//setting meetup place	
-						this.hasMeetup = true;
-					}
-					else{
-						this.hasMeetup = false;
-						this.isLoading = false;
-						if(this.meetupMarker){
-							this.meetupMarker.setMap(null);
-							this.meetupCircle.setMap(null);
-						}
-						let toast = this.toastCtrl.create({
-				          message: "No meetups available.",
-				          duration: 1000,
-				          position: 'top'
-				        });
-				        toast.present();
-					}
-				});
-			});
+	getActiveMeetup(){
+		let dateNow = moment().valueOf();
+		let day = 86400000;
+		let minutes = 900000;  //15 minutes allowance
+		this.activeIndex = this.requests.findIndex(x => !x.isCancelled && x.status==="Ongoing" 
+			&& dateNow >= moment(x.date+" "+x.time).valueOf()-day);
+			// (dateNow >= moment(x.date+" "+x.time).valueOf()-day) && dateNow < moment(x.date+" "+x.time).valueOf()+minutes);
+	    this.activeMeetup = this.requests[this.activeIndex];
 	}
+	// checkMeetups(){
+	// 	this.meetupObserver = this.db.list('meetups', ref=> ref.child(this.chatKey).orderByKey().equalTo(this.meetupDetails.id))
+	// 		.snapshotChanges().subscribe( snapshot => {
+	// 			let dateNow = moment().valueOf();
+	// 			snapshot.forEach( element =>{
+	// 				let data = element.payload.val()
+	// 				data['id'] = element.key;
+	// 				data['isAccepted'] = this.meetupStatus.receiverStatus === 'Accepted' && 
+	// 					this.meetupStatus.senderStatus === 'Accepted' ? true : false;
+	// 				this.meetupStatus = data;
+	// 				let minutes = 1800000;  //30 minutes allowance
+	// 				let dateTime = moment(data['date']+" "+data['time']).valueOf()+minutes;
+	// 				data['isExpired'] = dateNow > dateTime ? true: false;
+	// 				if(!this.meetupStatus.isCancelled && this.meetupStatus.isAccepted && !this.meetupStatus.isExpired){
+	// 					this.setMeetupPlace();	//setting meetup place	
+	// 					this.hasMeetup = true;
+	// 				}
+	// 				else{
+	// 					this.hasMeetup = false;
+	// 					this.isLoading = false;
+						// if(this.meetupMarker){
+						// 	this.meetupMarker.setMap(null);
+						// 	this.meetupCircle.setMap(null);
+						// }
+	// 					let toast = this.toastCtrl.create({
+	// 			          message: "No meetups available.",
+	// 			          duration: 1000,
+	// 			          position: 'top'
+	// 			        });
+	// 			        toast.present();
+	// 				}
+	// 			});
+	// 		});
+	// }
 
 	setMeetupPlace(){
-		var latLng = new google.maps.LatLng(this.meetupDetails.location.latitude, this.meetupDetails.location.longitude)
+		var latLng = new google.maps.LatLng(this.activeMeetup.location.latitude, this.activeMeetup.location.longitude)
 		var image = "../../../assets/imgs/markerfinal.png";
 		this.placesService = new google.maps.places.PlacesService(this.map);
 	    let request =  {
-			placeId: this.meetupDetails.placeId,
+			placeId: this.activeMeetup.placeId,
 			fields: ['name', 'formatted_address', 'place_id', 'geometry', 'types']
 		};
 		this.placesService.getDetails(request, (place, status) => {
@@ -253,19 +309,29 @@ export class UserGeoPage {
 				} 
 			}
 
-			let meetPoint = {
-				latitude: this.placeDetails.latitude,
-				longitude: this.placeDetails.longitude
-			}
+			if(this.activeIndex > -1){
+				let meetPoint = {
+					latitude: this.placeDetails.latitude,
+					longitude: this.placeDetails.longitude
+				}
 
-			let distance = geolib.getDistance(this.currentPosition, meetPoint) //auth user distance
-			this.distance.sender = (Math.round(distance/100.0)*100)/1000;	//estimating
+				let distance = geolib.getDistance(this.currentPosition, meetPoint) //auth user distance
+				this.distance.sender = (Math.round(distance/100.0)*100)/1000;	//estimating
 
-			let userInCircle = geolib.isPointInCircle(userPoint,meetPoint,20);
-			if(userInCircle){
-				this.db.list('meetups', ref=> ref.child(this.chatKey)).update(this.meetupDetails.id+"/hasArrived",{
-					[this.authKey]: true
-				});
+				let userInCircle = geolib.isPointInCircle(userPoint,meetPoint,20);
+				if(userInCircle){
+					if(this.activeMeetup.hasArrived[this.receiverKey]){
+						this.db.list('meetups', ref=> ref.child(this.chatKey)).update(this.activeMeetup.id+"/hasArrived",{
+							[this.authKey]: true,
+							status: 'Success'
+						});
+					}
+					else{
+						this.db.list('meetups', ref=> ref.child(this.chatKey)).update(this.activeMeetup.id+"/hasArrived",{
+							[this.authKey]: true
+						});
+					}
+				}
 			}
 			this.isLoading = false;
 		})

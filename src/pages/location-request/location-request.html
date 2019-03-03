@@ -47,7 +47,7 @@
 		</ion-card-content>
 	</ion-card>
 	<ion-card text-center>
-		<ion-card-header *ngIf="meetupDetails?.receiverStatus === 'Pending' && !meetupDetails?.isCancelled && meetupDetails?.receiver === authKey">
+		<ion-card-header *ngIf="meetupDetails?.receiverStatus === 'Pending' && !meetupDetails?.isCancelled && meetupDetails?.receiver === authKey && (!meetupDetails?.status === 'Expired' || !meetupDetails?.status === 'Fail') ">
 			<ion-grid>
 				<ion-row>
 					<ion-col>
@@ -59,10 +59,10 @@
 				</ion-row>
 			</ion-grid>
 		</ion-card-header>
-		<ion-item *ngIf="meetupDetails?.senderStatus === 'Accepted' && meetupDetails?.sender === authKey && !meetupDetails?.isCancelled">
+		<ion-item *ngIf="meetupDetails?.senderStatus === 'Accepted' && meetupDetails?.sender === authKey && !meetupDetails?.isCancelled && meetupDetails?.status !== 'Expired' && meetupDetails?.status !== 'Fail'">
 			<button ion-button (click)="cancelMeetup()">Cancel Meetup</button>
 		</ion-item>
-		<ion-item *ngIf="meetupDetails?.receiverStatus === 'Accepted' && meetupDetails?.receiver === authKey && !meetupDetails?.isCancelled">
+		<ion-item *ngIf="meetupDetails?.receiverStatus === 'Accepted' && meetupDetails?.receiver === authKey && !meetupDetails?.isCancelled && meetupDetails?.status !== 'Expired' && meetupDetails?.status !== 'Fail' ">
 			<button ion-button (click)="cancelMeetup()">Cancel Meetup</button>
 		</ion-item>
 		<ion-item class="req_text" *ngIf="meetupDetails?.receiverStatus === 'Declined' && meetupDetails?.sender === authKey && !meetupDetails?.isCancelled">
@@ -70,6 +70,15 @@
 		</ion-item>
 		<ion-item class="req_text" *ngIf="meetupDetails?.receiverStatus === 'Declined' && meetupDetails?.sender !== authKey && !meetupDetails?.isCancelled">
 			<p class="req_text">You declined the current meetup.</p>
+		</ion-item>
+		<ion-item class="req_text" *ngIf="!meetupDetails?.isCancelled && meetupDetails?.status === 'Expired'">
+			<p class="req_text">Oops, current meetup request has expired.</p>
+		</ion-item>
+		<ion-item class="req_text" *ngIf="!meetupDetails?.isCancelled && meetupDetails?.status === 'Success'">
+			<p class="req_text">You both succeeded in meeting up.</p>
+		</ion-item>
+		<ion-item class="req_text" *ngIf="!meetupDetails?.isCancelled && meetupDetails?.status === 'Fail'">
+			<p class="req_text">You both failed in meeting up.</p>
 		</ion-item>
 		<ion-item class="req_text" *ngIf="meetupDetails?.isCancelled">
 			<p class="req_text">Oops, current meetup request has been cancelled.</p>
