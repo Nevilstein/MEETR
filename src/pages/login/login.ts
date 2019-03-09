@@ -109,15 +109,13 @@ export class LoginPage {
           ageRange: {min: ageLower, max: ageUpper},
           isVisible: true,
           bio: '',
-          school: '',
-          work: '',
-          jobTitle: '',
           photos: [fbData['picture'].data.url],
           dateCreated: firebase.database.ServerValue.TIMESTAMP,
           lastLogin: firebase.database.ServerValue.TIMESTAMP,
           status: 'active',
           friendCount: fbData['friend_count'],
-          isLoggedIn: true
+          isLoggedIn: true,
+          showMoments: false
         }
         this.zone.run(() => {    //if snapshot doesn't exist redirect to wizard form
             this.authProvider.isFirstLogin = true;

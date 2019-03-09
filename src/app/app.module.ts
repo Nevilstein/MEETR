@@ -73,6 +73,14 @@ import { RequestListPage } from '../pages/request-list/request-list';
 import { RequestListPageModule } from '../pages/request-list/request-list.module';
 import { UserAllTutorialPageModule } from '../pages/user/user-all-tutorial/user-all-tutorial.module';
 import { UserAllTutorialPage} from '../pages/user/user-all-tutorial/user-all-tutorial';
+import { UserMomentsPage } from '../pages/user/user-moments/user-moments';
+import { UserMomentsPageModule } from '../pages/user/user-moments/user-moments.module';
+import { UserAddMomentPage } from '../pages/user/user-add-moment/user-add-moment';
+import { UserAddMomentPageModule } from '../pages/user/user-add-moment/user-add-moment.module';
+import { UserViewMomentPage } from '../pages/user/user-view-moment/user-view-moment';
+import { UserViewMomentPageModule } from '../pages/user/user-view-moment/user-view-moment.module';
+import { UserProfileMomentsPage } from '../pages/user/user-profile-moments/user-profile-moments';
+import { UserProfileMomentsPageModule } from '../pages/user/user-profile-moments/user-profile-moments.module';
 
 //Plugins
 import { AngularFireModule } from 'angularfire2';
@@ -94,7 +102,9 @@ import { AuthProvider } from '../providers/auth/auth';
 import { ChatProvider } from '../providers/chat/chat';
 import { UserProvider } from '../providers/user/user';
 import { MatchProvider } from '../providers/match/match';
-import { ToolsProvider } from '../providers/tools/tools';  
+import { ToolsProvider } from '../providers/tools/tools';
+import { CheckProvider } from '../providers/check/check';
+import { MomentProvider } from '../providers/moment/moment';  
 
 export const firebaseConfig = {
     apiKey: "AIzaSyCjTUixYv189FGdP3hQdztU_HCbtqvjJTU",
@@ -152,7 +162,11 @@ export const firebaseConfig = {
     UserRewardTutorialPageModule,
     UserMatchTutorialPageModule,
     UserChatTutorialPageModule,
-    UserAllTutorialPageModule
+    UserAllTutorialPageModule,
+    UserMomentsPageModule,
+    UserProfileMomentsPageModule,
+    UserAddMomentPageModule,
+    UserViewMomentPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -192,7 +206,9 @@ export const firebaseConfig = {
     ChatProvider,
     UserProvider,
     MatchProvider,
-    ToolsProvider
+    ToolsProvider,
+    CheckProvider,
+    MomentProvider
   ]
 })
 export class AppModule {}

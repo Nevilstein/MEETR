@@ -41,6 +41,7 @@ export class UserSettingPage {
   ageRange = {};
   showGender = {};
   userVisible: boolean;
+  showMoments: boolean;
 
   constructor(public navCtrl: NavController,public toastCtrl: ToastController, public navParams: NavParams, private fireAuth: AngularFireAuth, 
     private fb: Facebook, private db: AngularFireDatabase, private appCtrl: App, private authProvider: AuthProvider,
@@ -74,7 +75,7 @@ export class UserSettingPage {
           female: data['showGender'].female
         };
         this.userVisible = data['isVisible'];
-        this.userProvider.getUserProfile();
+        this.showMoments = data['showMoments'];
       });
   }
 
@@ -106,7 +107,8 @@ export class UserSettingPage {
         maxDistance: this.maxDistance,
         showGender: this.showGender,
         ageRange: {min:this.ageRange['lower'], max:this.ageRange['upper']},
-        isVisible: this.userVisible
+        isVisible: this.userVisible,
+        showMoments: this.showMoments
     }).then( () =>{
       const toast = this.toastCtrl.create({
         message: 'Your settings were successfully saved',
@@ -129,6 +131,7 @@ export class UserSettingPage {
       this.showGender['male'] = true;
     }
   }
+
   go_tutorial(){
     this.navCtrl.push(UserTutorialPage);
   }

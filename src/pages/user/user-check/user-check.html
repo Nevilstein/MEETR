@@ -35,6 +35,19 @@
 			<p class="location">{{activeWhen}}</p>
 		</div>
 	</div>
+	<hr *ngIf="moments.length>0">
+	<div padding *ngIf="moments.length>0">
+		<h4 class="head">Moments</h4>
+		<div *ngIf="isMatched || (!isMatched && !showMoments)">	
+			<button ion-button (click)="checkMoments()">See Moments</button>
+			<div *ngFor="let moment of moments; let i = index">
+				<img *ngIf="i<5" src="{{moment?.image}}">
+			</div>
+		</div>
+		<div *ngIf="!isMatched && showMoments">
+			<p>User moments in private.</p>
+		</div>
+	</div>
 	<hr *ngIf="sameInterests.length > 0">
 	<div padding *ngIf="sameInterests.length > 0">
 		<h4 class="head">Mutual Interests</h4>
@@ -66,20 +79,14 @@
 				<p>{{question.answer}}</p>
 			</ion-card-content>
 		</ion-card>
-		<!-- <div padding *ngFor="let question of questions">
-			<div>{{question.question}}</div>
-			<div>{{question.answer}}</div>
-		</div> -->
-		<!-- <p class="interests" *ngFor="let interest of userInterests">
-			{{interest}}
-		</p> -->
-	</div><!-- 
+	</div>
+	<!-- 
 	<div text-center padding>
 		<button ion-button id="report_button" clear (click)="reportUser()">Report User</button>
 	</div>
 	<hr> -->
-	<div padding>
-	</div>
+	<!-- <div padding>
+	</div> -->
 
 
 </ion-content>
