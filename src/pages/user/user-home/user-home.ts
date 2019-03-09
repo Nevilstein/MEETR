@@ -25,6 +25,7 @@ import { Observable } from 'rxjs/Observable';
 //Providers
 import { AuthProvider } from '../../../providers/auth/auth';
 import { MatchProvider } from '../../../providers/match/match';
+import { CheckProvider } from '../../../providers/check/check';
 /**
  * Generated class for the UserHomePage page.
  *
@@ -85,6 +86,22 @@ export class UserHomePage {
 	rewardChecker;	//timeInterval while data loads
 	timeChecker;
 
+	//added 03/04/19	//Observer for cards
+	profileObserver = [];
+	activeObserver = [];
+	locationObserver = [];
+	answerObserver = [];
+	momentObserver = [];
+
+//Card Information variables
+	cardProfile = [];
+	cardActive = [];
+	cardLocation = [];
+	cardAnswers = [];
+	cardMoments = [];
+
+//Other variables
+	quizDuration = 7*86400000; //7 days in milliseconds is the duration of all questions
 //OLD VERSION STARTS HERE
 
 	// ready = true;
@@ -102,7 +119,7 @@ export class UserHomePage {
 	constructor(private sanitizer: DomSanitizer,public navCtrl:NavController, private alertCtrl: AlertController, 
 		private modalCtrl: ModalController, private fireAuth: AngularFireAuth, private db: AngularFireDatabase, 
 		private authProvider: AuthProvider,	private matchProvider: MatchProvider, private loadingCtrl: LoadingController,
-		private toastCtrl: ToastController) {
+		private toastCtrl: ToastController, private checkProvider: CheckProvider) {
 		
 	}
 
@@ -134,6 +151,21 @@ export class UserHomePage {
 		this.profileChangedObserver.unsubscribe();
 		this.geolocationObserver.unsubscribe();
 		this.toolsObserver.unsubscribe();
+		this.profileObserver.forEach( observers =>{
+			observers.subscription.unsubscribe();
+		});
+		this.activeObserver.forEach( observers =>{
+			observers.subscription.unsubscribe();
+		});
+		this.answerObserver.forEach( observers =>{
+			observers.subscription.unsubscribe();
+		});
+		this.momentObserver.forEach( observers =>{
+			observers.subscriptions.unsubscribe();
+		});
+		this.locationObserver.forEach( observers =>{
+			observers.subscription.unsubscribe();
+		});
 		clearInterval(this.timeChecker);
 	}
 
@@ -157,6 +189,7 @@ export class UserHomePage {
 						latitude: data['currentLocation'].latitude,
 						longitude: data['currentLocation'].longitude
 					}
+					this.checkProvider.myLocation = this.myCoordinates;
 				});
 			});
 	}
@@ -217,6 +250,7 @@ export class UserHomePage {
    		else{
    			this.buttonsEnabled = false;
 			this.userLike(swipedUser.id, isLiked);	//add interacted user to db
+			this.clearCard(swipedUser.id);
 	   		var deletePromise = new Promise( resolve => {	//wait for user/card to be destroyed fully
 	   			setTimeout(() => {
 	   				// let swipedIndex = this.stackedUsers.indexOf(swipedUser);
@@ -277,6 +311,7 @@ export class UserHomePage {
 				}
 				this.buttonsEnabled = false;
 				this.userLike(swipedUser.id, isLiked);
+				this.clearCard(swipedUser.id);
 		   		var deletePromise = new Promise( resolve => {	//wait for user/card to be destroyed fully
 		   			setTimeout(() => {
 		   				// let swipedIndex = this.stackedUsers.indexOf(swipedUser);
@@ -316,6 +351,7 @@ export class UserHomePage {
 	        this.buttonsEnabled = false;
 	        this.toolPurchase(this.superlikeValue);
 			this.userLike(swipedUser.id, isLiked, superlike);
+			this.clearCard(swipedUser.id);
 	   		var deletePromise = new Promise( resolve => {	//wait for user/card to be destroyed fully
 	   			setTimeout(() => {
 	   				// let swipedIndex = this.stackedUsers.indexOf(swipedUser);
@@ -342,6 +378,76 @@ export class UserHomePage {
 		else{
 			alert("Not enough coins to use super like.");
 		}
+	}
+
+	clearCard(cardId){
+		//Profile
+		let profileIndex = this.cardProfile.findIndex(item => item.id === cardId);
+		let profileIndex2 = this.profileObserver.findIndex(item => item.id === cardId);
+		this.cardProfile.splice(profileIndex, 1);
+		this.profileObserver[profileIndex2].subscription.unsubscribe();
+		this.profileObserver.splice(profileIndex2, 1);
+
+		//Activity
+		let activeIndex = this.cardActive.findIndex(item => item.id === cardId);
+		let activeIndex2 = this.activeObserver.findIndex(item => item.id === cardId);
+		this.cardActive.splice(activeIndex, 1);
+		this.activeObserver[activeIndex2].subscription.unsubscribe();
+		this.activeObserver.splice(activeIndex2, 1);
+
+		//Answers
+		let answerIndex = this.cardAnswers.findIndex(item => item.id === cardId);
+		let answerIndex2 = this.answerObserver.findIndex(item => item.id === cardId);
+		this.cardAnswers.splice(answerIndex, 1);
+		this.answerObserver[answerIndex2].subscription.unsubscribe();
+		this.answerObserver.splice(answerIndex2, 1);
+
+		//Moments
+		let momentIndex = this.cardMoments.findIndex(item => item.id === cardId);
+		let momentIndex2 = this.cardMoments.findIndex(item => item.id === cardId);
+		this.cardMoments.splice(momentIndex, 1);
+		this.momentObserver[momentIndex2].subscription.unsubscribe();
+		this.momentObserver.splice(momentIndex2, 1);
+
+		//Locations
+		let locationIndex = this.cardLocation.findIndex(item => item.id === cardId);
+		let locationIndex2 = this.locationObserver.findIndex(item => item.id === cardId);
+		this.cardLocation.splice(locationIndex, 1);
+		this.locationObserver[locationIndex2].subscription.unsubscribe();
+		this.locationObserver.splice(locationIndex2, 1);
+	}
+
+	clearAllCards(){
+		//Profile
+		this.cardProfile = [];
+		this.profileObserver.forEach( observers =>{
+			observers.subscription.unsubscribe();
+		});
+		this.profileObserver = [];
+		//Activity
+		this.cardActive = [];
+		this.activeObserver.forEach( observers =>{
+			observers.subscription.unsubscribe();
+		});
+		this.activeObserver = [];
+		//Answers
+		this.cardAnswers = [];
+		this.answerObserver.forEach( observers =>{
+			observers.subscription.unsubscribe();
+		});
+		this.answerObserver = [];
+		//Moments
+		this.cardMoments = [];
+		this.momentObserver.forEach( observers =>{
+			observers.subscriptions.unsubscribe();
+		});
+		this.momentObserver = [];
+		//Locations
+		this.cardLocation = [];
+		this.locationObserver.forEach( observers =>{
+			observers.subscription.unsubscribe();
+		});
+		this.locationObserver = [];
 	}
 
 	userLike(userID, isLiked, superlike: boolean = false){
@@ -432,6 +538,7 @@ export class UserHomePage {
 					if(dislikedUsers.length>0){
 						this.toolPurchase(this.rewindValue);
 						let lastUser = dislikedUsers[0].id;	//last disliked user id
+						this.cardSubscribe(lastUser);
 						this.db.list('likes', ref => ref.child(this.authUser)).remove(lastUser);
 						this.returnCard(lastUser);	//get latest disliked user's data
 						let toast = this.toastCtrl.create({
@@ -519,6 +626,7 @@ export class UserHomePage {
 		this.userLikerList = [];
 		this.userSuperList = [];
 		this.userBoostList = [];
+		this.clearAllCards();
 		// this.cardObserver.forEach( subscription => {
 		// 	subscription.unsubscribe();
 		// });
@@ -593,6 +701,7 @@ export class UserHomePage {
 			}
 		});
 		Promise.all([malePromise, femalePromise]).then( () =>{	//wait to retrieve userbyGender promise to get values
+			console.log(this.userList);
 			this.filterByInterests();
 			// this.filterByLocation();
 		});
@@ -612,6 +721,7 @@ export class UserHomePage {
 			}
 		});
 		this.userList = newList;
+		console.log("Interest", this.userList);
 		this.filterByLocation();
 	}
 	filterByLocation(){
@@ -651,6 +761,7 @@ export class UserHomePage {
 		});
 		locationPromise.then(() => {
 			this.userList = newList;	//change update current list
+			console.log("Loc", this.userList);
 			this.filterByAge();
 		});
 	}
@@ -726,6 +837,7 @@ export class UserHomePage {
 		});
 		activePromise.then(()=>{
 			this.userList = newList;
+			console.log("Act", this.userList);
 			this.checkMatchStatus();
 		});
 	}
@@ -750,6 +862,7 @@ export class UserHomePage {
 		});
 		matchPromise.then(() =>{
 			this.userList = newList;
+			console.log("Match", this.userList);
 			this.checkLikeStatus(newList);
 		});
 	}
@@ -783,6 +896,7 @@ export class UserHomePage {
 		});
 		likedPromise.then(() =>{
 			this.userList = newList;
+			console.log("Like", this.userList);
 			this.checkDuplicates();
 			
 		});
@@ -856,6 +970,7 @@ export class UserHomePage {
 			setTimeout(()=>{    //<<<---    using ()=> syntax
 				this.findUserCount = 0;
 			    this.isReady = true;
+			    console.log(this.stackedUsers);
 			}, 2000);
 		}
 		else{
@@ -868,8 +983,147 @@ export class UserHomePage {
 			//loop to find users again
 		}
 	}
+
+	cardSubscribe(cardId){
+		this.getCardLocation(cardId);
+		this.getCardActivity(cardId);
+		this.getCardProfile(cardId);
+		this.getCardAnswers(cardId);
+		this.getCardMoments(cardId);
+	}
+
+	getCardActivity(cardId){
+		let cardObserver = this.db.list('activity', ref => ref.orderByKey().equalTo(cardId))
+			.snapshotChanges().subscribe( snapshot =>{
+				snapshot.forEach(element => {
+					let data = element.payload.val();
+					data['id'] = element.key;
+					let cardIndex = this.cardActive.findIndex(item => item['id'] === data['id']);
+					if(cardIndex>-1){
+						this.cardActive.splice(cardIndex, 1);
+					}
+					this.cardActive.push(data);
+				});
+			});
+		this.activeObserver.push({
+			id: cardId,
+			subscription:cardObserver
+		});
+	}
+	getCardProfile(cardId){
+		let cardObserver = this.db.list('profile', ref => ref.orderByKey().equalTo(cardId))
+			.snapshotChanges().subscribe( snapshot =>{
+				snapshot.forEach(element => {
+					let data = element.payload.val();
+					data['id'] = element.key;
+					data['age'] = moment().diff(moment(data['birthday'], "MM/DD/YYYY"), 'years');
+					let stackIndex = this.stackedUsers.findIndex(item => item['id'] === data['id']);
+					if(stackIndex>-1){
+						this.stackedUsers[stackIndex] = Object.assign(this.stackedUsers[stackIndex], data);
+					}
+					let cardIndex = this.cardProfile.findIndex(item => item['id'] === data['id']);
+					if(cardIndex>-1){
+						this.cardProfile.splice(cardIndex, 1);
+					}
+					this.cardProfile.push(data);
+				});
+			});
+		this.profileObserver.push({
+			id: cardId,
+			subscription:cardObserver
+		});
+	}
+	getCardAnswers(cardId){
+		let cardObserver = this.db.list('answers', ref => ref.orderByKey().equalTo(cardId))
+			.snapshotChanges().subscribe(snapshot => {
+				snapshot.forEach( element => {
+					let userId = element.key;
+					let answers = [];
+					this.db.list('answers', ref => ref.child(userId).orderByChild('timestamp').limitToLast(10))
+						.query.once('value').then( answerSnap => {
+							let dateNow = moment().valueOf();
+							
+							answerSnap.forEach( element2 => {
+								let data = element2.val();
+								data['id'] = element2.key;
+					          if((dateNow-data['timestamp'])<this.quizDuration){
+					            answers.push(data);
+					          }
+							});
+						}).then(() => {
+							let cardIndex = this.cardAnswers.findIndex(item => item['id'] === userId);
+							if(cardIndex>-1){
+								this.cardAnswers.splice(cardIndex, 1);
+							}
+							this.cardAnswers.push({
+								id: userId,
+								answers: answers
+							});
+						});
+				});
+			});
+		this.answerObserver.push({
+			id: cardId,
+			subscription:cardObserver
+		});
+	}
+	getCardLocation(cardId){
+		let cardObserver = this.db.list('location', ref=> ref.orderByKey().equalTo(cardId))
+			.snapshotChanges().subscribe( snapshot => {
+				snapshot.forEach( element =>{
+					let data = element.payload.toJSON();
+					data['id'] = element.key;
+					data['coordinates'] = {
+						latitude: data['currentLocation'].latitude,
+						longitude: data['currentLocation'].longitude
+					}
+					let cardIndex = this.cardLocation.findIndex(item => item['id'] === data['id']);
+					if(cardIndex>-1){
+						this.cardLocation.splice(cardIndex, 1);
+					}
+					this.cardLocation.push(data);
+				});
+			});
+		this.locationObserver.push({
+			id: cardId,
+			subscription:cardObserver
+		});
+	}
+
+	getCardMoments(cardId){
+		let cardObserver = this.db.list('moments', ref=> ref.orderByKey().equalTo(cardId))
+			.snapshotChanges().subscribe( snapshot => {
+				snapshot.forEach( element => {
+					let userId = element.key;
+					let moments = [];
+					this.db.list('moments', ref => ref.child(userId).orderByChild('timestamp'))
+						.query.once('value').then( momentSnap => {
+							let dateNow = moment().valueOf();
+							momentSnap.forEach( element2 => {
+								let data = element2.val();
+								data['id'] = element2.key;
+					            if(data['status']){
+					              moments.push(data);
+					            }
+							});
+						}).then(() => {
+							let cardIndex = this.cardMoments.findIndex(item => item['id'] === userId);
+							if(cardIndex>-1){
+								this.cardMoments.splice(cardIndex, 1);
+							}
+							this.cardMoments.push({
+								id: userId,
+								moments: moments.slice().reverse()
+							});
+						});
+				});
+			});
+	}
+
+
 	setCard(userID){
 		var newUserCard;
+		this.cardSubscribe(userID);
 		var stackPromise = new Promise( resolve => {
 			this.db.list('profile', ref => ref.child(userID)).query.once('value').then( snapshot =>{
 				newUserCard = snapshot.val();
@@ -967,8 +1221,17 @@ export class UserHomePage {
 		const report = this.modalCtrl.create(UserReportPage);
 		report.present();
 	}	
-	checkInfo(cardIndex){
-		const check = this.modalCtrl.create(UserCheckPage, {user:this.stackedUsers[cardIndex]});
+	checkInfo(cardIndex, cardId){
+		const check = this.modalCtrl.create(UserCheckPage);
+		this.checkProvider.isMatched = false;
+		this.checkProvider.profile = this.cardProfile[this.cardProfile.findIndex(item => item['id'] === cardId)];
+		this.checkProvider.active = this.cardActive[this.cardActive.findIndex(item => item['id'] === cardId)];
+		this.checkProvider.userLocation = this.cardLocation[this.cardLocation.findIndex(item => item['id'] === cardId)]['coordinates'];
+		let answerIndex = this.cardAnswers.findIndex(item => item['id'] === cardId);
+		this.checkProvider.answers = (answerIndex>-1) ? this.cardAnswers[answerIndex]['answers']: [];
+		let momentIndex = this.cardMoments.findIndex(item => item['id'] === cardId);
+		this.checkProvider.moments = (momentIndex>-1) ? this.cardMoments[momentIndex]['moments']: [];
+		this.checkProvider.myLocation = this.myCoordinates;
 		check.present();
 	}
 

@@ -23,6 +23,7 @@ import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker';
 //Providers
 import { AuthProvider } from '../../../providers/auth/auth';
 import { ChatProvider } from '../../../providers/chat/chat';
+import { CheckProvider } from '../../../providers/check/check';
 /**
  * Generated class for the UserChatroomPage page.
  *
@@ -64,7 +65,12 @@ export class UserChatroomPage {
   activeWhen: string;
   statusDate: number;
   isActive: boolean;
+
   userProfile;
+  userActivity;
+  userLocation;
+  answers = [];
+  moments = [];
   // meetDetails;
 
   //Elements
@@ -78,10 +84,12 @@ export class UserChatroomPage {
   messageObserver;
   activeObserver;
   profileObserver;
-  questionObserver;
   uploadObserver;
   meetupObserver;
   scrollObserver;
+  answerObserver;
+  momentObserver;
+  locationObserver;
   timeInterval;  //gets the active time interval of user while in chat
   expireInterval;
 
@@ -98,14 +106,16 @@ export class UserChatroomPage {
   constructor(public navCtrl: NavController,public popoverCtrl:PopoverController , public navParams: NavParams, 
     private db: AngularFireDatabase, private authProvider: AuthProvider, private chatProvider: ChatProvider, 
     private camera: Camera, private storage: AngularFireStorage, private toastCtrl: ToastController,
-    private modalCtrl: ModalController, private imagePicker: ImagePicker, private zone:NgZone) {
+    private modalCtrl: ModalController, private imagePicker: ImagePicker, private zone:NgZone, private checkProvider: CheckProvider) {
     
   }
   ionViewWillLoad(){
     this.getUserData();
     this.getChatData();
     this.getMeetups();
-
+    this.getUserLocation();
+    this.getAnswers();
+    this.getMoments();
     this.timeInterval = setInterval(() =>{
       this.activeWhen = this.getActiveStatus();  
     }, 60000)
@@ -181,6 +191,9 @@ export class UserChatroomPage {
     this.profileObserver.unsubscribe();
     // this.scrollObserver.unsubscribe();
     this.meetupObserver.unsubscribe();
+    this.locationObserver.unsubscribe();
+    this.answerObserver.unsubscribe();
+    this.momentObserver.unsubscribe();
     clearInterval(this.timeInterval);
     this.navCtrl.popToRoot();
   }
@@ -259,11 +272,15 @@ export class UserChatroomPage {
   }
 
   getUserData(){
-    this.activeObserver = this.db.list('activity', ref=> ref.child(this.receiverKey))  //get activeness of other user
-      .valueChanges().subscribe(snapshot =>{
+    this.activeObserver = this.db.list('activity', ref=> ref.orderByKey().equalTo(this.receiverKey))  //get activeness of other user
+      .snapshotChanges().subscribe(snapshot =>{
          snapshot.forEach( element =>{
-           this.userStatus = element['status'];
-           this.statusDate = element['timestamp'];
+           let data = element.payload.val();
+           data['id'] = element.key;
+           this.userActivity = data;
+           this.checkProvider.active = this.userActivity;
+           this.userStatus = data['status'];
+           this.statusDate = data['timestamp'];
            this.activeWhen = this.getActiveStatus();
          });
          this.activePromise = Promise.resolve(true);
@@ -275,6 +292,7 @@ export class UserChatroomPage {
            data['id'] = element.payload.key;
            data['age'] = moment().diff(moment(data['birthday'], "MM/DD/YYYY"), 'years');
            this.userProfile = data;
+           this.checkProvider.profile = this.userProfile
            this.userPhoto = data['photos'][0];
            this.userFirstName = data['firstName'];
          });
@@ -312,6 +330,57 @@ export class UserChatroomPage {
         this.chatProvider.requests = this.requests;
         this.activeIndex = this.requests.findIndex(x => !x.isCancelled && (x.receiverStatus!=="Declined" && x.senderStatus!=="Declined"));
         this.activeMeetup = this.requests[this.activeIndex];
+      });
+  }
+
+  getUserLocation(){
+    this.locationObserver = this.db.list('location', ref=> ref.orderByKey().equalTo(this.receiverKey))
+      .snapshotChanges().subscribe( snapshot => {
+        snapshot.forEach( element =>{
+          let data = element.payload.toJSON();
+          data['id'] = element.key;
+          data['coordinates'] = {
+            latitude: data['currentLocation'].latitude,
+            longitude: data['currentLocation'].longitude
+          }
+          this.userLocation = data;
+          this.checkProvider.userLocation = this.userLocation;
+        });
+      });
+  }
+
+  getAnswers(){
+    this.answerObserver = this.db.list('answers', ref => ref.child(this.receiverKey).orderByChild('timestamp').limitToLast(10))
+      .snapshotChanges().subscribe(snapshot => {
+        let answers = [];
+        let quizDuration = 7*86400000; //7 days in milliseconds is the duration of all questions
+        let dateNow = moment().valueOf();
+        snapshot.forEach(element =>{
+          let data = element.payload.val();
+          data['id'] = element.key;
+          if((dateNow-data['timestamp'])<quizDuration){
+            answers.push(data);
+          }
+        });
+        this.answers = answers;
+        this.checkProvider.answers = this.answers;
+      });
+  }
+
+  getMoments(){
+    this.momentObserver = this.db.list('moments', ref=> ref.child(this.receiverKey).orderByChild('timestamp'))
+      .snapshotChanges().subscribe(snapshot => {
+        let reversedSnap = snapshot.slice().reverse();
+        let moments = [];
+        reversedSnap.forEach(element => {
+          let data = element.payload.val();
+          data['id'] = element.key;
+          if(data['status']){
+            moments.push(data);
+          }
+        });
+        this.moments = moments;
+        this.checkProvider.moments = moments;
       });
   }
 
@@ -365,7 +434,10 @@ export class UserChatroomPage {
     const options: CameraOptions = {
       quality: 60,
       destinationType: this.camera.DestinationType.DATA_URL,
-      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY
+      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+      targetWidth:1920,
+      targetHeight:1080,
+      correctOrientation: true,
     }
 
     this.camera.getPicture(options).then((imageData) => {
@@ -521,6 +593,7 @@ export class UserChatroomPage {
   }
 
   checkProfile(){
+    this.checkProvider.isMatched = true;
     let modal = this.modalCtrl.create(UserCheckPage, {user: this.userProfile});
     modal.present();
   }

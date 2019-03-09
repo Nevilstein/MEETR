@@ -6,9 +6,10 @@ import { LoginPage } from '../../login/login';
 import { UserEditPage } from '../user-edit/user-edit';
 import { UserTabsPage } from '../user-tabs/user-tabs';
 import { UserSettingPage } from '../user-setting/user-setting';
+import { UserProfileMomentsPage } from '../user-profile-moments/user-profile-moments';
 
 //Plugin
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+import { AngularFireDatabase } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 // import { Observable } from 'rxjs';
 import moment from 'moment';
@@ -17,6 +18,7 @@ import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 //Providers
 import { AuthProvider } from '../../../providers/auth/auth';
 import { UserProvider } from '../../../providers/user/user';
+import { MomentProvider } from '../../../providers/moment/moment';
 /**
  * Generated class for the UserProfilePage page.
  *
@@ -44,6 +46,7 @@ export class UserProfilePage {
 
   //Observer/Subscription
   profileObserver;
+  momentObserver;
   // likeObserver;
 
   //Variables
@@ -53,38 +56,59 @@ export class UserProfilePage {
   bio: string;
   gender = {};
   interests = [];
+  moments = [];
 
   //Element variables
   interestInputValue: string = "";
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public fb:Facebook, private fireAuth: AngularFireAuth,
     private db: AngularFireDatabase, private zone: NgZone, private authProvider: AuthProvider, 
-    private userProvider: UserProvider) {
+    private userProvider: UserProvider, private momentProvider:MomentProvider) {
   }
   ionViewWillLoad() {
     this.loadProfile();
   }
   ionViewWillUnload(){
     this.profileObserver.unsubscribe();
-    // this.likeObserver.unsubscribe();
+    this.momentObserver.unsubscribe();
   }
 
   loadProfile(){
     this.profileObserver = this.db.list('profile', ref => ref.orderByKey().equalTo(this.authUser))
       .snapshotChanges().subscribe( snapshot => {  //Angularfire2 
         var data = snapshot[0].payload.val();
+        data['id'] = snapshot[0].key;
         this.firstName = data['firstName'];
         this.age = moment().diff(moment(data['birthday'], "MM/DD/YYYY"), 'years');
         this.gender = data['gender'];
         this.image = data['photos'][0];
         this.bio = data['bio'];
         this.interests = Object.assign([], data['interests']);
-        this.userProvider.getUserProfile();
+        this.userProvider.authProfile = data;
+      });
+    this.momentObserver = this.db.list('moments', ref => ref.child(this.authUser).orderByChild('timestamp'))
+      .snapshotChanges().subscribe( snapshot => {
+        let reverseSnap = snapshot.slice().reverse();
+        let allMoments = [];
+        reverseSnap.forEach( element =>{
+          let data = element.payload.val();
+          data['id'] = element.key;
+          data['date'] = moment(data['timestamp']).format('MMM DD');
+          if(data['status']){
+            allMoments.push(data);
+          }
+        });
+        this.moments = allMoments;
+        this.userProvider.myMoments = allMoments;
       });
   }
   // getLikes(){
   //   this.likeObserver = this.db.list('likes')
   // }
+  seeMoments(){
+    this.momentProvider.userKey = this.authUser;
+    this.navCtrl.push(UserProfileMomentsPage);
+  }
   goToEdit(){
     this.navCtrl.push(UserEditPage);
   }

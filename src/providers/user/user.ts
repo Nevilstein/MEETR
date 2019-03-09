@@ -17,21 +17,22 @@ import moment from 'moment';
 export class UserProvider {
 	authProfile;
   authLocation;
+  myMoments = [];  //moments of the auth user
   constructor(public http: HttpClient, private db: AngularFireDatabase, private fireAuth: AngularFireAuth) {
     console.log('Hello UserProvider Provider');
-    this.getUserProfile();
+    // this.getUserProfile();
     this.getUserLocation();
   }
 
-  getUserProfile(){
-  	this.db.list('profile', ref => ref.child(this.fireAuth.auth.currentUser.uid))
-  		.query.once('value', snapshot =>{
-  			let data = snapshot.val();
-  			data.id = snapshot.key;
-  			data.age = moment().diff(moment(data['birthday'], "MM/DD/YYYY"), 'years');
-  			this.authProfile = data;
-  		});
-  }
+  // getUserProfile(){
+  // 	this.db.list('profile', ref => ref.child(this.fireAuth.auth.currentUser.uid))
+  // 		.query.once('value', snapshot =>{
+  // 			let data = snapshot.val();
+  // 			data.id = snapshot.key;
+  // 			data.age = moment().diff(moment(data['birthday'], "MM/DD/YYYY"), 'years');
+  // 			this.authProfile = data;
+  // 		});
+  // }
   getUserLocation(){
     this.db.list('location', ref => ref.child(this.fireAuth.auth.currentUser.uid))
       .query.once('value', snapshot =>{

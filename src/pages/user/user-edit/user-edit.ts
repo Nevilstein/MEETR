@@ -84,12 +84,12 @@ export class UserEditPage {
     this.profileObserver = this.db.list('profile', ref => ref.orderByKey().equalTo(this.authUser))
       .snapshotChanges().subscribe( snapshot => {  //Angularfire2
         var data = snapshot[0].payload.toJSON();
+        data['id'] = snapshot[0].key;
         this.bio = data['bio'];
         this.interests = Object.assign([], data['interests']);
         this.isMale = data['gender'].male;
         this.isFemale = data['gender'].female;
         this.profileImages = Object.assign([], data['photos']);
-        this.userProvider.getUserProfile();
         // this.interestList = this.interests.concat(this.interestList);  //add interests shown in option
         // this.interestList = this.removeDuples(this.interestList);
       });

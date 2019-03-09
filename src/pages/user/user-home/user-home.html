@@ -82,7 +82,7 @@
 					<ion-badge item-start><ion-icon name="people"></ion-icon> {{card.friendCount}}</ion-badge>
 					<!-- Gawan mo icon yung super like, siguro pin na lang -->
 					<ion-badge item-start *ngIf="card.superlike"><ion-icon name="star"></ion-icon></ion-badge>
-					<button id="button" ion-button item-end (click)="checkInfo(i)">
+					<button id="button" ion-button item-end (click)="checkInfo(i, card.id)">
 						<ion-icon id="eye" name="eye"></ion-icon>
 					</button>
 				</ion-item>

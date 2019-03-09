@@ -59,6 +59,15 @@
 			</ion-card-content>
 		</ion-card>
 		<ion-card>
+			<ion-card-header class="labels">Show Moments</ion-card-header>
+			<ion-card-content>
+				<ion-item>
+					<ion-label>Only to Matched Users</ion-label>
+		    		<ion-toggle color="danger" [(ngModel)]="showMoments"></ion-toggle>
+				</ion-item>
+			</ion-card-content>
+		</ion-card>
+		<ion-card>
 			<ion-item>
 				<ion-label>Account Visibility</ion-label>
 	    		<ion-toggle color="danger" [(ngModel)]="userVisible"></ion-toggle>
