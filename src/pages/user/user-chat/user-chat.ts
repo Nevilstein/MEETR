@@ -72,9 +72,9 @@ export class UserChatPage {
     this.chatObserver = this.db.list('chat', ref => ref.child(this.authKey).orderByChild('timestamp'))
       .snapshotChanges().subscribe( snapshot => {
         if(snapshot.length>0){
+          let chatArray = [];
           var chatPromise = new Promise(resolve =>{
             let reversedSnap = snapshot.slice().reverse();
-            let chatArray = [];
             reversedSnap.forEach( (element, index) =>{
               let data = element.payload.val();
               data['id'] = element.key;
@@ -88,7 +88,7 @@ export class UserChatPage {
               this.db.list('messages', ref=> ref.child(this.authKey).child(data['id']).orderByChild('timestamp').limitToLast(1))
                 .query.once('value', messageSnap =>{
                   // console.log("message", messageSnap);
-                  if(messageSnap){
+                  // if(messageSnap){
                     messageSnap.forEach( newElement =>{  //only returns one, foreach to include checking if got 1
                       let messageData = newElement.val();
                       var message;
@@ -104,27 +104,37 @@ export class UserChatPage {
                       data['messageStatus'] = messageData['status'];
                       data['isRead'] = messageData['isRead'];
                     });
-                    if(data['matchStatus']){  //only chats with active matches
-                      chatArray.push(data);
-                    }
-                    if(index+1 === reversedSnap.length){
-                      resolve(chatArray);
-                    } 
+                    // if(index+1 === reversedSnap.length){
+                    //   resolve(true);
+                    // } 
+                  // }
+                  // else{    //02-02-19 if added, might have error
+                  //   if(index+1 === reversedSnap.length){
+                  //     resolve(true);
+                  //   } 
+                  // }  
+                }).then(()=>{
+                  if(data['matchStatus']){  //only chats with active matches
+                    chatArray.push(data);
                   }
-                  else{    //02-02-19 if added, might have error
-                    if(index+1 === reversedSnap.length){
-                      resolve(chatArray);
-                    } 
-                  }  
+                  if(index+1 === reversedSnap.length){
+                    resolve(true);
+                  } 
                 });
             });
-          }).then( chatList => {
+          }).then(() => {
             this.chatList = [];
-            this.chatList = Object.assign(chatList);
-            if(!(this.filterChat.length>0)){
+            this.chatList = chatArray;
+            console.log(this.chatList);
+            // if(!(this.filterChat.length>0)){
+             
+            // }
+            if(this.chatSearchValue.trim()!=''){
+              this.searchMatch();  //update changes even while in searching process
+            }
+            else{
               this.filterChat = this.chatList;
             }
-            this.searchMatch();  //update changes even while in searching process
             // this.loader.dismiss();
             this.getChatData();
           });
@@ -164,31 +174,32 @@ export class UserChatPage {
           });
         });
         chatPromise.then(() =>{
-          this.getMeetups();
-        });
-      });
-  }
-  getMeetups(){
-    this.meetupObserver = this.db.list('userMeetups', ref=> ref.orderByKey().equalTo(this.authKey))
-      .snapshotChanges().subscribe(snapshot =>{
-        let reversedSnap = snapshot.slice().reverse();
-        let meetups = [];
-        var meetupPromise = new Promise(resolve =>{
-          reversedSnap.forEach(element => {
-            let data = element.payload.val();
-            data['id'] = element.key;
-            meetups.push(data);
-          });
-          resolve(true);
-        });
-        meetupPromise.then(() =>{
-          this.allMeetups = [];
-          this.allMeetups = meetups;
-          this.chatProvider.allrequests = meetups;
+          // this.getMeetups();
           this.loader.dismiss();
         });
       });
   }
+  // getMeetups(){
+  //   this.meetupObserver = this.db.list('userMeetups', ref=> ref.orderByKey().equalTo(this.authKey))
+  //     .snapshotChanges().subscribe(snapshot =>{
+  //       let reversedSnap = snapshot.slice().reverse();
+  //       let meetups = [];
+  //       var meetupPromise = new Promise(resolve =>{
+  //         reversedSnap.forEach(element => {
+  //           let data = element.payload.val();
+  //           data['id'] = element.key;
+  //           meetups.push(data);
+  //         });
+  //         resolve(true);
+  //       });
+  //       meetupPromise.then(() =>{
+  //         this.allMeetups = [];
+  //         this.allMeetups = meetups;
+  //         this.chatProvider.allrequests = meetups;
+  //         this.loader.dismiss();
+  //       });
+  //     });
+  // }
   // getMatchedUsers(){
   //   this.matchObserver = this.db.list('match', ref => ref.orderByKey().equalTo(this.authKey))
   //     .snapshotChanges().subscribe( snapshot => {
@@ -254,7 +265,9 @@ export class UserChatPage {
       if(chat.firstName.toLowerCase().indexOf(this.chatSearchValue.toLowerCase()) > -1){
         return true;
       }
-      return false;
+      else{
+        return false;
+      }
     });
   }
 }

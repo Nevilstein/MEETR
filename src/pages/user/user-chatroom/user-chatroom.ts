@@ -279,8 +279,8 @@ export class UserChatroomPage {
            data['id'] = element.key;
            this.userActivity = data;
            this.checkProvider.active = this.userActivity;
-           this.userStatus = data['status'];
-           this.statusDate = data['timestamp'];
+           this.userStatus = data['isActive']['status'];
+           this.statusDate = data['isActive']['timestamp'];
            this.activeWhen = this.getActiveStatus();
          });
          this.activePromise = Promise.resolve(true);
@@ -392,6 +392,7 @@ export class UserChatroomPage {
     }
     else{
       this.isActive = false;
+      console.log(moment(this.statusDate).fromNow());
       return moment(this.statusDate).fromNow();
     }
   }
