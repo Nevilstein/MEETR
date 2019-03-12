@@ -404,7 +404,7 @@ export class UserHomePage {
 
 		//Moments
 		let momentIndex = this.cardMoments.findIndex(item => item.id === cardId);
-		let momentIndex2 = this.cardMoments.findIndex(item => item.id === cardId);
+		let momentIndex2 = this.momentObserver.findIndex(item => item.id === cardId);
 		this.cardMoments.splice(momentIndex, 1);
 		this.momentObserver[momentIndex2].subscription.unsubscribe();
 		this.momentObserver.splice(momentIndex2, 1);
@@ -1118,6 +1118,11 @@ export class UserHomePage {
 						});
 				});
 			});
+		this.momentObserver.push({
+			id: cardId,
+			subscription:cardObserver
+		});
+		console.log(this.momentObserver);
 	}
 
 
