@@ -37,12 +37,16 @@ export class UserChatPage {
   allMeetups = [];
 
   chatData = [];  //contains all chat including its messages
+  matchedUsers = [];
 
   //Observer/Subscriptions
   chatObserver;
   newChatObserver;
-  userProfileObserver;
   meetupObserver;
+  matchObserver;
+  // usersProfileObserver = [];
+  // usersActiveObserver = [];
+  // usersMomentsObserver = [];
   constructor(public navCtrl: NavController, public navParams: NavParams, private db:AngularFireDatabase, 
     private authProvider: AuthProvider, private chatProvider: ChatProvider, private loadingCtrl: LoadingController) {
   }
@@ -54,6 +58,14 @@ export class UserChatPage {
     });
     this.loader.present();
     this.getChats();
+    // this.getMatchedUsers();
+  }
+
+  ionViewWillUnload(){
+    this.chatObserver.unsubscribe();
+    this.newChatObserver.unsubscribe();
+    this.meetupObserver.unsubscribe();
+    this.matchObserver.unsubscribe();
   }
 
   getChats(){  
@@ -177,6 +189,39 @@ export class UserChatPage {
         });
       });
   }
+  // getMatchedUsers(){
+  //   this.matchObserver = this.db.list('match', ref => ref.orderByKey().equalTo(this.authKey))
+  //     .snapshotChanges().subscribe( snapshot => {
+  //       let matches = [];
+  //       this.clearMatchedData();
+  //       snapshot.forEach(element => {
+  //         let data = element.payload.val();
+  //         data['id'] = element.key;
+  //         matches.push(data);
+  //       });
+  //       this.matchedUsers = matches;
+  //       this.matchedUsers.forEach( match =>{
+          
+  //       });
+  //     });
+  // }
+  // clearMatchedData(){
+  //   this.usersProfileObserver.forEach(item =>{
+  //     item.unsubscribe();
+  //   });
+  //   this.usersProfileObserver = [];
+  //   this.usersActiveObserver.forEach(item =>{
+  //     item.unsubscribe();
+  //   });
+  //   this.usersActiveObserver = [];
+  //   this.usersMomentsObserver.forEach(item => {
+  //     item.unsubscribe();
+  //   });
+  //   this.usersMomentsObserver = [];
+  // }
+  // getMatchedData(matchedId){
+
+  // }
   messageDateFormat(date){
     let dateNow = moment().valueOf();
     let dayUnix = 86400000;
