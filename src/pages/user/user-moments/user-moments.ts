@@ -26,16 +26,19 @@ import { MomentProvider } from '../../../providers/moment/moment';
 })
 export class UserMomentsPage {
 
-	userKey = this.checkProvider.profile.id;
-	profile = this.checkProvider.profile;
-	moments = [];
+  userKey = this.checkProvider.profile.id;
+  profile = this.checkProvider.profile;
+  moments = [];
   isMatched = this.checkProvider.isMatched;
 
-	//Observer/Subscription
-	momentObserver;
+  //Observer/Subscription
+  momentObserver;
   constructor(public navCtrl: NavController, public navParams: NavParams, public checkProvider: CheckProvider,
-  	public momentProvider: MomentProvider, public db: AngularFireDatabase, public modalCtrl: ModalController) {
-  	this.moments = this.checkProvider.moments;
+    public momentProvider: MomentProvider, public db: AngularFireDatabase, public modalCtrl: ModalController) {
+    this.moments = this.checkProvider.moments;
+    if(!this.isMatched && this.moments.length>6){
+      this.moments.splice(6);
+    }
   }
 
   ionViewDidLoad() {
@@ -46,7 +49,7 @@ export class UserMomentsPage {
     this.momentObserver.unsubscribe();
   }
   getMoments(){
-  	this.momentObserver = this.db.list('moments', ref => ref.child(this.userKey).orderByChild('timestamp'))
+    this.momentObserver = this.db.list('moments', ref => ref.child(this.userKey).orderByChild('timestamp'))
       .snapshotChanges().subscribe( snapshot => {
         let reverseSnap = snapshot.slice().reverse();
         let allMoments = [];
@@ -59,11 +62,14 @@ export class UserMomentsPage {
           }
         });
         this.moments = allMoments;
+        if(!this.isMatched && this.moments.length>6){
+          this.moments.splice(6);
+        }
       });
   }
   seeMoment(momentDetails){
-  	this.momentProvider.currentMoment = momentDetails;
-  	let modal = this.modalCtrl.create(UserViewMomentPage);
-  	modal.present();
+    this.momentProvider.currentMoment = momentDetails;
+    let modal = this.modalCtrl.create(UserViewMomentPage);
+    modal.present();
   }
 }

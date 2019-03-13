@@ -21,8 +21,8 @@
 		No moments to show.
 	</div>
 	<div *ngIf="moments.length > 0">
-		<div *ngFor="let moment of moments; let i = index">
-			<ion-card padding *ngIf="i<=4 || (i>4 && isMatched)">
+		<div *ngFor="let moment of moments">
+			<ion-card padding>
 				<ion-card-header text-center>
 					<h2>{{moment?.date}}</h2>
 				</ion-card-header>
@@ -32,7 +32,7 @@
 				</ion-card-content>
 			</ion-card>
 		</div>
-		<div *ngIf="moments.length>4 && !isMatched" text-center>
+		<div *ngIf="moments.length>6 && !isMatched" text-center>
 			<hr>
 			<p style="color: red;">Match with user to see all moments.</p>
 		</div>

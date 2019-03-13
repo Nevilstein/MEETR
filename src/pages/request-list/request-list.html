@@ -26,11 +26,11 @@
 					<p>Status: {{activeMeetup.status}}</p>
 					<p>Date Sent: {{activeMeetup.dateSent}}</p>
 				</div>
+				<div *ngIf="activeIndex === -1">
+					No Pending/Scheduled Meetup.
+				</div>
 			</ion-card-content>
 		</ion-card>
-	<div *ngIf="activeIndex === -1">
-		No Pending/Scheduled Meetup.
-	</div>
 		<hr>
 		<div *ngIf="inactiveRequests.length > 0">
 			<ion-card>
