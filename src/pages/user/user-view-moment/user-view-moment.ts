@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController,ViewController, NavParams } from 'ionic-angular';
 
 //Plugin
 import moment from 'moment';
@@ -27,7 +27,7 @@ export class UserViewMomentPage {
 	image;
 	caption;
   constructor(public navCtrl: NavController, public navParams: NavParams, public momentProvider: MomentProvider, public authProvider: AuthProvider,
-    public db: AngularFireDatabase) {
+    public db: AngularFireDatabase, public view:ViewController) {
 
   }
 
@@ -44,6 +44,9 @@ export class UserViewMomentPage {
     }).then(()=>{
       this.navCtrl.pop();
     });
+  }
+  closeModal(){
+    this.view.dismiss();
   }
 
 }

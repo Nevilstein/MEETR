@@ -18,7 +18,6 @@ import moment from 'moment';
 import firebase from 'firebase';
 import { AngularFireStorage, AngularFireUploadTask } from 'angularfire2/storage';
 import { Camera, CameraOptions } from '@ionic-native/camera';
-import { ImagePicker, ImagePickerOptions } from '@ionic-native/image-picker';
 
 //Providers
 import { AuthProvider } from '../../../providers/auth/auth';
@@ -106,7 +105,7 @@ export class UserChatroomPage {
   constructor(public navCtrl: NavController,public popoverCtrl:PopoverController , public navParams: NavParams, 
     private db: AngularFireDatabase, private authProvider: AuthProvider, private chatProvider: ChatProvider, 
     private camera: Camera, private storage: AngularFireStorage, private toastCtrl: ToastController,
-    private modalCtrl: ModalController, private imagePicker: ImagePicker, private zone:NgZone, private checkProvider: CheckProvider) {
+    private modalCtrl: ModalController, private zone:NgZone, private checkProvider: CheckProvider) {
     
   }
   ionViewWillLoad(){

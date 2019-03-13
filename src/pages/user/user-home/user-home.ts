@@ -161,7 +161,7 @@ export class UserHomePage {
 			observers.subscription.unsubscribe();
 		});
 		this.momentObserver.forEach( observers =>{
-			observers.subscriptions.unsubscribe();
+			observers.subscription.unsubscribe();
 		});
 		this.locationObserver.forEach( observers =>{
 			observers.subscription.unsubscribe();
@@ -439,7 +439,7 @@ export class UserHomePage {
 		//Moments
 		this.cardMoments = [];
 		this.momentObserver.forEach( observers =>{
-			observers.subscriptions.unsubscribe();
+			observers.subscription.unsubscribe();
 		});
 		this.momentObserver = [];
 		//Locations

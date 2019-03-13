@@ -39,13 +39,29 @@
 	<div padding *ngIf="moments.length>0">
 		<h4 class="head">Moments</h4>
 		<div *ngIf="isMatched || (!isMatched && !showMoments)">	
-			<button ion-button (click)="checkMoments()">See Moments</button>
+			<ion-scroll scrollX="true" direction="x">
+				<div  id="moments" *ngFor="let moment of moments;">
+				    <ion-card id="moments">
+				      <img style="object-fit: cover; object-position: top; height: 100%; width: 100%;" src="{{moment?.image}}">
+				    </ion-card>
+				</div>
+			</ion-scroll>
+			<ion-grid>
+				<ion-row text-center>
+					<ion-col>
+						<button ion-button clear style="text-decoration: underline;" (click)="checkMoments()">View all moments</button>
+					</ion-col>
+				</ion-row>
+			</ion-grid>
+					
+			<!-- 
 			<div *ngFor="let moment of moments; let i = index">
 				<img *ngIf="i<5" src="{{moment?.image}}">
-			</div>
+			</div> -->
+
 		</div>
 		<div *ngIf="!isMatched && showMoments">
-			<p>User moments in private.</p>
+			<p>User moments is private.</p>
 		</div>
 	</div>
 	<hr *ngIf="sameInterests.length > 0">

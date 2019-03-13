@@ -72,6 +72,9 @@ export class UserCheckPage {
     console.log("Location2", this.userLocation);
     console.log("Profile", this.userInfo);
     console.log("Activity", this.userActivity);
+    if(this.moments.length>5){
+      this.moments.splice(5)
+    }
   }
 
   ionViewDidLoad() {
@@ -207,6 +210,9 @@ export class UserCheckPage {
           }
         });
         this.moments = moments.slice().reverse();
+        if(this.moments.length>5){
+          this.moments.splice(5)
+        }
       });
   }
   checkMoments(){

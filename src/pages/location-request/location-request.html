@@ -60,10 +60,10 @@
 			</ion-grid>
 		</ion-card-header>
 		<ion-item *ngIf="meetupDetails?.senderStatus === 'Accepted' && meetupDetails?.sender === authKey && !meetupDetails?.isCancelled && meetupDetails?.status !== 'Expired' && meetupDetails?.status !== 'Fail'">
-			<button ion-button (click)="cancelMeetup()">Cancel Meetup</button>
+			<button ion-button block (click)="cancelMeetup()" style="background-color: #e56464;">Cancel Meetup</button>
 		</ion-item>
 		<ion-item *ngIf="meetupDetails?.receiverStatus === 'Accepted' && meetupDetails?.receiver === authKey && !meetupDetails?.isCancelled && meetupDetails?.status !== 'Expired' && meetupDetails?.status !== 'Fail' ">
-			<button ion-button (click)="cancelMeetup()">Cancel Meetup</button>
+			<button ion-button block (click)="cancelMeetup()" style="background-color: #e56464;">Cancel Meetup</button>
 		</ion-item>
 		<ion-item class="req_text" *ngIf="meetupDetails?.receiverStatus === 'Declined' && meetupDetails?.sender === authKey && !meetupDetails?.isCancelled">
 			<p class="req_text">Oops, current meetup request has been declined.</p>

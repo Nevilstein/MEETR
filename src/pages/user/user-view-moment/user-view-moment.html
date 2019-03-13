@@ -7,14 +7,17 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>{{date}}</ion-title>
-    <ion-icon *ngIf="authKey === userKey" name="trash" (click)="deleteMoment(momentDetails?.id)"></ion-icon>
+    <ion-title>{{date}}</ion-title><!-- 
+    <ion-icon *ngIf="authKey === userKey" name="trash" (click)="deleteMoment(momentDetails?.id)"></ion-icon> -->
+    <ion-buttons end>
+    	<button ion-button clear (click)="closeModal();">Close</button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-	<img src="{{image}}">
 	<p style="white-space: pre-wrap;">{{caption}}</p>
+	<img src="{{image}}">
 </ion-content>
