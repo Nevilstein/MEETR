@@ -12,27 +12,29 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content padding><!-- 
 	<div>
 		<img src="{{profile?.photos[0]}}">
 		<p>{{profile?.firstName}}</p>
-	</div>
+	</div> -->
 	<div *ngIf="moments.length === 0">
 		No moments to show.
 	</div>
 	<div *ngIf="moments.length > 0">
 		<div *ngFor="let moment of moments; let i = index">
 			<ion-card padding *ngIf="i<=4 || (i>4 && isMatched)">
+				<ion-card-header text-center>
+					<h2>{{moment?.date}}</h2>
+				</ion-card-header>
 				<ion-card-content (click)="seeMoment(moment)">
-					<p>{{moment?.date}}</p>
-					<img src="{{moment?.image}}">
 					<p style="white-space: pre-wrap;">{{moment?.caption}}</p>
+					<img src="{{moment?.image}}">
 				</ion-card-content>
 			</ion-card>
 		</div>
-		<div *ngIf="moments.length>4 && !isMatched">
+		<div *ngIf="moments.length>4 && !isMatched" text-center>
 			<hr>
-			<p>Match with user to see all moments.</p>
+			<p style="color: red;">Match with user to see all moments.</p>
 		</div>
 	</div>
 </ion-content>

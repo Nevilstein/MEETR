@@ -37,4 +37,23 @@ page-user-check {
 	.bio-div p{
 		white-space: pre-wrap;
 	}
+	.scroll-zoom-wrapper {
+        white-space: nowrap;
+    }
+
+    #moments {
+        width: 100px !important;
+        height: 100px !important;
+        display: inline-block;
+        margin-right: 5px;
+    }
+
+    ion-scroll {
+        min-height: 120px; 
+        height: auto;
+
+            .scroll-content {
+            padding: 0px !important;
+        }    
+    }
 }

@@ -8,27 +8,43 @@
 
   <ion-navbar>
     <ion-title>Moments</ion-title>
-  </ion-navbar>
-  <button ion-button clear (click)="addMoment()">New Moment</button>
+  </ion-navbar><!-- 
+  <button ion-button clear (click)="addMoment()">New Moment</button> -->
 </ion-header>
 
 
 <ion-content padding>
+	<ion-fab bottom right (click)="addMoment()">
+	    <button ion-fab color="vibrant"><ion-icon name="add"></ion-icon></button>
+  	</ion-fab><!-- 
 	<div>
 		<img src="{{profile?.photos[0]}}">
 		<p>{{profile?.firstName}}</p>
-	</div>
+	</div> -->
 	<div *ngIf="moments.length === 0">
 		No moments to show.
 	</div>
 	<div *ngIf="moments.length > 0">
 		<ion-card padding *ngFor="let moment of moments">
-			<ion-card-header><ion-icon (click)="deleteMoment(moment?.id)" name="close"></ion-icon></ion-card-header>
+			<ion-card-header>
+				<ion-list>
+					<ion-item text-center>
+						<h2>{{moment?.date}}</h2><!-- 
+						<ion-icon item-end (click)="deleteMoment(moment?.id)" name="close"></ion-icon> -->
+					</ion-item>
+				</ion-list>
+			</ion-card-header>
 			<ion-card-content (click)="seeMoment(moment)">
-				<p>{{moment?.date}}</p>
+				<ion-list>
+					<ion-item>
+						<p style="white-space: pre-wrap;" item-start>{{moment?.caption}}</p>
+					</ion-item>
+				</ion-list>
 				<img src="{{moment?.image}}">
-				<p style="white-space: pre-wrap;">{{moment?.caption}}</p>
 			</ion-card-content>
+			<ion-row class="cardfooter" no-padding>
+		     <button ion-button block style="background-color: #ea6969;">Remove</button>
+		    </ion-row>
 		</ion-card>
 	</div>
 </ion-content>

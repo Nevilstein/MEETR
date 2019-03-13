@@ -95,7 +95,6 @@ import firebase from 'firebase';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import { Diagnostic } from '@ionic-native/diagnostic';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
-import { ImagePicker } from '@ionic-native/image-picker';
 
 //Provider
 import { AuthProvider } from '../providers/auth/auth';
@@ -200,7 +199,6 @@ export const firebaseConfig = {
     LocalNotifications,
     Diagnostic,
     LocationAccuracy,
-    ImagePicker,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthProvider,
     ChatProvider,
