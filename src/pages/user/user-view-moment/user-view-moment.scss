@@ -1,5 +1,22 @@
 page-user-view-moment {
-	.toolbar-background {
- 	 	background-color: #189dae;
+	.toolbar-background {/*
+ 	 	background-color: #189dae;*/
+
+		background: rgba(0,0,0,1);
+	}
+	.main_con{
+		display: flex;
+		height: 100%;
+	}
+	.inner{
+		margin: auto;
+	}
+	.viewMoment{
+		background: rgba(0,0,0,1);
+	}
+	.caption{
+		overflow: inherit ;
+	  text-overflow: inherit ;
+	  white-space: normal;
 	}
 }
