@@ -17,7 +17,13 @@
 </ion-header>
 
 
-<ion-content padding>
-	<p style="white-space: pre-wrap;">{{caption}}</p>
-	<img src="{{image}}">
+<ion-content padding class="viewMoment">
+  <div class="main_con">
+    <div class="inner">
+      <div style="height: 100%; width: 100%;" >
+        <img style="object-fit: contain;" src="{{image}}">
+      </div>
+    </div>
+  </div>
+  <p style="white-space: normal !important; word-wrap: break-word !important;  color: white; margin-top: -10vh; ">{{caption}}</p>
 </ion-content>

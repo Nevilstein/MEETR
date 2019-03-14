@@ -36,14 +36,15 @@
 			<ion-card>
 				<ion-card-header style="background-color: #c68989;">
 					<h2>Inactive</h2>
-				</ion-card-header>
+				</ion-card-header><hr>
 				<ion-card-content>
 					<div *ngFor="let inactive of inactiveRequests" (click)="selectRequest(inactive)">
+						<p style="text-align: right;">Date Sent: {{inactive.dateSent}}</p>
 						<p>Meetup Date: {{inactive.date}}</p>
 						<p>Meetup Time: {{inactive.time}}</p>
-						<p *ngIf="inactive.isCancelled">Cancelled</p>
-						<p *ngIf="!inactive.isCancelled">{{inactive.status}}</p>
-						<p>Date Sent: {{inactive.dateSent}}</p>
+						<p *ngIf="inactive.isCancelled" style="text-align: right; color:red;">Status: Cancelled</p>
+						<p *ngIf="!inactive.isCancelled" style="text-align: right; color:red;">Status: {{inactive.status}}</p>
+						<hr>
 					</div>
 				</ion-card-content>
 			</ion-card>

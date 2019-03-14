@@ -21,8 +21,8 @@
 		<img src="{{profile?.photos[0]}}">
 		<p>{{profile?.firstName}}</p>
 	</div> -->
-	<div *ngIf="moments.length === 0">
-		No moments to show.
+	<div *ngIf="moments.length === 0" text-center>
+		<p style="color: red">No moments to show.</p>
 	</div>
 	<div *ngIf="moments.length > 0">
 		<ion-card padding *ngFor="let moment of moments">
@@ -35,15 +35,21 @@
 				</ion-list>
 			</ion-card-header>
 			<ion-card-content (click)="seeMoment(moment)">
-				<ion-list>
-					<ion-item>
-						<p style="white-space: pre-wrap;" item-start>{{moment?.caption}}</p>
-					</ion-item>
-				</ion-list>
-				<img src="{{moment?.image}}">
+				<ion-grid>
+					<ion-row style="white-space: normal;">
+						<ion-col>
+							<div style="height: 100px; width: 100px;">
+								<img style="object-fit: cover; height: 100%; width: 100%;" src="{{moment?.image}}">
+							</div>
+						</ion-col>
+						<ion-col style=" width: 1%;">
+							<p style="white-space: normal; word-wrap: break-word;">{{moment?.caption}}</p>
+						</ion-col>
+					</ion-row>
+				</ion-grid>
 			</ion-card-content>
 			<ion-row class="cardfooter" no-padding>
-		     <button ion-button block style="background-color: #ea6969;">Remove</button>
+		     <button ion-button block style="background-color: #ea6969;" (click)="deleteMoment(moment?.id)">Remove</button>
 		    </ion-row>
 		</ion-card>
 	</div>

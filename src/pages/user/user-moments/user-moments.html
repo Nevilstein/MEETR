@@ -27,8 +27,18 @@
 					<h2>{{moment?.date}}</h2>
 				</ion-card-header>
 				<ion-card-content (click)="seeMoment(moment)">
-					<p style="white-space: pre-wrap;">{{moment?.caption}}</p>
-					<img src="{{moment?.image}}">
+					<ion-grid>
+						<ion-row>
+							<ion-col>
+								<div style="height: 100px; width: 100px;">
+									<img style="object-fit: cover; height: 100%; width: 100%;" src="{{moment?.image}}">
+								</div>
+							</ion-col>
+							<ion-col style=" width: 1%;">
+								<p style="white-space: normal; word-wrap: break-word;">{{moment?.caption}}</p>
+							</ion-col>
+						</ion-row>
+					</ion-grid>
 				</ion-card-content>
 			</ion-card>
 		</div>
